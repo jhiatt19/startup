@@ -1,18 +1,32 @@
-# Your startup name here
+# Still working on a cool name
 
-[My Notes](notes.md)
-
-A brief description of the application here. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-
-> [!NOTE]
->  This is a template for your startup application. You must modify this `README.md` file for each phase of your development. You only need to fill in the section for each deliverable when that deliverable is submitted in Canvas. Without completing the section for a deliverable, the TA will not know what to look for when grading your submission. Feel free to add additional information to each deliverable description, but make sure you at least have the list of rubric items and a description of what you did for each item.
-
-> [!NOTE]
->  If you are not familiar with Markdown then you should review the [documentation](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) before continuing.
 
 ## 🚀 Specification Deliverable
 
+### Elevator Pitch
+
+I struggle with ADHD. This struggle makes it difficult for me to remember all of the tasks that I have going on and can make it difficult to priortize each task in an appropriate manner. This has caused me to forget about big projects, plans with friends, and many other meetings. An easy solution to this could be to write everything down and constantly check my list. However, this can end up causing me to have more anxiety as I keep seeing all of the things I need to get done. If only there was a way to be able to write everything down and priortize those tasks so that I don't forget to do anything, but don't feel the stress with seeing a long list of tasks. Well I'm hoping to solve this with this amazing planning and prioritizing tool, **insert cool name for website**. This tool will help someone to organize all of the many tasks that they have to do and will send reminders about upcoming due dates for tasks you may have forgotten about. Gone are the days of writing down a plan to get all of your tasks done to only to lose the plan or forget that you made this plan. With **insert cool name for website** you can kiss those stress filled days goodbye!
+
+### Key Features
+* Login athentication required for each user.
+* Tasks will be saved in database.
+* Tasks will update priority in real time as task dates get closer.
+* Calendar will create scheduled times when tasks should get started during based on your calendar and estimated time of tasks.
+* Notifications about current traffic condiditons and leaving for next event are shown as well.
+
+### Technologies
+
+**HTML:** 3-4 html pages
+1. Homepage/Login
+2. Priority task dashboard
+3. Add new tasks page
+4. Other page (Calendar, traffic, etc.)
+
+**CSS:** Application styled in a way to support the user experience.
+
+**JavaScript:** Provides functionality to buttons, drop downs, etc.
+
+**Services:** 
 > [!NOTE]
 >  Fill in this sections as the submission artifact for this deliverable. You can refer to this [example](https://github.com/webprogramming260/startup-example/blob/main/README.md) for inspiration.
 
