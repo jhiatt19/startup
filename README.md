@@ -24,9 +24,14 @@ I struggle with ADHD. This struggle makes it difficult for me to remember all of
 
 **CSS:** Application styled in a way to support the user experience.
 
-**JavaScript:** Provides functionality to buttons, drop downs, etc.
+**JavaScript:** Provides functionality to buttons, drop downs, etc. using JavaScript and the React web framework.
 
-**Services:** 
+**Services:** Website will use API's for calendar and traffic services among potential use for others depending on difficulty to include.
+
+**Authentication:** Login page will allow users to provide authentication for their account and login. After login, user's account name will be displayed in the login button corner.
+
+**WebSocket data:** Traffic data will be update to inform user if they need to leave earlier for an event. Or will give an alert if a task is due soon and hasn't been completed.
+
 > [!NOTE]
 >  Fill in this sections as the submission artifact for this deliverable. You can refer to this [example](https://github.com/webprogramming260/startup-example/blob/main/README.md) for inspiration.
 
