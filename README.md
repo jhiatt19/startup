@@ -7,11 +7,11 @@
 
 I struggle with ADHD. This struggle makes it difficult for me to remember all of the tasks that I have going on and can make it difficult to priortize each task in an appropriate manner. This has caused me to forget about big projects, plans with friends, and many other meetings. An easy solution to this could be to write everything down and constantly check my list. However, this can end up causing me to have more anxiety as I keep seeing all of the things I need to get done. If only there was a way to be able to write everything down and priortize those tasks so that I don't forget to do anything, but don't feel the stress with seeing a long list of tasks. Well I'm hoping to solve this with this amazing planning and prioritizing tool, **insert cool name for website**. This tool will help someone to organize all of the many tasks that they have to do and will send reminders about upcoming due dates for tasks you may have forgotten about. Gone are the days of writing down a plan to get all of your tasks done to only to lose the plan or forget that you made this plan. With **insert cool name for website** you can kiss those stress filled days goodbye!
 
-![Login Screen](./Images/Login_screen)
+![Login Screen](./Images/Login_screen.png)
 
-![Main Page](./Images/Main_page)
+![Main Page](./Images/Main_page.png)
 
-![Create new page](./Images/Create_new_page)
+![Create new page](./Images/Create_new_page.png)
 
 ### Key Features
 * Login athentication required for each user.
