@@ -7,6 +7,12 @@
 
 I struggle with ADHD. This struggle makes it difficult for me to remember all of the tasks that I have going on and can make it difficult to priortize each task in an appropriate manner. This has caused me to forget about big projects, plans with friends, and many other meetings. An easy solution to this could be to write everything down and constantly check my list. However, this can end up causing me to have more anxiety as I keep seeing all of the things I need to get done. If only there was a way to be able to write everything down and priortize those tasks so that I don't forget to do anything, but don't feel the stress with seeing a long list of tasks. Well I'm hoping to solve this with this amazing planning and prioritizing tool, **insert cool name for website**. This tool will help someone to organize all of the many tasks that they have to do and will send reminders about upcoming due dates for tasks you may have forgotten about. Gone are the days of writing down a plan to get all of your tasks done to only to lose the plan or forget that you made this plan. With **insert cool name for website** you can kiss those stress filled days goodbye!
 
+![Login Screen](./Images/Login_screen)
+
+![Main Page](./Images/Main_page)
+
+![Create new page](./Images/Create_new_page)
+
 ### Key Features
 * Login athentication required for each user.
 * Tasks will be saved in database.
@@ -32,50 +38,6 @@ I struggle with ADHD. This struggle makes it difficult for me to remember all of
 
 **WebSocket data:** Traffic data will be update to inform user if they need to leave earlier for an event. Or will give an alert if a task is due soon and hasn't been completed.
 
-> [!NOTE]
->  Fill in this sections as the submission artifact for this deliverable. You can refer to this [example](https://github.com/webprogramming260/startup-example/blob/main/README.md) for inspiration.
-
-For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
-
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
-
-### Elevator pitch
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-### Design
-
-![Design image](placeholder.png)
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-```mermaid
-sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
-```
-
-### Key features
-
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
-
-### Technologies
-
-I am going to use the required technologies in the following ways.
-
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
 
 ## 🚀 AWS deliverable
 
