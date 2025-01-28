@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta name = "viewport" content="width=device-width, initial-scale=1.0">
+        <title>Won Stop</title>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid black;
+            }
+            td:hover {
+                background-color: rgb(234, 234, 239);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Won Stop</h1>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="Home.html">Home</a></li>
+                <li><a href="PDFextractor.html">PDF Extractor</a></li>
+                <li><a href="ProductivityCalendar.html">Productivity Calendar</a></li>
+                <li><a href="Calendar.html">Calendar</a></li>
+                <li><a href="Alarms.html">Alarms</a></li>
+                <li><a href="URLholder.html">URL holder</a></li>
+            </ul>
+        </nav>
+        <main>
+            <h2>PDF extractor</h2>
+            <section>
+                <form>
+                    <label for="extractor">Choose PDF to extract text from:</label><br>
+                    <input type="file"><br><br>
+                    <label for="fileType">What kind of file would you like text added to?</label><br>
+                    <select id="fileType" name="fileType">
+                        <option value="txt">.txt</option>
+                        <option value="searchAblePDF">Searchable PDF</option>
+                        <option value="html">HTML (hOCR)</option>
+                        <option value="TSV">TSV</option>
+                    </select>
+                </form>
+            </section>
+        </main>
+    </body>
+
+</html>
