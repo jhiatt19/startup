@@ -56,8 +56,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **3rd party API placeholder** - I created a calendar out of a table to act as a placeholder for a 3rd party API to be added in later.
 - [x] **Images** - 3 images were added to different HTML pages. 1 on the sign up page, 1 on the homepage, and another on the url holder.
 - [x] **Login placeholder** - There is a login html page that will be used to store login credentials.
-- [x] **DB data placeholder** - Multiple form submissions are included throughout the website. These forms are used to save tasks, hold calendar data, hold onto url's, ect.
-- [x] **WebSocket placeholder** - I currently have a websocket placeholder in place for when someone enters a new task. When a new task is submitted all users will be notified of a task being added. Future deliverables may adjust this feature, but for now that is where this technology is planned on being used.
+- [x] **DB data placeholder** - Multiple form submissions are included throughout the website. These forms are used to save tasks, hold calendar data, hold onto url's, ect. Specifically this is shown on the Productivity Calendar page.
+- [x] **WebSocket placeholder** - I currently have a websocket placeholder in place for when someone enters a new task (Productivity Calendar page). When a new task is submitted all users will be notified of a task being added. Future deliverables may adjust this feature, but for now that is where this technology is planned on being used.
 
 ## 🚀 CSS deliverable
 
