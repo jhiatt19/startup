@@ -43,21 +43,21 @@ I struggle with ADHD. This struggle makes it difficult for me to remember all of
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://yourdomainnamehere.click).
+- [x] **Server deployed and accessible with custom domain name** - [My server link](https://jordanhiatt.org).
 
 ## 🚀 HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] **HTML pages** - I created 8 html pages for my website 1 login, 1 signup, 1 home page, and then 5 tool pages.
+- [x] **Proper HTML element usage** - I used HTML elements properly in all of my html pages.
+- [x] **Links** - I have links connecting all of my pages together through the navigation page. I also have a link connecting to my github page on the bottom of each page.
+- [x] **Text** - Text was added to my page describing what each tool could be used for.
+- [x] **3rd party API placeholder** - I created a calendar out of a table to act as a placeholder for a 3rd party API to be added in later.
+- [x] **Images** - 3 images were added to different HTML pages. 1 on the sign up page, 1 on the homepage, and another on the url holder.
+- [x] **Login placeholder** - There is a login html page that will be used to store login credentials.
+- [x] **DB data placeholder** - Multiple form submissions are included throughout the website. These forms are used to save tasks, hold calendar data, hold onto url's, ect.
+- [x] **WebSocket placeholder** - I currently have a websocket placeholder in place for when someone enters a new task. When a new task is submitted all users will be notified of a task being added. Future deliverables may adjust this feature, but for now that is where this technology is planned on being used.
 
 ## 🚀 CSS deliverable
 
