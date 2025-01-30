@@ -17,7 +17,6 @@ a {
 
 header{
     display:flex;
-    flex:1;
     border: 0px solid black;
     border-bottom-width: 2px;
     width: 100%;
@@ -41,7 +40,6 @@ form #logOut {
     width: 10em;
     min-height:1em;
     justify-content:end;
-    z-index: 100;
 
 }
 
@@ -71,15 +69,14 @@ body {
 }
 
 html,body {
-    flex:1;
     width:100%;
     margin: 0;
+    height: 100%;
 }
 
 main {
     /*width: 75%;*/
-    flex:3;
-    align-content: start;
+    flex:1;
     font-size: large;
 }
 
@@ -88,23 +85,24 @@ button {
 }
 
 footer #github {
-    align-self: flex-end;
-    justify-content: center;
+    align-items: flex-end;
+    justify-self: center;
+    padding-right: 1em;
 }
 
 footer #authorName {
     align-self: flex-start;
     justify-content: center;
-    text-align: end;
+    padding-left:1em;
 }
 
 footer {
     display:flex;
-    flex:1;
     justify-content: space-between;
     border: 0px, solid, black;
     border-top-width: 2px;
     width:100%;
+    min-height: 3em;
 }
 
 table {
@@ -120,7 +118,7 @@ td:hover {
 
 nav {
     position: sticky;
-    top:0;
+    top: 0;
     z-index: 100;
 }
 
