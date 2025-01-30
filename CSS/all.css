@@ -16,9 +16,44 @@ a {
 }
 
 header{
+    display:flex;
     border: 0px solid black;
     border-bottom-width: 2px;
     width: 100%;
+    justify-content: space-evenly;
+}
+
+header form{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    padding-right:2em;
+    padding-left:2em;
+}
+
+form #logOut {
+    box-sizing: border-box;
+    height: 3em;
+    min-width:20%;
+    width: 10em;
+    min-height:1em;
+    justify-content:end;
+
+}
+
+form #profile {
+    box-sizing: border-box;
+    height: 3em;
+    min-width:20%;
+    width: 10em;
+    min-height:1em;
+    justify-content:start;
+}
+
+header h1 {
+    display: flex;
+    justify-content: center;
+    width:75%;
 }
 
 button:hover {
