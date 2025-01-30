@@ -1,13 +1,89 @@
 * {
-  font-family: "Quicksand", serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
+    display:flexbox;
+    font-family: "Quicksand", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
 
-  justify-items: center;
+    justify-items: center;
+    text-align: center;
+
+    background: rgb(240, 240, 240);
+}
+
+h1{
+    font-weight: 700;
+    font-size: xxx-large;
+    margin:0;
+}
+
+header{
+    border: 0px solid black;
+    border-bottom-width: 2px;
+    width: 100%;
 }
 
 button:hover {
     background-color: darkslategrey;
     color:white;
+}
+
+.content {
+    flex: 1;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+html,body {
+    height: 100%;
+    width:100%;
+    margin: 0;
+}
+
+main {
+    flex: 1;
+    align-content: start;
+    font-size: large;
+}
+
+input[type="text"], input[type="password"]{
+    box-sizing: border-box;
+    width: 100%;
+    justify-items: start;
+    height: 2em;
+    background-color: white;
+}
+
+button {
+    background-color: white;
+}
+form {
+    width:100%;
+}
+footer {
+    justify-content: space-between;
+    display:flex;
+    border: 0px, solid, black;
+    border-top-width: 2px;
+
+}
+footer #github {
+    align-self: flex-end;
+    padding-right:1em;
+    padding-bottom: 1em;
+}
+
+footer #authorName {
+    align-self: flex-start;
+    padding-left:1em;
+    padding-bottom: 1em;
+}
+
+form button[type="submit"] {
+    margin-top: 1em;;
+    width: 10em;
+    height: 2em;
 }
