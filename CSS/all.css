@@ -11,10 +11,8 @@
     background: rgb(240, 240, 240);
 }
 
-h1{
-    font-weight: 700;
-    font-size: xxx-large;
-    margin:0;
+a {
+    background-color: rgb(240, 240, 240);
 }
 
 header{
@@ -26,10 +24,6 @@ header{
 button:hover {
     background-color: darkslategrey;
     color:white;
-}
-
-.content {
-    flex: 1;
 }
 
 body {
@@ -49,27 +43,10 @@ main {
     font-size: large;
 }
 
-input[type="text"], input[type="password"]{
-    box-sizing: border-box;
-    width: 100%;
-    justify-items: start;
-    height: 2em;
-    background-color: white;
-}
-
 button {
     background-color: white;
 }
-form {
-    width:100%;
-}
-footer {
-    justify-content: space-between;
-    display:flex;
-    border: 0px, solid, black;
-    border-top-width: 2px;
 
-}
 footer #github {
     align-self: flex-end;
     padding-right:1em;
@@ -80,10 +57,14 @@ footer #authorName {
     align-self: flex-start;
     padding-left:1em;
     padding-bottom: 1em;
+    padding-top: .5em;
 }
 
-form button[type="submit"] {
-    margin-top: 1em;;
-    width: 10em;
-    height: 2em;
+footer {
+    display:flex;
+    justify-content: space-between;
+    border: 0px, solid, black;
+    border-top-width: 2px;
+    width:100%;
+    height: 3em;
 }

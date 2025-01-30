@@ -1,0 +1,23 @@
+h1{
+    font-weight: 700;
+    font-size: xxx-large;
+    margin:0;
+}
+
+input[type="text"], input[type="password"]{
+    box-sizing: border-box;
+    width: 100%;
+    justify-items: start;
+    height: 2em;
+    background-color: white;
+}
+
+form {
+    width:100%;
+}
+
+form button[type="submit"] {
+    margin-top: 1em;;
+    width: 10em;
+    height: 2em;
+}
