@@ -1,0 +1,13 @@
+* {
+  font-family: "Quicksand", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+
+  justify-items: center;
+}
+
+button:hover {
+    background-color: darkslategrey;
+    color:white;
+}
