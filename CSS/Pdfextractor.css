@@ -1,0 +1,53 @@
+label.extractor {
+    border: 2px solid black;
+    padding-top: 1em;
+    padding-bottom:1em;
+    display:flex;
+    margin-bottom: 1em;
+    cursor:pointer;
+    width:100%;
+    justify-content: center;
+}
+
+label.extractor:hover{
+    background-color: black;
+    color: white;
+}
+
+label.fileTypeSelector {
+    margin-bottom: 1em;
+    display: flex;
+
+}
+
+#pdfFile {
+    display: none;
+}
+
+#extractorStuff {
+    height: 50%;
+}
+
+#fileType {
+    margin:1em;
+}
+
+#extractInput {
+    display:flex;
+    border:2px solid black;
+    padding:1em;
+    margin:1em;
+    cursor:pointer;
+    width:100%;
+    font-size: large;
+}
+
+#extractInput:hover {
+    background-color: black;
+    color:white;
+}
+
+section {
+    justify-items: center;
+    height:100%;
+}
