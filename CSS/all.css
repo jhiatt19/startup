@@ -141,3 +141,33 @@ nav a:hover {
     text-decoration:underline;
     font-weight: 700;
 }
+
+label.extractor {
+    border: 2px solid black;
+    padding: 1em;
+    display:flex;
+    margin-bottom: 1em;
+    cursor:pointer;
+}
+
+label.extractor:hover{
+    background-color: black;
+    color: white;
+}
+
+label.fileTypeSelector {
+    margin-bottom: 1em;
+}
+
+#pdfFile {
+    display: none;
+}
+
+section {
+    justify-items: center;
+    height:100%;
+}
+
+#extractorStuff {
+    height: 50%;
+}
