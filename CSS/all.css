@@ -114,7 +114,7 @@ th, td {
     border: 1px solid black;
 }
 td:hover {
-    background-color: rgb(16, 16, 17);
+    background-color: rgb(10, 10, 10);
     color:white;
 }
 
