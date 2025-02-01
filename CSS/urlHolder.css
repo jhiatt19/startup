@@ -18,12 +18,12 @@ img{
 }
 
 th {
-    background-color: rgb(112, 106, 106);
+    background-color: rgb(153, 147, 147);
     color:white;
 }
 
 #topRow {
-    background-color: black;
+    background-color: rgba(122,179,225,255);
     color:white;
 }
 

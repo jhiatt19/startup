@@ -1,0 +1,30 @@
+button {
+    height:4em;
+    width: 20em;
+}
+
+label {
+    font-size: larger;
+}
+
+#alarm-time {
+    height:2em;
+    width:20em;
+}
+
+h3 {
+    border:0px solid black;
+    border-bottom-width:2px;
+    padding-left:.5em;
+    padding-right:.5em;
+    padding-bottom: .2em;
+}
+
+h2 {
+    margin-top:0;
+    margin-bottom: .5em;
+}
+
+section {
+    width:100%;
+}
