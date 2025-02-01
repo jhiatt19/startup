@@ -63,12 +63,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Header, footer, and main content body** - I did not complete this part of the deliverable.
-- [ ] **Navigation elements** - I did not complete this part of the deliverable.
-- [ ] **Responsive to window resizing** - I did not complete this part of the deliverable.
-- [ ] **Application elements** - I did not complete this part of the deliverable.
-- [ ] **Application text content** - I did not complete this part of the deliverable.
-- [ ] **Application images** - I did not complete this part of the deliverable.
+- [x] **Header, footer, and main content body** - I created a main CSS page that created a uniform styling for the header, footer, adn main content for all of the pages. Other CSS files were created to make slight adjustments to each individual html page as needed.
+- [x] **Navigation elements** - I created a uniform navigation elements that stick to the top of the page if the will scroll down. 
+- [x] **Responsive to window resizing** - Almost all of my elements use responsive resizing. This means that no matter the size of the page all of the different parts of the page should be in similar spots as before. This is especially shown with the header and the main title and two buttons will adjust as the page shrinks.
+- [x] **Application elements** - All of my elements have been adjusted to ensure that the page is responsive and is easy to navigate. Buttons are resized to be bigger, text input forms have been enlarged, and the tables have been formatted to have each cell be the same width.
+- [x] **Application text content** - All of my text is added onto the page in such a way that it is easy to read looks pretty good.
+- [x] **Application images** - My application image on the urlHolder page was changed to have the dimensions held by the CSS file instead of declared in the html.
 
 ## 🚀 React part 1: Routing deliverable
 
