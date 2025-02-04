@@ -145,3 +145,10 @@ nav a:hover {
 p {
     width:75%;
 }
+
+img {
+    max-width: max-content;
+    max-height:max-content;
+    min-width: none;
+    min-height: none;
+}
