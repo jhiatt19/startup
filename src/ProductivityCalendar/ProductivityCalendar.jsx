@@ -1,43 +1,17 @@
-<!DOCTYPE html>
-<html lang = "en">
-    <head>
-        <meta name = "viewport" content="width=device-width, initial-scale=1.0">
-        <title>Won Stop</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="/CSS/all.css">
-        <link rel="stylesheet" href="/CSS/productivity.css">
-    </head>
-    <body>
-        <header>
-            <form action="/index.html">
-                <button id="profile">Welcome, user!</button>
-            </form>
-            <h1>Won Stop</h1>
-            <form action="/index.html">
-                <button id="logOut">Log out</button>
-            </form>
-        </header>
-        <nav>
-            <ul>
-                <li><a href="Home.html">Home</a></li>
-                <li><a href="PDFextractor.html">PDF Extractor</a></li>
-                <li><a href="ProductivityCalendar.html">Productivity Calendar</a></li>
-                <li><a href="Calendar.html">Calendar</a></li>
-                <li><a href="Alarms.html">Alarms</a></li>
-                <li><a href="URLholder.html">URL holder</a></li>
-            </ul>
-        </nav>
-        <main>
+import React from 'react';
+import './productivity.css';
+
+export function ProductivityCalendar() {
+  return (
+    <main>
         <section>
             <h3>Task Prioritizer</h3>
             <p>Another thing that I struggle with is determining what tasks to do at different times. Sometimes I spend more time coming up with a plan on when I will do all my tasks than actually doing the task. In this section I hope to create an algorithm to place tasks into my calendar based on priority and estimated time to complete task.</p>
         </section>
         <section>
-            <h3>Add new task</h3><!--My database will hold onto these tasks for each user.-->
+            <h3>Add new task</h3>
             <form id="newTask" action="/html/ProductivityCalendar.html">
-                <input type="text" id="task" placeholder="Task name"><br>
+                <input type="text" id="task" placeholder="Task name"/><br/>
                 <label for="time">Estimated time:</label>
                 <select id="times" name="time">
                     <option value="choose">Choose ETA</option>
@@ -56,7 +30,7 @@
                     <option value="7hr"> 7 hours</option>
                     <option value="8hr"> 8 hours</option>
                     <option value="Allday"> All day</option>
-                </select><br>
+                </select><br/>
                 <label for="priority">Priority Level:</label>
                 <select id="lvlpriority" name="priority">
                     <option value="choose">Choose priority level</option>
@@ -64,12 +38,12 @@
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
                     <option value="Extreme">Extreme</option>
-                </select><br> <!--Any new tasks that are created will send an alert letting people know that another user has added tasks to there calendar.-->
-                <button id=buttonButton type="submit">Submit</button>
+                </select><br/> /*Any new tasks that are created will send an alert letting people know that another user has added tasks to there calendar.*/
+                <button id="buttonButton" type="submit">Submit</button>
             </form>
         </section>
         <section>
-            <h3>Calendar</h3><!--The calendar will be a 3rd party service call-->
+            <h3>Calendar</h3>/*The calendar will be a 3rd party service call*/
             <table>
                 <thead>
                     <tr>
@@ -132,9 +106,5 @@
             </table>
         </section>
     </main>
-    </body><br>
-    <footer>
-        <span id="authorName">Author Name(s): Jordan Hiatt</span>
-        <a id="github"href="https://github.com/jhiatt19/startup">Github</a>
-    </footer>
-</html>
+  );
+}
