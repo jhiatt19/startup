@@ -1,4 +1,4 @@
-* {
+.app {
     display:flexbox;
     font-family: "Quicksand", serif;
     font-optical-sizing: auto;

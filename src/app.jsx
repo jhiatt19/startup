@@ -2,31 +2,56 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './all.css';
 
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { Home } from './Home/home';
+import { Alarms } from './Alarms/Alarms';
+import { Calendar } from './Calendar/Calendar';
+import { Login } from './Login/login';
+import { PDFextractor } from './PdFextractor/PDFextractor';
+import { ProductivityCalendar } from './ProductivityCalendar/ProductivityCalendar';
+import { SignUpPage } from './SignUpPage/SignUpPage';
+import { URLholder } from './URLholder/URLholder';
+
 export default function App(){
-    return <div className='app'>
+    return ( 
+        <BrowserRouter>
+        <div className='app'>
         <header>
             <form action="/index.html">
                 <button id="profile">Welcome, user!</button>
             </form>
-            <h1>Won Stop</h1>
+            <NavLink to='./'><h1>Won Stop</h1></NavLink>
             <form action="/index.html">
                 <button id="logOut">Log out</button>
             </form>
         </header>
         <nav>
             <ul>
-                <li><a href="Home.html">Home</a></li>
-                <li><a href="PDFextractor.html">PDF Extractor</a></li>
-                <li><a href="ProductivityCalendar.html">Productivity Calendar</a></li>
-                <li><a href="Calendar.html">Calendar</a></li>
-                <li><a href="Alarms.html">Alarms</a></li>
-                <li><a href="URLholder.html">URL holder</a></li>
+                <li><NavLink to='/home'>Home</NavLink></li>
+                <li><NavLink to='/PDFextractor'>PDF Extractor</NavLink></li>
+                <li><NavLink to='/ProductivityCalendar'>Productivity Calendar</NavLink></li>
+                <li><NavLink to='/Calendar'>Calendar</NavLink></li>
+                <li><NavLink to='/Alarms'>Alarms</NavLink></li>
+                <li><NavLink to='/URLholder'>URL holder</NavLink></li>
             </ul>
         </nav>
-        <main>Display main stuff here</main>
+        <main>
+            <Routes>
+                <Route path='/' element={<Login />} exact />
+                <Route path='/Home' element={<Home />} />
+                <Route path='/PDFextractor' element={<PDFextractor />} />
+                <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
+                <Route path='/Calendar' element={<Calendar />} />
+                <Route path='/Alarms' element={<Alarms />} />
+                <Route path='/URLholder' element={<URLholder />} />
+                <Route path='/SignUpPage' element={<SignUpPage />} />
+            </Routes>
+        </main>
         <footer>
             <span id="authorName">Author Name(s): Jordan Hiatt</span>
-            <a id="github"href="https://github.com/jhiatt19/startup">Github</a>
+            <NavLink id="github"to="https://github.com/jhiatt19/startup">Github</NavLink>
         </footer>
     </div>
+    </BrowserRouter>
+    )
 }
