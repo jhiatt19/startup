@@ -10,7 +10,7 @@ export function ProductivityCalendar() {
         </section>
         <section>
             <h3>Add new task</h3>
-            <form id="newTask" action="/html/ProductivityCalendar.html">
+            <form id="newTask" action="/ProductivityCalendar">
                 <input type="text" id="task" placeholder="Task name"/><br/>
                 <label for="time">Estimated time:</label>
                 <select id="times" name="time">
@@ -38,12 +38,12 @@ export function ProductivityCalendar() {
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
                     <option value="Extreme">Extreme</option>
-                </select><br/> /*Any new tasks that are created will send an alert letting people know that another user has added tasks to there calendar.*/
+                </select><br/> {/*Any new tasks that are created will send an alert letting people know that another user has added tasks to there calendar.*/}
                 <button id="buttonButton" type="submit">Submit</button>
             </form>
         </section>
         <section>
-            <h3>Calendar</h3>/*The calendar will be a 3rd party service call*/
+            <h3>Calendar</h3>{/*The calendar will be a 3rd party service call*/}
             <table>
                 <thead>
                     <tr>

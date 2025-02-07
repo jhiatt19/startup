@@ -1,5 +1,6 @@
 import React from 'react';
 import './calendar.css';
+import '../all.css'
 
 export function Calendar() {
   return (

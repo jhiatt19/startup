@@ -5,7 +5,7 @@ export function SignUpPage() {
   return (
     <main>
         <section id="sign up">
-            <form action="Home.html">
+            <form action="/Home">
                 <label id="uname" for="username">Username</label><br/>
                 <input type="text" name="username" placeholder="Username"/><br/>
                 <label for="password">Password</label><br/>

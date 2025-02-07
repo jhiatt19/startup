@@ -17,13 +17,13 @@ export default function App(){
         <BrowserRouter>
         <div className='app'>
         <header>
-            <form action="/index.html">
+            <NavLink to='./Home'><form action='./Home'>
                 <button id="profile">Welcome, user!</button>
-            </form>
+            </form></NavLink>
             <NavLink to='./'><h1>Won Stop</h1></NavLink>
-            <form action="/index.html">
+            <NavLink to='./'><form action='./'>
                 <button id="logOut">Log out</button>
-            </form>
+            </form></NavLink>
         </header>
         <nav>
             <ul>
@@ -45,6 +45,7 @@ export default function App(){
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />
                 <Route path='/SignUpPage' element={<SignUpPage />} />
+                <Route path='*' element={<NotFound />} />
             </Routes>
         </main>
         <footer>
@@ -55,3 +56,7 @@ export default function App(){
     </BrowserRouter>
     )
 }
+
+function NotFound() {
+    return <main className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</main>;
+  }
