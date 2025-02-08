@@ -4,7 +4,7 @@ import './Pdfextractor.css';
 export function PDFextractor() {
   return (
     <main>
-        <h2>PDF extractor</h2> /*I have created a script for this already so this will have a 3rd party call to get to the Tesseract OCR open source code, but the actual script will be locally hosted*/
+        <h2>PDF extractor</h2> {/*I have created a script for this already so this will have a 3rd party call to get to the Tesseract OCR open source code, but the actual script will be locally hosted*/}
             <section>
                 <form id="extractorStuff" action="PDFextractor.html">
                     <label class="extractor" for="pdfFile">Choose PDF to extract text from</label>

@@ -17,9 +17,9 @@ export function Login() {
         <section id="login">
             <form action="/Home">
                 <label for="username">Username</label><br/>
-                <input type="text" name="username" placeholder="Username"/><br/>
+                <input type="text" id="loginText" name="username" placeholder="Username"/><br/>
                 <label for="password">Password</label><br/>
-                <input type="password" name="password" placeholder="Password"/><br/>
+                <input type="password" id="loginPassword" name="password" placeholder="Password"/><br/>
                 <button type="submit">Login</button>
             </form>
             <p>Don't have an account? Create one <a href='/SignUpPage'>here</a></p>

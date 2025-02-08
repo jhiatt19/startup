@@ -10,7 +10,7 @@ export function Alarms() {
                 <label for="alarm-time">Set alarm time:</label>
                 <input type="time" id="alarm-time" name="alarm-time"/>
                 <br/><br/>
-                <button type="submit">Set Alarm</button>/*Alarms will be handled by a 3rd party*/
+                <button type="submit">Set Alarm</button> {/*Alarms will be handled by a 3rd party*/}
                 <br/>
             </form>
         </section>

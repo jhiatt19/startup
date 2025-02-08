@@ -15,7 +15,7 @@ import { URLholder } from './URLholder/URLholder';
 export default function App(){
     return ( 
         <BrowserRouter>
-        <div className='app'>
+        <div>
         <header>
             <NavLink to='./Home'><form action='./Home'>
                 <button id="profile">Welcome, user!</button>

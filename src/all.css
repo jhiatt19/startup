@@ -1,4 +1,4 @@
-.app {
+* {
     display:flexbox;
     font-family: "Quicksand", serif;
     font-optical-sizing: auto;
@@ -151,4 +151,9 @@ img {
     max-height:max-content;
     min-width: none;
     min-height: none;
+}
+
+div {
+    height:100%;
+    width:100%;
 }

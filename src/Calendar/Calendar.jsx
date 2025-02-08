@@ -1,12 +1,11 @@
 import React from 'react';
 import './calendar.css';
-import '../all.css'
 
 export function Calendar() {
   return (
     <main>
         <section>
-            <h3>Calendar</h3> /*Calendar will be handled by a 3rd party*/
+            <h3>Calendar</h3> {/*Calendar will be handled by a 3rd party*/}
             <table>
                 <thead>
                     <tr>
