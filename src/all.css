@@ -29,7 +29,6 @@ header form{
     position:sticky;
     top:2em;
     display: flex;
-    height: 100%;
     align-items: center;
     padding-right:2em;
     padding-left:2em;

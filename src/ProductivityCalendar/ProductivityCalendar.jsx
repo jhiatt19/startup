@@ -1,5 +1,6 @@
 import React from 'react';
 import './productivity.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export function ProductivityCalendar() {
   return (
@@ -9,9 +10,9 @@ export function ProductivityCalendar() {
             <p>Another thing that I struggle with is determining what tasks to do at different times. Sometimes I spend more time coming up with a plan on when I will do all my tasks than actually doing the task. In this section I hope to create an algorithm to place tasks into my calendar based on priority and estimated time to complete task.</p>
         </section>
         <section>
-            <h3>Add new task</h3>
+            <h3 id="newtask">Add new task</h3>
             <form id="newTask" action="/ProductivityCalendar">
-                <input type="text" id="task" placeholder="Task name"/><br/>
+                <textarea className="form-control" id="task" rows="3"></textarea>
                 <label for="time">Estimated time:</label>
                 <select id="times" name="time">
                     <option value="choose">Choose ETA</option>

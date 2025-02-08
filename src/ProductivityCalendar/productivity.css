@@ -11,19 +11,11 @@ section {
 }
 
 #task {
-    display:flexbox;
     justify-items: start;
     width:75%;
     box-sizing: border-box;
     border: 2px solid black;
     margin-bottom: 1em;
-    white-space: pre-wrap;
-    font-size: 1em;
-    padding:0;
-    text-align: start;
-    min-height: 2em;
-    flex-wrap:wrap;
-    overflow:visible;
 }
 
 #times {
@@ -38,5 +30,9 @@ section {
 
     height:3em;
     width:20em;
+    margin-bottom: 1em;
+}
+
+#newtask {
     margin-bottom: 1em;
 }
