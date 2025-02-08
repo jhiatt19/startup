@@ -4,7 +4,7 @@ import './calendar.css';
 export function Calendar() {
   return (
     <main>
-        <section>
+        <div id="calendar">
             <h3>Calendar</h3> {/*Calendar will be handled by a 3rd party*/}
             <table>
                 <thead>
@@ -66,7 +66,7 @@ export function Calendar() {
                     </tr>
                 </tbody>
             </table>
-        </section>
+        </div>
     </main>
   );
 }

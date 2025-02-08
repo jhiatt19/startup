@@ -9,7 +9,7 @@ table {
     height:90%;
 }
 
-section {
+#calendar {
     height:100%;
 }
 
@@ -19,3 +19,7 @@ h3{
     margin:.5em;
 }
 
+td:hover {
+    background-color: black;
+    color:white;
+}
