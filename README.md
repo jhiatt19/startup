@@ -74,9 +74,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - Routing between login and voting components.
+I have done the Simon react and deployed it to the simon service prior to undergoing my own startup.
+
+- [x] **Bundled using Vite** - I bundled my startup using Vite and update the package.json to use vite commands and added the necessary packages.
+- [x] **Components** - I created 8 components that house the html code for those pages. Thereby making my startup dependent on 1 index.html, 1 index.jsx, and 2 directories (public and src).
+- [x] **Router** - I successfully routed my website to go between all of the different pages just like it did when I was hrefrencing between .html pages.
 
 ## 🚀 React part 2: Reactivity
 
