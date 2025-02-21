@@ -7,7 +7,7 @@ import { Home } from './Home/home';
 import { Alarms } from './Alarms/Alarms';
 import { Calendar } from './Calendar/Calendar';
 import { Login } from './Login/login';
-import { PDFextractor } from './PdFextractor/PDFextractor';
+import { PDFextractor } from './PdFextractor/Pdfextractor';
 import { ProductivityCalendar } from './ProductivityCalendar/ProductivityCalendar';
 import { SignUpPage } from './SignUpPage/SignUpPage';
 import { URLholder } from './URLholder/URLholder';
