@@ -1,19 +1,22 @@
-let BuiltScript = {
-    scriptLanguage: 'Python',
-    InputFilePath: 'inputfile',
-    OutputFilePath: 'outputfile',
-    scriptName: 'scriptname',
+import { build } from "vite";
+
+ let BuiltScript = {
+     scriptLanguage: 'Python',
+     InputFilePath: 'inputfile',
+     OutputFilePath: 'outputfile',
+     scriptName: 'scriptname',
 };
 
 class ScriptBuilder {
     scriptName = "Pdf-splitter.py";
     constructor(InputFilePath,OutputFilePath) {
-        const commandLine = this.buildScript(this.scriptName,InputFilePath,OutputFilePath);
-        return this.runScript(commandLine);
+        this.buildScript(this.scriptName,InputFilePath,OutputFilePath);
+        return this.runScript(JSON.parse(localStorage.getItem('myKey')));
     }
 
     buildScript(scriptName,inPath,outPath){
-        return BuiltScript = {scriptLanguage: "Python", InputFilePath: inPath, OutputFilePath: outPath, scriptName: scriptName};
+        BuiltScript = {scriptLanguage: "Python", InputFilePath: inPath, OutputFilePath: outPath, scriptName: scriptName};
+        localStorage.setItem('myKey',JSON.stringify(BuiltScript));
     }
 
     runScript(command) {
