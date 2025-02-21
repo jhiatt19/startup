@@ -32,6 +32,9 @@ table {
     table-layout: fixed;
     width:75%;
 }
+tbody {
+    height:4em;
+}
 
 .website {
     width:100%;

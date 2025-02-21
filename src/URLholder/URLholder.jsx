@@ -7,34 +7,40 @@ export function URLholder() {
     const urlRef = useRef(null);
     const descriptionRef = useRef(null);
     const [urlInfo, setUrlInfo] = useState({
-        inUrl: '',
-        inDescription: '',
+        url: '',
+        description: '',
     })
     const [tableData, setTableData] = useState([]);
     
     const handleDescription = (event) => {
+        console.log(event);
         setDescription(event.target.value);
         if (handleDescription.current){
             setDescription(descriptionRef.current.value);
+            setUrlInfo({urlInfo,description:event});
         }
     };
 
-    const handleUrl = () => {
+    const handleUrl = (e) => {
+        console.log(e);
         if (urlRef.current){
             setUrl(urlRef.current.value);
+            setUrlInfo({urlInfo, url:e})
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        urlInfo.append('inUrl', url);
-        urlInfo.append('inDescription', description);
         setTableData([tableData,urlInfo]);
-        setUrlInfo({inUrl:'',inDescription:'',});
-    };
-    //function addToTable() {
+        setUrlInfo({url:'',description:'',});
 
-    //}
+        const counter = 0;
+        tableData.forEach(element=>{
+            console.log(element);
+            console.log(counter + 1);
+        });
+    };
+
   return (
     <main>
         <h3>URL Holder</h3>
@@ -57,10 +63,12 @@ export function URLholder() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="https://google.com">https://google.com</a></td>
-                            <td>Favorite search engine</td>
+                        {tableData.map((data,index) => 
+                        <tr key={index}>
+                            <td>{data.url}</td>
+                            <td>{data.description}</td>
                         </tr>
+                        )}
                     </tbody>
                 </table>
             </section>
