@@ -1,4 +1,4 @@
-const BuiltScript = {
+let BuiltScript = {
     scriptLanguage: 'Python',
     InputFilePath: 'inputfile',
     OutputFilePath: 'outputfile',
@@ -8,8 +8,8 @@ const BuiltScript = {
 class ScriptBuilder {
     scriptName = "Pdf-splitter.py";
     constructor(InputFilePath,OutputFilePath) {
-        const commandLine = new buildScript(this.scriptName,InputFilePath,OutputFilePath);
-
+        const commandLine = this.buildScript(this.scriptName,InputFilePath,OutputFilePath);
+        return this.runScript(commandLine);
     }
 
     buildScript(scriptName,inPath,outPath){
@@ -21,3 +21,5 @@ class ScriptBuilder {
         console.log(command);
     }
 }
+
+export {BuiltScript,ScriptBuilder}

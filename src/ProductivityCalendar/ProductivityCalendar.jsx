@@ -13,7 +13,7 @@ export function ProductivityCalendar() {
             <h3 id="newtask">Add new task</h3>
             <form id="newTask" action="/ProductivityCalendar">
                 <textarea className="form-control" id="task" rows="3"></textarea>
-                <label for="time">Estimated time:</label>
+                <label htmlFor="time">Estimated time:</label>
                 <select id="times" name="time">
                     <option value="choose">Choose ETA</option>
                     <option value="5min">5 minutes</option>
@@ -32,7 +32,7 @@ export function ProductivityCalendar() {
                     <option value="8hr"> 8 hours</option>
                     <option value="Allday"> All day</option>
                 </select><br/>
-                <label for="priority">Priority Level:</label>
+                <label htmlFor="priority">Priority Level:</label>
                 <select id="lvlpriority" name="priority">
                     <option value="choose">Choose priority level</option>
                     <option value="low">Low</option>
