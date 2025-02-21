@@ -1,5 +1,3 @@
-import { build } from "vite";
-
  let BuiltScript = {
      scriptLanguage: 'Python',
      InputFilePath: 'inputfile',
