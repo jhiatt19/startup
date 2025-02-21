@@ -6,8 +6,14 @@ export function URLholder() {
     const[description, setDescription] = useState('Optional Description');
     const urlRef = useRef(null);
     const descriptionRef = useRef(null);
+    const [urlInfo, setUrlInfo] = useState({
+        inUrl: '',
+        inDescription: '',
+    })
+    const [tableData, setTableData] = useState([]);
     
-    const handleDescription = () => {
+    const handleDescription = (event) => {
+        setDescription(event.target.value);
         if (handleDescription.current){
             setDescription(descriptionRef.current.value);
         }
@@ -19,11 +25,16 @@ export function URLholder() {
         }
     };
 
-    const handleSubmit = () => {
-        const urlInfo = new FormData();
-        urlInfo.append('url', url);
-        urlInfo.append('description', description);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        urlInfo.append('inUrl', url);
+        urlInfo.append('inDescription', description);
+        setTableData([tableData,urlInfo]);
+        setUrlInfo({inUrl:'',inDescription:'',});
     };
+    //function addToTable() {
+
+    //}
   return (
     <main>
         <h3>URL Holder</h3>
@@ -33,7 +44,7 @@ export function URLholder() {
                     <label htmlFor="website">Add URL:</label>
                     <input type="url" className="website" id="website" value={url} ref={urlRef} onChange={handleUrl} required/>
                     <input type="text" className="website" id="description" value={description} ref={descriptionRef} onChange={handleDescription}/>
-                    <button id="bigButton" type="submit">Submit</button>
+                    <input id="bigButton" type="submit"/>
                 </form>
                 <table>
                     <thead>
@@ -44,11 +55,13 @@ export function URLholder() {
                             <th>URL</th>
                             <th>Description</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         <tr>
                             <td><a href="https://google.com">https://google.com</a></td>
                             <td>Favorite search engine</td>
                         </tr>
-                    </thead>
+                    </tbody>
                 </table>
             </section>
     </main>

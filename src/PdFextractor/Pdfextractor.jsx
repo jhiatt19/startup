@@ -34,8 +34,8 @@ export function PDFextractor() {
     formInfo.forEach(element => {
       console.log(element);
     });
-    const test = new ScriptBuilder(formInfo['file'],formInfo['outType']);
-  }
+    //const test = new ScriptBuilder(formInfo['file'],formInfo['outType']);
+  };
   return (
     <main>
         <h2>PDF extractor</h2> {/*I have created a script for this already so this will have a 3rd party call to get to the Tesseract OCR open source code, but the actual script will be locally hosted*/}
