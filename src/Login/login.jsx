@@ -22,7 +22,7 @@ export function Login() {
                 <input type="password" id="loginPassword" name="password" placeholder="Password"/><br/>
                 <button type="submit">Login</button>
             </form>
-            <p>Don't have an account? Create one <a href='/SignUpPage'>here</a></p>
+            <p>Don't have an account? Create one <a id="signUplink" href='/SignUpPage'>here</a></p>
         </section>
     </main>
     //</BrowserRouter>

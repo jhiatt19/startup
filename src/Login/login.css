@@ -10,6 +10,7 @@ h1{
     justify-items: start;
     background-color: white;
     margin:0;
+    caret-color: black;
 }
 
 form {
@@ -21,4 +22,8 @@ form button[type="submit"] {
     width: 10em;
     height: 2em;
     margin-top: 1em;
+}
+
+#signUplink{
+    color:rgba(122,179,225,255);
 }
