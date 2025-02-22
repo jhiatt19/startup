@@ -17,6 +17,11 @@ a {
     text-decoration: none;
 }
 
+input[type="text"]:focus{
+    caret-color: black;
+    animation: blinky 1s steps(1) infinite;
+}
+
 header{
     display:flex;
     border: 0px solid black;
@@ -164,4 +169,8 @@ div {
     header form {
         padding:0;
     }
+}
+
+@keyframes blinky {
+    50% {caret-color: transparent;}
 }

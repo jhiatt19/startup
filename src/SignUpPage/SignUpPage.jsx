@@ -1,4 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
+import { useNavigate} from 'react-router-dom';
 import './signupPage.css';
 
 export function SignUpPage() {
@@ -8,6 +9,7 @@ export function SignUpPage() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(initialEmail);
   const [userData, setUserData] = useState([]);
+  const navigate = useNavigate();
 
   const handleBlurUser = () => {
     if (username === ''){
@@ -46,20 +48,34 @@ export function SignUpPage() {
 
   const handleReset = () => {
     setUsername(initialUsername);
-    setPassword(initialPassword);
+    setPassword('');
     setEmail(initialEmail);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setUserData([...userData, {username:username,password:password,email:email}])
-    handleReset();
-  }
+    if (email !== initialEmail && email !== ''){
+      setUserData([...userData, {username:username,password:password,email:email}]);
+      setUsername(initialUsername);
+      setPassword('');
+      setEmail(initialEmail);
+    }
+    else {
+      setUserData([...userData, {username:username,password:password,email:''}]);
+      setUsername(initialUsername);
+      setPassword('');
+    }
+    navigate("/Home");
+  };
+
+  useEffect(() => {
+    localStorage.setItem("userData",JSON.stringify(userData));
+  }, [userData]);
 
   return (
     <main>
         <section id="sign up">
-            <form action="/Home" onSubmit={handleSubmit}>
+            <form action="/Home">
                 <label htmlFor="username">Username</label><br/>
                 <input type="text" value={username} onBlur={handleBlurUser} onFocus={handleFocusUser} onChange={handleUsername} required/><br/>
                 <label htmlFor="password">Password</label><br/>
@@ -68,7 +84,7 @@ export function SignUpPage() {
                 <input type="email" value={email} onBlur={handleBlurEmail} onFocus={handleFocusEmail} onChange={handleEmail}/><br/>
                 <div className="signUpButtons">
                   <button type="reset" id='signButton' onClick={handleReset}>Reset</button>
-                  <button type="submit" id='signButton'>Submit</button>
+                  <button type="Submit" id='signButton' onClick={handleSubmit}>Submit</button>
                 </div>
             </form>
         </section>

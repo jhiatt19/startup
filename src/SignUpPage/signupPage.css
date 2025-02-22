@@ -5,6 +5,7 @@ label {
 input {
     margin-bottom:.5em;
     justify-items: start;
+    width:25em;
 }
 
 .signUpButtons{
