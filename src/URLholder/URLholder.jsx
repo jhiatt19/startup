@@ -3,15 +3,29 @@ import {nanoid} from 'nanoid';
 import './urlHolder.css';
 
 export function URLholder() {
+    const initialDescription = 'Optional Description';
     const [url, setUrl] = useState('https://');
-    const[description, setDescription] = useState('Optional Description');
+    const[description, setDescription] = useState(initialDescription);
     const urlRef = useRef(null);
     const descriptionRef = useRef(null);
-    const checkBox = useRef(null);
+    const [checkItems, setCheckItems] = useState([]);
+    const [uniqueID,setUniqueID] = useState('');
     const [tableData, setTableData] = useState(() => {
         const storedTable = localStorage.getItem("myTable");
         return storedTable ? JSON.parse(storedTable) : [];
     });
+    
+    const handleBlur = () => {
+        if (description === ''){
+            setDescription(initialDescription);
+        };
+    } 
+
+    const handleFocus = () => {
+        if (description === initialDescription) {
+            setDescription('');
+        };
+    }
     
     const handleDescription = (event) => {
         setDescription(event.target.value);
@@ -19,18 +33,31 @@ export function URLholder() {
 
     const handleUrl = (e) => {
         setUrl(e.target.value); 
+        setUniqueID(nanoid());
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setTableData([...tableData,{id: url:url,description:description,}]);
+        setTableData([...tableData,{id:uniqueID, url:url,description:description,}]);
         setUrl("https://");
         setDescription('');
         
     };
-    const handleEdit = () => {
-        setTableData([...tableData,{}]);
 
+    const handleCheckItems = (id) => {
+        if (checkItems.includes(id)){
+            setCheckItems(checkItems.filter((item) => item !== id));
+        }
+        else{
+            setCheckItems([...checkItems,id]);
+        }
+    };
+
+    const handleEdit = () => {
+        const removeRows = document.querySelectorAll('.checkBox:checked');
+        const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
+        setTableData(tableData => tableData.filter(row => !removeIDs.includes(row.id)));
+        setCheckItems([]);
     };
 
     useEffect(()=> { 
@@ -46,7 +73,7 @@ export function URLholder() {
                     <label htmlFor="website">Add URL:</label>
                     <div id="inputBoxes">
                         <input type="url" className="website" id="website" value={url} ref={urlRef} onChange={handleUrl} required/>
-                        <input type="text" className="website" id="description" value={description} ref={descriptionRef} onChange={handleDescription}/>
+                        <input type="text" className="website" id="description" value={description} ref={descriptionRef} onChange={handleDescription} onFocus={handleFocus} onBlur={handleBlur}/>
                     </div>
                     <div id="buttons">
                         <button id="bigButton" type="submit">Submit</button>
@@ -65,11 +92,11 @@ export function URLholder() {
                         </tr>
                     </thead>
                     <tbody>
-                        {tableData.map((data,index) => 
-                        <tr key={index}>
+                        {tableData.map((data,uniqueID) => 
+                        <tr key={uniqueID}>
                             <td><a href={data.url}>{data.url}</a></td>
                             <td>{data.description}</td>
-                            <td><input itemRef='checkBox' type="checkbox"/></td>
+                            <td><input className='checkBox' data-row-id={data.id} checked={checkItems.includes(data.id)} type="checkbox" onChange={() => handleCheckItems(data.id)}/></td>
                         </tr>
                         )}
                     </tbody>
