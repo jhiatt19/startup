@@ -23,6 +23,7 @@ header{
     border-bottom-width: 2px;
     width: 100%;
     justify-content: space-evenly;
+    padding-bottom:.5em;
 }
 
 header form{
