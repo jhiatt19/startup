@@ -9,6 +9,7 @@ h1{
     width: 100%;
     justify-items: start;
     background-color: white;
+    margin:0;
 }
 
 form {
@@ -19,4 +20,5 @@ form button[type="submit"] {
     margin-top: 1em;;
     width: 10em;
     height: 2em;
+    margin-top: 1em;
 }

@@ -1,12 +1,20 @@
 label {
-    margin-bottom: 1em;
+    margin-bottom: .5em;
 }
 
 input {
-    margin-bottom:1em;
+    margin-bottom:.5em;
 }
 
-button {
-    width:5em;
-    height:2em;
+.signUpButtons{
+    margin-bottom:.5em;
+    
 }
+
+#signButton {
+    width:7em;
+    height:2em;
+    margin-left:1em;
+    margin-right:1em;
+}
+
