@@ -56,7 +56,7 @@ form #profile {
 header h1 {
     display: flex;
     justify-content: center;
-    width:75%;
+    width:100%;
 }
 
 button:hover {

@@ -42,10 +42,11 @@ tbody {
     border:2px solid black;
     justify-items: start;
     margin-bottom:1em;
+    box-sizing: border-box;
 }
 
 #websiteSubmit {
-    width:75%;
+    width:100%;
 }
 
 section {
@@ -55,5 +56,37 @@ section {
 #bigButton {
     height: 3em;
     width:10em;
+    padding: 0;
+    background-color: rgb(240,240,240);
+    margin-left: 2.5em;
+    margin-right: 2.5em;
+    margin-top:0em;
+}
 
+#bigButton:hover {
+    background-color: darkslategrey;
+    
+}
+
+#buttons {
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    margin: 0;
+    
+}
+
+#inputBoxes {
+    width:75%;
+}
+
+#removeButton {
+    background-color: rgb(240,240,240);
+    height:100%;
+    width:100%;
+    border:none;
+}
+
+col:nth-last-child() {
+    width:10%;
 }
