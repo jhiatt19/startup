@@ -47,7 +47,8 @@ export default function App(){
                     <button id="logOut">Log out</button>
                 </form></NavLink>
             </header>
-            {findLocation() && <NavigationBar />}
+            {/* {findLocation() && <NavigationBar />} */}
+            <NavigationBar />
             <main>
                 <Routes>
                     <Route path='/' element={<Login />} exact />

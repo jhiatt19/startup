@@ -40,7 +40,7 @@ export function PDFextractor() {
                 <form id="extractorStuff" action="PDFextractor.html" onSubmit={handleSubmit}>
                   <div>
                     <label className="extractor" htmlFor="pdfFile">Choose PDF to extract text from</label>
-                    <input ref={fileInputRef} type="file" id="pdfFile" onChange={handleFileInput}/>
+                    <input ref={fileInputRef} type="file" id="pdfFile" onChange={handleFileInput} required/>
                     {selectedFile && <p>Selected File: {selectedFile}</p>}
                   </div>
                   <div>
