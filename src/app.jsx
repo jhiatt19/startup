@@ -27,19 +27,19 @@ function NavigationBar(){
     )
 };
 
-function findLocation(){
-        const location = useLocation();
-        const hideNavBarPages = ['/', '/SignUpPage'];
-        const hideNavBar = hideNavBarPages.includes(location.pathname);
-        return hideNavBar;
-}
+// function findLocation(){
+//         const location = useLocation();
+//         const hideNavBarPages = ['/', '/SignUpPage'];
+//         const hideNavBar = hideNavBarPages.includes(location.pathname);
+//         return hideNavBar;
+// }
 
 export default function App(){
 
     const handleLogOut = () => {
         const navigate = useNavigate();
-        const userData = localStorage.getItem("userData");
-        const code = localStorage.getItem("authCode");
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        const code = JSON.parse(localStorage.getItem("authCode"));
         if (code === ''){
             navigate('/');
         }
