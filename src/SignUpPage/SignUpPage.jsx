@@ -10,6 +10,8 @@ export function SignUpPage() {
   const [email, setEmail] = useState(initialEmail);
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [isError, setIsError] = useState('false');
 
   const handleBlurUser = () => {
     if (username === ''){
@@ -50,10 +52,20 @@ export function SignUpPage() {
     setUsername(initialUsername);
     setPassword('');
     setEmail(initialEmail);
+    setIsError('false');
   };
+
+  const handleError = () => {
+    setError('Please enter a username and password');
+  } 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (username === initialUsername && password === ''){
+      handleError();
+      setIsError('true');
+    }
+    else {
     if (email !== initialEmail && email !== ''){
       setUserData([...userData, {username:username,password:password,email:email}]);
       setUsername(initialUsername);
@@ -66,12 +78,13 @@ export function SignUpPage() {
       setPassword('');
     }
     navigate("/Home");
+  }
   };
 
   useEffect(() => {
     localStorage.setItem("userData",JSON.stringify(userData));
   }, [userData]);
-
+  
   return (
     <main>
         <section id="sign up">
@@ -87,6 +100,9 @@ export function SignUpPage() {
                   <button type="Submit" id='signButton' onClick={handleSubmit}>Submit</button>
                 </div>
             </form>
+            <div id="error">
+              {isError && error}
+            </div>
         </section>
     </main>
   );
