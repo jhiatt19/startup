@@ -15,9 +15,9 @@ export function SignUpPage() {
     });
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const [isError, setIsError] = useState('false');
+  const [isError, setIsError] = useState(false);
   const [authCode,setAuthCode] = useState ('');
-  const [takenUser,setTakenUser] = useState('false');
+  const [takenUser,setTakenUser] = useState(false);
 
   const handleBlurUser = () => {
     if (username === ''){
@@ -58,42 +58,28 @@ export function SignUpPage() {
     setUsername(initialUsername);
     setPassword('');
     setEmail(initialEmail);
-    setIsError('false');
+    setIsError(false);
   };
 
-  const handleError = () => {
-    if (takenUser === 'true') {
-      setError('Username already taken, please provide another one')
-    }
-    else {
-    setError('Please enter a username and password');
-    };
-  }; 
-
-  function checkError() {
-    if (username === initialUsername || password === ''){
-      handleError();
-      setIsError('true');
-    }
-    else {
-      let userNameTaken = localStorage.getItem("userData");
-      userNameTaken = JSON.parse(userNameTaken);
-      userNameTaken.map((data) => {
-        if (data.username === username){
-          setTakenUser('true');
-        }
-      });
-      if (takenUser){
-        setIsError('true');
-      }
-
-  }
-}
-
   const handleSubmit = (e) => {
+    setIsError(false);
+    setError('');
     e.preventDefault();
-    checkError();
+    if (username === initialUsername || password === ''){
+      setError('Please enter a username and password');
+      setIsError(true);
+      return;
+    }
+    const userNameTaken = JSON.parse(localStorage.getItem("userData" || '[]'));
+
+    if (userNameTaken.some((data => data.username === username))){
+      setError('Username already taken, please provide another one');
+      setIsError(true);
+      return;
+      };
+
     setAuthCode(nanoid());
+    
     if (!isError){
       console.log(authCode);
       if (email !== initialEmail && email !== ''){
