@@ -17,7 +17,7 @@ export function SignUpPage() {
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
   const [authCode,setAuthCode] = useState ('');
-  const [takenUser,setTakenUser] = useState(false);
+  const [objectAdded,setObjectAdded] = useState(false);
 
   const handleBlurUser = () => {
     if (username === ''){
@@ -77,28 +77,34 @@ export function SignUpPage() {
       setIsError(true);
       return;
       };
-
-    setAuthCode(nanoid());
     
-    if (!isError){
-      console.log(authCode);
+    setAuthCode(nanoid());
+    setObjectAdded(false);
+    setUsername(initialUsername);
+    setPassword('');
+    setEmail(initialEmail);
+    navigate("/Home");
+  };
+
+  useEffect(() => {
+    if(authCode !== '' && !objectAdded){
       if (email !== initialEmail && email !== ''){
         setUserData([...userData, {username:username,password:password,email:email, authCode:authCode}]);
       }
       else {
         setUserData([...userData, {username:username,password:password,email:'', authCode:authCode}]);
       }
-      setUsername(initialUsername);
-      setPassword('');
-      setEmail(initialEmail);
-      localStorage.setItem("authCode",JSON.stringify(authCode));
-      navigate("/Home");
     };
-  };
+    setObjectAdded(true);
+  }, [userData, username, password, email, authCode,]);
 
   useEffect(() => {
     localStorage.setItem("userData",JSON.stringify(userData));
   }, [userData]);
+
+  useEffect(() => {
+    localStorage.setItem("authCode",JSON.stringify(authCode));
+  },[authCode]);
 
   return (
     <main>
