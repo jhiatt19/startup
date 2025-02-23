@@ -1,5 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import { useNavigate} from 'react-router-dom';
+import {nanoid} from 'nanoid';
 import './signupPage.css';
 
 export function SignUpPage() {
@@ -8,10 +9,15 @@ export function SignUpPage() {
   const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(initialEmail);
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState(() => {
+      const storedTable = localStorage.getItem("userData");
+        return storedTable ? JSON.parse(storedTable) : [];
+    });
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [isError, setIsError] = useState('false');
+  const [authCode,setAuthCode] = useState ('');
+  const [takenUser,setTakenUser] = useState('false');
 
   const handleBlurUser = () => {
     if (username === ''){
@@ -56,35 +62,58 @@ export function SignUpPage() {
   };
 
   const handleError = () => {
+    if (takenUser === 'true') {
+      setError('Username already taken, please provide another one')
+    }
+    else {
     setError('Please enter a username and password');
-  } 
+    };
+  }; 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (username === initialUsername && password === ''){
+  function checkError() {
+    if (username === initialUsername || password === ''){
       handleError();
       setIsError('true');
     }
     else {
-    if (email !== initialEmail && email !== ''){
-      setUserData([...userData, {username:username,password:password,email:email}]);
+      let userNameTaken = localStorage.getItem("userData");
+      userNameTaken = JSON.parse(userNameTaken);
+      userNameTaken.map((data) => {
+        if (data.username === username){
+          setTakenUser('true');
+        }
+      });
+      if (takenUser){
+        setIsError('true');
+      }
+
+  }
+}
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    checkError();
+    setAuthCode(nanoid());
+    if (!isError){
+      console.log(authCode);
+      if (email !== initialEmail && email !== ''){
+        setUserData([...userData, {username:username,password:password,email:email, authCode:authCode}]);
+      }
+      else {
+        setUserData([...userData, {username:username,password:password,email:'', authCode:authCode}]);
+      }
       setUsername(initialUsername);
       setPassword('');
       setEmail(initialEmail);
-    }
-    else {
-      setUserData([...userData, {username:username,password:password,email:''}]);
-      setUsername(initialUsername);
-      setPassword('');
-    }
-    navigate("/Home");
-  }
+      localStorage.setItem("authCode",JSON.stringify(authCode));
+      navigate("/Home");
+    };
   };
 
   useEffect(() => {
     localStorage.setItem("userData",JSON.stringify(userData));
   }, [userData]);
-  
+
   return (
     <main>
         <section id="sign up">

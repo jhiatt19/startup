@@ -2,7 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './all.css';
 
-import { BrowserRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Home } from './Home/home';
 import { Alarms } from './Alarms/Alarms';
 import { Calendar } from './Calendar/Calendar';
@@ -35,6 +35,29 @@ function findLocation(){
 }
 
 export default function App(){
+
+    const handleLogOut = () => {
+        const navigate = useNavigate();
+        const userData = localStorage.getItem("userData");
+        const code = localStorage.getItem("authCode");
+        if (code === ''){
+            navigate('/');
+        }
+        else {
+            userData.map((data,authCode) => {
+                if (data.authCode === authCode){
+                    return {...data,authCode:''};
+                }
+                else {
+                    return data;
+                }
+            });
+        };
+        localStorage.setItem("userData",userData);
+    }
+    
+    
+
     return ( 
         <BrowserRouter>
             <div>
@@ -44,7 +67,7 @@ export default function App(){
                 </form></NavLink>
                 <NavLink to='./'><h1>Won Stop</h1></NavLink>
                 <NavLink to='./'><form action='./'>
-                    <button id="logOut">Log out</button>
+                    <button id="logOut" onClick={handleLogOut}>Log out</button>
                 </form></NavLink>
             </header>
             {/* {findLocation() && <NavigationBar />} */}
