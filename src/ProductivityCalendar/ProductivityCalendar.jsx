@@ -1,40 +1,60 @@
 import React, {useState, useRef, useEffect} from 'react';
+import {nanoid} from 'nanoid';
 import './productivity.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export function ProductivityCalendar() {
     const [task,setTask] = useState('');
-    const [time, setTime] = useState('');
-    const [priority, setPriority] = useState('');
-    const timeRef = useRef(null);
-    const priorityRef = useRef(null);
+    const [time, setTime] = useState('Choose Est time');
+    const [priority, setPriority] = useState('Choose priority level');
     const [taskData,setTaskData] = useState(() => {
         const storedTable = localStorage.getItem("taskData");
         return storedTable ? JSON.parse(storedTable) : [];
     });
-    const [id,setId] = useState(taskData.length+1);
+    const [checkItems, setCheckItems] = useState([]);
 
-    const handlePriority = () => {
-        if (priorityRef.current){
-            setPriority(priorityRef.current.value);
-        };
+    const handlePriority = (e) => {
+        setPriority(e.target.value);
     };
 
-    const handleTime = () => {
-        if (timeRef.current){
-            setTime(timeRef.current.value);
-        };
+    const handleTime = (e) => {
+        setTime(e.target.value);
     };
 
     const handleTask = (e) => {
         setTask(e.target.value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        setTaskData([...taskData,[{task:task, time:time, priority:priority,id:id}]]);
+        if (!task || time === "Choose Est time" || priority === "Choose priority level") return;
+
+        const newTask = {
+            task: task,
+            time: time,
+            priority: priority,
+            id:nanoid(),
+        }
+        setTaskData([...taskData,newTask]);
         setTask('');
-        setId(taskData.length+1);
+        setPriority("Choose priority level");
+        setTime("Choose Est time");
+    };
+
+    const handleCheckItems = (id) => {
+        if (checkItems.includes(id)){
+            setCheckItems(checkItems.filter((item) => item !== id));
+        }
+        else{
+            setCheckItems([...checkItems,id]);
+        }
+    };
+
+    const handleEdit = () => {
+        const removeRows = document.querySelectorAll('.checkBox:checked');
+        const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
+        setTaskData(taskData => taskData.filter(row => !removeIDs.includes(row.id)));
+        setCheckItems([]);
     };
 
     useEffect(() => {
@@ -49,11 +69,11 @@ export function ProductivityCalendar() {
         </section>
         <section>
             <h3 id="newtask">Add new task</h3>
-            <form id="newTask" action="/ProductivityCalendar">
-                <textarea className="form-control" id="task" rows="3" onChange={handleTask}></textarea>
-                <label htmlFor="time" ref={timeRef} onChange={handleTime}>Estimated time:</label>
-                <select id="times" name="time" value={time}>
-                    <option>Choose ETA</option>
+            <form id="newTask" onSubmit={handleSubmit}>
+                <textarea className="form-control" id="task" rows="3" value={task} onChange={handleTask} placeholder="Enter task..."></textarea>
+                <label htmlFor="time">Estimated time:</label>
+                <select id="times" name="time" onChange={handleTime} value={time}>
+                    <option>Choose Est time</option>
                     <option>5 minutes</option>
                     <option>15 minutes</option>
                     <option>30 minutes</option>
@@ -70,42 +90,45 @@ export function ProductivityCalendar() {
                     <option> 8 hours</option>
                     <option> All day</option>
                 </select><br/>
-                <label htmlFor="priority" ref={priorityRef} onChange={handlePriority}>Priority Level:</label>
-                <select id="lvlpriority" name="priority" value={priority}>
-                    <option>Choose priority level</option>
-                    <option>Low</option>
-                    <option>Medium</option>
-                    <option>High</option>
-                    <option>Extreme</option>
+                <label htmlFor="priority">Priority Level:</label>
+                <select id="lvlpriority" name="priority" value={priority} onChange={handlePriority}>
+                    <option value="none">Choose priority level</option>
+                    <option value='green'>Low</option>
+                    <option value='yellow'>Medium</option>
+                    <option value='orange'>High</option>
+                    <option value='red'>Extreme</option>
                 </select><br/> {/*Any new tasks that are created will send an alert letting people know that another user has added tasks to there calendar.*/}
-                <button id="buttonButton" type="submit" onClick={handleSubmit}>Submit</button>
+                <button id="buttonButton" type="submit">Submit</button>
             </form>
         </section>
         <section>
             <table id="productivityTable">
+                <colgroup>
+                    <col className='col1'/>
+                    <col className='col2'/>
+                    <col className='col3'/>
+                </colgroup>
                 <thead>
                     <tr>
                         <th id="topRow" colSpan="3">Tasks to do:</th>
                     </tr>
                     <tr>
-                        <th class="col1">Task</th>
-                        <th class="col2">Estimated Time</th>
-                        <th class="col3">Finished?</th>
+                        <th>Task</th>
+                        <th>Estimated Time</th>
+                        <th>Finished?</th>
                     </tr>
-                    <tbody>
-                    {taskData.map((data,id) => 
-                        <tr key={id}>
-                            <td><a href={data.task}>{data.task}</a></td>
-                            <td>{data.time}</td>
-                            <td><input className='checkBox' type="checkbox"/></td>
-                        </tr>
-                    )}
-                    </tbody>
-                    
                 </thead>
-
-                
+                <tbody>
+                {taskData.map((data) => 
+                    <tr key={data.id}>
+                        <td style={{backgroundColor:data.priority}}>{data.task}</td>
+                        <td>{data.time}</td>
+                        <td><input className='checkBox' data-row-id={data.id} checked={checkItems.includes(data.id)} type="checkbox" onChange={() => handleCheckItems(data.id)}/></td>
+                    </tr>
+                )}
+                </tbody>
             </table>
+            <button type="button" id="buttonButton" onClick={handleEdit}>Remove Checked Boxes</button>
         </section>
         <section>
             <h3>Calendar</h3>{/*The calendar will be a 3rd party service call*/}

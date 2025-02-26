@@ -39,6 +39,14 @@ section {
 
 #productivityTable{
     table-layout:fixed;
+    overflow-wrap:anywhere;
+}
+
+input[type="checkbox"] {
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    vertical-align: middle;
 }
 
 .col1{
@@ -58,4 +66,8 @@ th {
 
 #topRow {
     background-color: rgba(122,179,225,255);
+}
+
+.checkBox {
+    width:50%;
 }

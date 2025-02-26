@@ -39,8 +39,6 @@ export default function App(){
         return storedTable ? JSON.parse(storedTable) : [];
       });
     
-    const navigate = useNavigate();
-    
     const handleLogOut = () => {
         setUserData((userData) => {
             const indexNew = userData.findIndex((u) => u.authCode === authCode);

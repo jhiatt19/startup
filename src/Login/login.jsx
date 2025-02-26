@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import './login.css';
 import { data, useNavigate } from 'react-router-dom';
 import {nanoid} from 'nanoid';
-import { SignUpPage } from '../SignUpPage/SignUpPage';
 //import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 //import { SignUpPage } from './SignUpPage/SignUpPage';
