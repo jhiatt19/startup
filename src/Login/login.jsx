@@ -59,34 +59,33 @@ export function Login() {
         return;
       }
       else{
-        setAuthCode(nanoid());
+        const token = nanoid();
+        setUserData((userData) => {
+          const indexNew = userData.findIndex((u) => u.username === username);
+          if (indexNew !== -1){
+            const newUserData = [...userData];
+            newUserData[indexNew] = {
+              ...newUserData[indexNew],
+              authCode: token,
+            };
+            localStorage.setItem("userData",JSON.stringify(newUserData))
+            return newUserData;
+          };
+          return userData;
+        });
+        
+        setAuthCode(token);
         setAuthState("Authenticated");
-        updateAuthCode();
       };
+      
     };
     
     navigate("/Home");
   };
 
-  const updateAuthCode = () => { 
-      setUserData((userData) => {
-        const indexNew = userData.findIndex((u) => u.username === username);
-        if (indexNew !== -1){
-          const newUserData = [...userData];
-          newUserData[indexNew] = {
-            ...newUserData[indexNew],
-            authCode: authCode,
-          };
-          return newUserData;
-        };
-        return userData;
-      });
-    };
-
   useEffect(() => {
     if (authCode !== '' && authState === "Authenticated"){
       localStorage.setItem("authState",JSON.stringify({authStatus:authState,authCode:authCode}));
-      localStorage.setItem("userData",JSON.stringify(userData))
     };
   },[userData, username, authCode, authState]);
 

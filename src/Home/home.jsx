@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
+import { useLocation } from 'react-router-dom';
 import '../all.css';
 
 export function Home() {
   return (
     <main>
-      <div>
+      <div >
       <img src="https://media.licdn.com/dms/image/v2/D5612AQHSjbT7e9eCCg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1699466621872?e=1743638400&v=beta&t=iMQ_j1VZOh6T2YykHVFlpRzb07QN2jj37iUJJNx_H2M"/>
         <section>
             <h2>What the heck is this website all about?</h2>

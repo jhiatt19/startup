@@ -14,7 +14,6 @@ import { URLholder } from './URLholder/URLholder';
 
 function NavigationBar(){
     return (
-    <nav>
         <ul>
             <li><NavLink to='/home'>Home</NavLink></li>
             <li><NavLink to='/PDFextractor'>PDF Extractor</NavLink></li>
@@ -23,7 +22,6 @@ function NavigationBar(){
             <li><NavLink to='/Alarms'>Alarms</NavLink></li>
             <li><NavLink to='/URLholder'>URL holder</NavLink></li>
         </ul>
-    </nav>
     )
 };
 
@@ -76,7 +74,9 @@ export default function App(){
                 </form>
                 </NavLink>
             </header>
-            {authState === "Authenticated" && <NavigationBar />}
+            <nav>
+                {authState === "Authenticated" && <NavigationBar />}
+            </nav>
             <main>
                 <Routes>
                     <Route path='/' element={<Login />} exact />
