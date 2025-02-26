@@ -41,6 +41,24 @@ export default function App(){
     });
     const [authCode, setAuthCode] = useState(auth.authCode);
     const [authState,setAuthState] = useState(auth.authState);
+
+    const handleLogOut = () => {
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        const userIndex = userData.findIndex(user => user.authCode === authCode)
+        if (userIndex !== -1){
+            userData[userIndex].authCode = '';
+            setAuthCode('');
+            setAuthState('Not Authenticated');
+            localStorage.setItem("userData",JSON.stringify(userData));
+        };
+    };
+    
+    useEffect(() => {
+        if(authCode === '' && authState === "Not Authenticated"){
+            localStorage.setItem("authState",JSON.stringify({authCode:authCode,authStatus:authState}));
+        };
+    },[authCode, authState]);
+
     return ( 
         <BrowserRouter>
             <div>
@@ -50,7 +68,7 @@ export default function App(){
                 </form></NavLink>
                 <NavLink to='./'><h1>Won Stop</h1></NavLink>
                 <NavLink to='./'><form action='./'>
-                    <button id="logOut" to='./'>Log out</button>
+                    <button id="logOut" to='./' onClick={handleLogOut}>Log out</button>
                 </form></NavLink>
             </header>
             {authState && <NavigationBar />}
