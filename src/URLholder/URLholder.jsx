@@ -38,7 +38,7 @@ export function URLholder() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setTableData([...tableData,{id:uniqueID, url:url,description:description,}]);
+        setTableData([...tableData,{id:uniqueID, url:url, description:description,}]);
         setUrl("https://");
         setDescription('');
         

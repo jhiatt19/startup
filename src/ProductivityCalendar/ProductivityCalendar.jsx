@@ -1,8 +1,46 @@
-import React from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import './productivity.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export function ProductivityCalendar() {
+    const [task,setTask] = useState('');
+    const [time, setTime] = useState('');
+    const [priority, setPriority] = useState('');
+    const timeRef = useRef(null);
+    const priorityRef = useRef(null);
+    const [taskData,setTaskData] = useState(() => {
+        const storedTable = localStorage.getItem("taskData");
+        return storedTable ? JSON.parse(storedTable) : [];
+    });
+    const [id,setId] = useState(taskData.length+1);
+
+    const handlePriority = () => {
+        if (priorityRef.current){
+            setPriority(priorityRef.current.value);
+        };
+    };
+
+    const handleTime = () => {
+        if (timeRef.current){
+            setTime(timeRef.current.value);
+        };
+    };
+
+    const handleTask = (e) => {
+        setTask(e.target.value);
+    };
+
+    const handleSubmit = () => {
+        e.preventDefault();
+        setTaskData([...taskData,[{task:task, time:time, priority:priority,id:id}]]);
+        setTask('');
+        setId(taskData.length+1);
+    };
+
+    useEffect(() => {
+        localStorage.setItem("taskData",JSON.stringify(taskData));
+    },[taskData]);
+
   return (
     <main>
         <section>
@@ -12,42 +50,61 @@ export function ProductivityCalendar() {
         <section>
             <h3 id="newtask">Add new task</h3>
             <form id="newTask" action="/ProductivityCalendar">
-                <textarea className="form-control" id="task" rows="3"></textarea>
-                <label htmlFor="time">Estimated time:</label>
-                <select id="times" name="time">
-                    <option value="choose">Choose ETA</option>
-                    <option value="5min">5 minutes</option>
-                    <option value="15min">15 minutes</option>
-                    <option value="30min">30 minutes</option>
-                    <option value="45min">45 minutes</option>
-                    <option value="1hr"> 1 hour</option>
-                    <option value="1.5hr"> 1.5 hours</option>
-                    <option value="2hr"> 2 hours</option>
-                    <option value="2.5hr"> 2.5 hous</option>
-                    <option value="3hr"> 3 hours</option>
-                    <option value="4hr"> 4 hours</option>
-                    <option value="5hr"> 5 hours</option>
-                    <option value="6hr"> 6 hours</option>
-                    <option value="7hr"> 7 hours</option>
-                    <option value="8hr"> 8 hours</option>
-                    <option value="Allday"> All day</option>
+                <textarea className="form-control" id="task" rows="3" onChange={handleTask}></textarea>
+                <label htmlFor="time" ref={timeRef} onChange={handleTime}>Estimated time:</label>
+                <select id="times" name="time" value={time}>
+                    <option>Choose ETA</option>
+                    <option>5 minutes</option>
+                    <option>15 minutes</option>
+                    <option>30 minutes</option>
+                    <option>45 minutes</option>
+                    <option> 1 hour</option>
+                    <option> 1.5 hours</option>
+                    <option> 2 hours</option>
+                    <option> 2.5 hous</option>
+                    <option> 3 hours</option>
+                    <option> 4 hours</option>
+                    <option> 5 hours</option>
+                    <option> 6 hours</option>
+                    <option> 7 hours</option>
+                    <option> 8 hours</option>
+                    <option> All day</option>
                 </select><br/>
-                <label htmlFor="priority">Priority Level:</label>
-                <select id="lvlpriority" name="priority">
-                    <option value="choose">Choose priority level</option>
-                    <option value="low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                    <option value="Extreme">Extreme</option>
+                <label htmlFor="priority" ref={priorityRef} onChange={handlePriority}>Priority Level:</label>
+                <select id="lvlpriority" name="priority" value={priority}>
+                    <option>Choose priority level</option>
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                    <option>Extreme</option>
                 </select><br/> {/*Any new tasks that are created will send an alert letting people know that another user has added tasks to there calendar.*/}
-                <button id="buttonButton" type="submit">Submit</button>
+                <button id="buttonButton" type="submit" onClick={handleSubmit}>Submit</button>
             </form>
         </section>
         <section>
-            <table>
+            <table id="productivityTable">
                 <thead>
-                    <th>Tasks to do:</th>
+                    <tr>
+                        <th id="topRow" colSpan="3">Tasks to do:</th>
+                    </tr>
+                    <tr>
+                        <th class="col1">Task</th>
+                        <th class="col2">Estimated Time</th>
+                        <th class="col3">Finished?</th>
+                    </tr>
+                    <tbody>
+                    {taskData.map((data,id) => 
+                        <tr key={id}>
+                            <td><a href={data.task}>{data.task}</a></td>
+                            <td>{data.time}</td>
+                            <td><input className='checkBox' type="checkbox"/></td>
+                        </tr>
+                    )}
+                    </tbody>
+                    
                 </thead>
+
+                
             </table>
         </section>
         <section>

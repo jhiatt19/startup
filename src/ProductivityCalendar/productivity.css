@@ -36,3 +36,26 @@ section {
 #newtask {
     margin-bottom: 1em;
 }
+
+#productivityTable{
+    table-layout:fixed;
+}
+
+.col1{
+    width:75%;
+}
+.col2{
+    width:15%;
+}
+.col3{
+    width:10%
+}
+
+th {
+    background-color: rgb(153, 147, 147);
+    color:white;
+}
+
+#topRow {
+    background-color: rgba(122,179,225,255);
+}
