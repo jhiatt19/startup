@@ -3,9 +3,9 @@ import { useNavigate} from 'react-router-dom';
 import {nanoid} from 'nanoid';
 import './signupPage.css';
 
+const initialUsername = 'Username';
+const initialEmail = 'Enter your email';
 export function SignUpPage() {
-  const initialUsername = 'Username';
-  const initialEmail = 'Enter your email';
   const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(initialEmail);
@@ -72,7 +72,7 @@ export function SignUpPage() {
     }
     const userNameTaken = JSON.parse(localStorage.getItem("userData" || '[]'));
 
-    if (userNameTaken.some((data => data.username === username))){
+    if (userNameTaken !== '' && userNameTaken.some((data => data.username === username))){
       setError('Username already taken, please provide another one');
       setIsError(true);
       return;
@@ -80,11 +80,13 @@ export function SignUpPage() {
     
     setAuthCode(nanoid());
     setObjectAdded(false);
-    setUsername(initialUsername);
-    setPassword('');
-    setEmail(initialEmail);
+    // setUsername(initialUsername);
+    // setPassword('');
+    // setEmail(initialEmail);
     navigate("/Home");
   };
+
+  //&& username !== initialUsername && password !== ''
 
   useEffect(() => {
     if(authCode !== '' && !objectAdded){

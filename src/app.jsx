@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './all.css';
 
@@ -33,31 +33,16 @@ function NavigationBar(){
 //         const hideNavBar = hideNavBarPages.includes(location.pathname);
 //         return hideNavBar;
 // }
-
+localStorage.setItem("userData",JSON.stringify(''));
+localStorage.setItem("user",JSON.stringify(''));
 export default function App(){
-
-    const handleLogOut = () => {
-        const navigate = useNavigate();
-        const userData = JSON.parse(localStorage.getItem("userData"));
-        const code = JSON.parse(localStorage.getItem("authCode"));
-        if (code === ''){
-            navigate('/');
-        }
-        else {
-            userData.map((data,authCode) => {
-                if (data.authCode === authCode){
-                    return {...data,authCode:''};
-                }
-                else {
-                    return data;
-                }
-            });
-        };
-        localStorage.setItem("userData",userData);
+    const username = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("userData" || '[]'));
+    const [authCode, setAuthCode] = useState('');
+    if (user.username === username){
+        setAuthCode(user.authCode);
     }
-    
-    
-
+    const authState = authCode ? true : false;
     return ( 
         <BrowserRouter>
             <div>
@@ -67,11 +52,11 @@ export default function App(){
                 </form></NavLink>
                 <NavLink to='./'><h1>Won Stop</h1></NavLink>
                 <NavLink to='./'><form action='./'>
-                    <button id="logOut" onClick={handleLogOut}>Log out</button>
+                    <button id="logOut" to='./'>Log out</button>
                 </form></NavLink>
             </header>
-            {/* {findLocation() && <NavigationBar />} */}
-            <NavigationBar />
+            {authState && <NavigationBar />}
+           
             <main>
                 <Routes>
                     <Route path='/' element={<Login />} exact />

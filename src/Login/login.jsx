@@ -1,18 +1,13 @@
 import React from 'react';
 import './login.css';
-import { NavLink } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 //import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 //import { SignUpPage } from './SignUpPage/SignUpPage';
 
 export function Login() {
   return (
-    //<BrowserRouter>
     <main>
-        {/* <Routes>
-            <Route path='/Home' element={<Home />} />
-            <Route path='/SignUpPage' element={<SignUpPage />} />
-        </Routes> */}
         <p>Please login below</p>
         <section id="login">
             <form action="/Home">
@@ -25,6 +20,5 @@ export function Login() {
             <p>Don't have an account? Create one <a id="signUplink" href='/SignUpPage'>here</a></p>
         </section>
     </main>
-    //</BrowserRouter>
   );
 }
