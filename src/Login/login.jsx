@@ -72,22 +72,29 @@ export function Login() {
     navigate("/Home");
   };
 
-  function updateAuthCode(userData,index,authCode){
-    userData[index].authCode = authCode;
-    setUserData(...userData,[userData]);
-  };
+  const updateAuthCode = (index) => {
+    setUserData((userData) => { 
+      const updatedUserData = userData.map((user,idx) => {
+        if (idx === index){
+          return {...user,authCode:authCode};
+        };
+        return user;
+      });
+      return updatedUserData;
+    });
+  return userData;
+};
 
   useEffect(() => {
     if (authCode !== '' && authState === "Authenticated"){
       localStorage.setItem("authState",JSON.stringify({authStatus:authState,authCode:authCode}));
-      ;
     };
   },[authCode, authState]);
 
     useEffect(() => {
       if (authCode !== '' && !objectChanged){
-        updateAuthCode(userData,index,authCode)
-      localStorage.setItem("userData",JSON.stringify(userData));
+        updateAuthCode(index);
+        localStorage.setItem("userData",JSON.stringify(userData));
       };
       setObjectChanged(true);
     }, [userData,index,authCode]);
@@ -100,6 +107,7 @@ export function Login() {
       navigate('/');
     }
   },[]);
+
   return (
     <main>
         <p>Please login below</p>
