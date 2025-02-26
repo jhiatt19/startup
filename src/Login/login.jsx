@@ -7,15 +7,13 @@ import { SignUpPage } from '../SignUpPage/SignUpPage';
 
 //import { SignUpPage } from './SignUpPage/SignUpPage';
 
-export function Login() {
+export function Login({setAuthState, setAuthCode}) {
   const [authStatus,setAuthStatus] = useState(() => { 
     const auth = localStorage.getItem("authState");
     return auth ? JSON.parse(auth) : {authCode:'',authState:''};
   });
   const [username,setUsername] = useState('');
   const [password,setPassword] = useState('');
-  const [authCode,setAuthCode] = useState(authStatus?.authCode || '');
-  const [authState,setAuthState] = useState(authStatus?.authStatus  || '');
   const [userData, setUserData] = useState(() => {
     const storedTable = localStorage.getItem("userData");
     return storedTable ? JSON.parse(storedTable) : [];
@@ -76,27 +74,11 @@ export function Login() {
         
         setAuthCode(token);
         setAuthState("Authenticated");
+        navigate("/Home");
       };
       
     };
-    
-    navigate("/Home");
   };
-
-  useEffect(() => {
-    if (authCode !== '' && authState === "Authenticated"){
-      localStorage.setItem("authState",JSON.stringify({authStatus:authState,authCode:authCode}));
-    };
-  },[userData, username, authCode, authState]);
-
-  useEffect(() => {
-    if (authState === "Authenticated" && authCode){
-      navigate("/Home");
-    }
-    else {
-      navigate('/');
-    }
-  },[]);
 
   return (
     <main>

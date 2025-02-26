@@ -37,6 +37,8 @@ export default function App(){
         return storedTable ? JSON.parse(storedTable) : [];
       });
     
+    const navigate = useNavigate();
+    
     const handleLogOut = () => {
         setUserData((userData) => {
             const indexNew = userData.findIndex((u) => u.authCode === authCode);
@@ -60,42 +62,50 @@ export default function App(){
         localStorage.setItem("userData",JSON.stringify(userData));
     },[userData]);
 
+    useEffect(() => {
+        if (authState === "Authenticated" && authCode){
+          navigate("/Home");
+        }
+        else {
+          navigate('/');
+        }
+      },[authState, authCode, navigate]);
+
+    console.log("authState: ", authState);
     return ( 
-        <BrowserRouter>
-            <div>
-            <header>
-                <NavLink to='./Home'><form action='./Home'>
-                    <button id="profile">Welcome, user!</button>
-                </form></NavLink>
-                <NavLink to='./'><h1>Won Stop</h1></NavLink>
-                <NavLink to='./'>
-                <form>
-                    <button id="logOut" onClick={handleLogOut}>Log out</button>
-                </form>
-                </NavLink>
-            </header>
-            <nav>
-                {authState === "Authenticated" && <NavigationBar />}
-            </nav>
-            <main>
-                <Routes>
-                    <Route path='/' element={<Login />} exact />
-                    <Route path='/Home' element={<Home />} />
-                    <Route path='/PDFextractor' element={<PDFextractor />} />
-                    <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
-                    <Route path='/Calendar' element={<Calendar />} />
-                    <Route path='/Alarms' element={<Alarms />} />
-                    <Route path='/URLholder' element={<URLholder />} />
-                    <Route path='/SignUpPage' element={<SignUpPage />} />
-                    <Route path='*' element={<NotFound />} />
-                </Routes>
-            </main>
-            <footer>
-                <span id="authorName">Author Name(s): Jordan Hiatt</span>
-                <NavLink id="github"to="https://github.com/jhiatt19/startup">Github</NavLink>
-            </footer>
-        </div>
-    </BrowserRouter>
+        <div>
+        <header>
+            <NavLink to='./Home'><form action='./Home'>
+                <button id="profile">Welcome, user!</button>
+            </form></NavLink>
+            <NavLink to='./'><h1>Won Stop</h1></NavLink>
+            <NavLink to='./'>
+            <form>
+                <button id="logOut" onClick={handleLogOut}>Log out</button>
+            </form>
+            </NavLink>
+        </header>
+        <nav>
+            {authState === "Authenticated" && <NavigationBar />}
+        </nav>
+        <main>
+            <Routes>
+                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} />} exact />
+                <Route path='/Home' element={<Home />} />
+                <Route path='/PDFextractor' element={<PDFextractor />} />
+                <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
+                <Route path='/Calendar' element={<Calendar />} />
+                <Route path='/Alarms' element={<Alarms />} />
+                <Route path='/URLholder' element={<URLholder />} />
+                <Route path='/SignUpPage' element={<SignUpPage />} />
+                <Route path='*' element={<NotFound />} />
+            </Routes>
+        </main>
+        <footer>
+            <span id="authorName">Author Name(s): Jordan Hiatt</span>
+            <NavLink id="github"to="https://github.com/jhiatt19/startup">Github</NavLink>
+        </footer>
+    </div>
     )
 }
 
