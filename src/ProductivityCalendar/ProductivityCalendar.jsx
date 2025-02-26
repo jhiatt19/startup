@@ -44,6 +44,13 @@ export function ProductivityCalendar() {
             </form>
         </section>
         <section>
+            <table>
+                <thead>
+                    <th>Tasks to do:</th>
+                </thead>
+            </table>
+        </section>
+        <section>
             <h3>Calendar</h3>{/*The calendar will be a 3rd party service call*/}
             <table>
                 <thead>

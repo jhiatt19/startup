@@ -17,6 +17,10 @@ a {
     text-decoration: none;
 }
 
+#homeNav {
+    cursor: pointer;
+}
+
 input[type="text"]:focus{
     caret-color: black;
     animation: blinky 1s steps(1) infinite;

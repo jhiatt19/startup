@@ -2,12 +2,6 @@ import React from 'react';
 import './calendar.css';
 
 export function Calendar() {
-    const eventAlert = () => {
-        setInterval(() => {
-            const event = "CS240 deliverable due!";
-            dispatch
-        })
-    } 
   return (
     <main>
         <div id="calendar">
