@@ -33,16 +33,14 @@ function NavigationBar(){
 //         const hideNavBar = hideNavBarPages.includes(location.pathname);
 //         return hideNavBar;
 // }
-localStorage.setItem("userData",JSON.stringify(''));
-localStorage.setItem("user",JSON.stringify(''));
+
 export default function App(){
-    const username = JSON.parse(localStorage.getItem("user"));
-    const user = JSON.parse(localStorage.getItem("userData" || '[]'));
-    const [authCode, setAuthCode] = useState('');
-    if (user.username === username){
-        setAuthCode(user.authCode);
-    }
-    const authState = authCode ? true : false;
+    const [auth, setAuth] = useState(() => {
+        const data = localStorage.getItem("authState");
+        return data ? JSON.parse(data) : '[]';
+    });
+    const [authCode, setAuthCode] = useState(auth.authCode);
+    const [authState,setAuthState] = useState(auth.authState);
     return ( 
         <BrowserRouter>
             <div>
@@ -56,7 +54,6 @@ export default function App(){
                 </form></NavLink>
             </header>
             {authState && <NavigationBar />}
-           
             <main>
                 <Routes>
                     <Route path='/' element={<Login />} exact />

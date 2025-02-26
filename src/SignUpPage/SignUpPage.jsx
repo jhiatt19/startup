@@ -105,7 +105,7 @@ export function SignUpPage() {
   }, [userData]);
 
   useEffect(() => {
-    localStorage.setItem("authCode",JSON.stringify(authCode));
+    localStorage.setItem("authState",JSON.stringify({authStatus:"Authenticated",authCode:authCode}));
   },[authCode]);
 
   return (
