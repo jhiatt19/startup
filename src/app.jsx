@@ -27,37 +27,40 @@ function NavigationBar(){
     )
 };
 
-// function findLocation(){
-//         const location = useLocation();
-//         const hideNavBarPages = ['/', '/SignUpPage'];
-//         const hideNavBar = hideNavBarPages.includes(location.pathname);
-//         return hideNavBar;
-// }
-
 export default function App(){
     const [auth, setAuth] = useState(() => {
         const data = localStorage.getItem("authState");
-        return data ? JSON.parse(data) : '[]';
+        return data ? JSON.parse(data) : {authCode:'',authState:''};
     });
     const [authCode, setAuthCode] = useState(auth.authCode);
     const [authState,setAuthState] = useState(auth.authState);
-
-    const handleLogOut = () => {
-        const userData = JSON.parse(localStorage.getItem("userData"));
-        const userIndex = userData.findIndex(user => user.authCode === authCode)
-        if (userIndex !== -1){
-            userData[userIndex].authCode = '';
-            setAuthCode('');
-            setAuthState('Not Authenticated');
-            localStorage.setItem("userData",JSON.stringify(userData));
-        };
-    };
+    const [userData, setUserData] = useState(() => {
+        const storedTable = localStorage.getItem("userData");
+        return storedTable ? JSON.parse(storedTable) : [];
+      });
     
+    const handleLogOut = () => {
+        setUserData((userData) => {
+            const indexNew = userData.findIndex((u) => u.authCode === authCode);
+            if (indexNew !== -1){
+              const newUserData = [...userData];
+              newUserData[indexNew] = {
+                ...newUserData[indexNew],
+                authCode: '',
+              };
+              return newUserData;
+            };
+            return userData;
+          });
+        
+        setAuthCode('');
+        setAuthState('Not Authenticated');
+        localStorage.setItem("authState",JSON.stringify({authCode:'',authStatus:"Not Authenticated"}));
+    };
+
     useEffect(() => {
-        if(authCode === '' && authState === "Not Authenticated"){
-            localStorage.setItem("authState",JSON.stringify({authCode:authCode,authStatus:authState}));
-        };
-    },[authCode, authState]);
+        localStorage.setItem("userData",JSON.stringify(userData));
+    },[userData]);
 
     return ( 
         <BrowserRouter>
@@ -67,11 +70,13 @@ export default function App(){
                     <button id="profile">Welcome, user!</button>
                 </form></NavLink>
                 <NavLink to='./'><h1>Won Stop</h1></NavLink>
-                <NavLink to='./'><form action='./'>
-                    <button id="logOut" to='./' onClick={handleLogOut}>Log out</button>
-                </form></NavLink>
+                <NavLink to='./'>
+                <form>
+                    <button id="logOut" onClick={handleLogOut}>Log out</button>
+                </form>
+                </NavLink>
             </header>
-            {authState && <NavigationBar />}
+            {authState === "Authenticated" && <NavigationBar />}
             <main>
                 <Routes>
                     <Route path='/' element={<Login />} exact />

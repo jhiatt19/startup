@@ -10,20 +10,18 @@ import { SignUpPage } from '../SignUpPage/SignUpPage';
 export function Login() {
   const [authStatus,setAuthStatus] = useState(() => { 
     const auth = localStorage.getItem("authState");
-    return auth ? JSON.parse(auth) : '[]';
+    return auth ? JSON.parse(auth) : {authCode:'',authState:''};
   });
   const [username,setUsername] = useState('');
   const [password,setPassword] = useState('');
-  const [authCode,setAuthCode] = useState(authStatus.authCode);
-  const [authState,setAuthState] = useState(authStatus.authStatus);
+  const [authCode,setAuthCode] = useState(authStatus?.authCode || '');
+  const [authState,setAuthState] = useState(authStatus?.authStatus  || '');
   const [userData, setUserData] = useState(() => {
     const storedTable = localStorage.getItem("userData");
     return storedTable ? JSON.parse(storedTable) : [];
   });
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
-  const [objectChanged,setObjectChanged] = useState(false);
-  const [index,setIndex] = useState('');
   const navigate = useNavigate();
 
   const handleUsername = (e) => {
@@ -34,7 +32,7 @@ export function Login() {
     setPassword(e.target.value);
   };
 
-  const handleSignUpPageClick = (e) => {
+  const handleSignUpPageClick = () => {
     navigate("/SignUpPage");
   };
 
@@ -49,7 +47,7 @@ export function Login() {
     }
 
     const dataIndex = userData.findIndex(data => data.username === username);
-    if (userData !== '' && dataIndex === -1){
+    if (userData.length > 0 && dataIndex === -1){
       setError('Incorrect username');
       setIsError(true);
       return;
@@ -63,41 +61,34 @@ export function Login() {
       else{
         setAuthCode(nanoid());
         setAuthState("Authenticated");
-        setIndex(dataIndex);
-        userData[dataIndex].authCode = 'Hi';
-        console.log(userData[dataIndex].authCode);
+        updateAuthCode();
       };
     };
     
     navigate("/Home");
   };
 
-  const updateAuthCode = (index) => {
-    setUserData((userData) => { 
-      const updatedUserData = userData.map((user,idx) => {
-        if (idx === index){
-          return {...user,authCode:authCode};
+  const updateAuthCode = () => { 
+      setUserData((userData) => {
+        const indexNew = userData.findIndex((u) => u.username === username);
+        if (indexNew !== -1){
+          const newUserData = [...userData];
+          newUserData[indexNew] = {
+            ...newUserData[indexNew],
+            authCode: authCode,
+          };
+          return newUserData;
         };
-        return user;
+        return userData;
       });
-      return updatedUserData;
-    });
-  return userData;
-};
+    };
 
   useEffect(() => {
     if (authCode !== '' && authState === "Authenticated"){
       localStorage.setItem("authState",JSON.stringify({authStatus:authState,authCode:authCode}));
+      localStorage.setItem("userData",JSON.stringify(userData))
     };
-  },[authCode, authState]);
-
-    useEffect(() => {
-      if (authCode !== '' && !objectChanged){
-        updateAuthCode(index);
-        localStorage.setItem("userData",JSON.stringify(userData));
-      };
-      setObjectChanged(true);
-    }, [userData,index,authCode]);
+  },[userData, username, authCode, authState]);
 
   useEffect(() => {
     if (authState === "Authenticated" && authCode){
