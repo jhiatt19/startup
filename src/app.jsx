@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './all.css';
+import {nanoid} from 'nanoid';
 
 import { BrowserRouter, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Home } from './Home/home';
@@ -28,9 +29,10 @@ function NavigationBar(){
 };
 
 export default function App(){
+    const initalText = "Continue as Guest"
     const [auth, setAuth] = useState(() => {
         const data = localStorage.getItem("authState");
-        return data ? JSON.parse(data) : {authCode:'',authState:''};
+        return data ? JSON.parse(data) : {username:'',authCode:'',authState:''};
     });
     const [authCode, setAuthCode] = useState(auth.authCode);
     const [authState,setAuthState] = useState(auth.authState);
@@ -38,24 +40,35 @@ export default function App(){
         const storedTable = localStorage.getItem("userData");
         return storedTable ? JSON.parse(storedTable) : [];
       });
+    const [username,setUsername] = useState(userData.username || 'Guest');
+    const [buttonText,setButtonText] = useState(initalText);
+    const navigate = useNavigate();
     
     const handleLogOut = () => {
         setUserData((userData) => {
             const indexNew = userData.findIndex((u) => u.authCode === authCode);
-            if (indexNew !== -1){
-              const newUserData = [...userData];
-              newUserData[indexNew] = {
-                ...newUserData[indexNew],
-                authCode: '',
-              };
-              return newUserData;
+            if (userData[indexNew].username === 'Guest'){
+                const newUserData = userData.filter(
+                    (user) => user.authCode !== userData[indexNew].authCode
+                );
+                return newUserData;
+            }
+            else {
+                if (indexNew !== -1){
+                const newUserData = [...userData];
+                newUserData[indexNew] = {
+                    ...newUserData[indexNew],
+                    authCode: '',
+                };
+                return newUserData;
+                };
+                return userData;
             };
-            return userData;
-          });
+        });
         
         setAuthCode('');
         setAuthState('Not Authenticated');
-        localStorage.setItem("authState",JSON.stringify({authCode:'',authStatus:"Not Authenticated"}));
+        localStorage.setItem("authState",JSON.stringify({username:'', authCode:'', authStatus:"Not Authenticated"}));
     };
 
     useEffect(() => {
@@ -70,13 +83,24 @@ export default function App(){
           navigate('/');
         }
       };
-
-    console.log("authState: ", authState);
+    
+    const handleGuest = () => {
+        const token = nanoid();
+        setUsername("Guest")
+        setAuthState("Authenticated")
+        setAuthCode(token);
+        localStorage.setItem("authState",JSON.stringify({username:username,authCode:token,authStatus:"Authenticated"}));
+        setButtonText("Welcome " + username + "!");
+        if (username === 'Guest'){
+            setUserData([...userData, {username:"Guest", authCode:token}]);
+        }
+        navigate("/home");
+    }
     return ( 
         <div>
         <header>
             <NavLink to='./Home'><form action='./Home'>
-                <button id="profile">Welcome, user!</button>
+                <button id="profile" onClick={handleGuest}>{buttonText}</button>
             </form></NavLink>
             <h1><a id="homeNav" onClick={handleHome}>Won Stop</a></h1>
             <NavLink to='./'>
