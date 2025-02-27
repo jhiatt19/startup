@@ -5,18 +5,13 @@ import './signupPage.css';
 
 const initialUsername = 'Username';
 const initialEmail = 'Enter your email';
-export function SignUpPage() {
+export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
   const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(initialEmail);
-  const [userData, setUserData] = useState(() => {
-      const storedTable = localStorage.getItem("userData");
-        return storedTable ? JSON.parse(storedTable) : [];
-    });
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const [isError, setIsError] = useState(false);
-  const [authCode,setAuthCode] = useState ('');
+  const [isError, setIsError] = useState(false);;
   const [objectAdded,setObjectAdded] = useState(false);
 
   const handleBlurUser = () => {
@@ -79,7 +74,9 @@ export function SignUpPage() {
       };
     
     setAuthCode(nanoid());
+    setAuthState("Authenticated");
     setObjectAdded(false);
+    setButtonText("Welcome " + username + "!");
     // setUsername(initialUsername);
     // setPassword('');
     // setEmail(initialEmail);

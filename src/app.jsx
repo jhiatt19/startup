@@ -45,9 +45,10 @@ export default function App(){
     const navigate = useNavigate();
     
     const handleLogOut = () => {
+        const authstate = JSON.parse(localStorage.getItem("authState"))
         setUserData((userData) => {
             const indexNew = userData.findIndex((u) => u.authCode === authCode);
-            if (userData[indexNew].username === 'Guest'){
+            if (authstate.username === 'Guest'){
                 const newUserData = userData.filter(
                     (user) => user.authCode !== userData[indexNew].authCode
                 );
@@ -68,6 +69,7 @@ export default function App(){
         
         setAuthCode('');
         setAuthState('Not Authenticated');
+        setButtonText("Continue as Guest");
         localStorage.setItem("authState",JSON.stringify({username:'', authCode:'', authStatus:"Not Authenticated"}));
     };
 
@@ -112,14 +114,14 @@ export default function App(){
         {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} />} exact />
+                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
                 <Route path='/Home' element={<Home />} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
                 <Route path='/Calendar' element={<Calendar />} />
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />
-                <Route path='/SignUpPage' element={<SignUpPage />} />
+                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </main>

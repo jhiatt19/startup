@@ -6,17 +6,13 @@ import {nanoid} from 'nanoid';
 
 //import { SignUpPage } from './SignUpPage/SignUpPage';
 
-export function Login({setAuthState, setAuthCode}) {
+export function Login({setAuthState, setAuthCode, setButtonText, userData, setUserData}) {
   const [authStatus,setAuthStatus] = useState(() => { 
     const auth = localStorage.getItem("authState");
     return auth ? JSON.parse(auth) : {authCode:'',authState:''};
   });
   const [username,setUsername] = useState('');
   const [password,setPassword] = useState('');
-  const [userData, setUserData] = useState(() => {
-    const storedTable = localStorage.getItem("userData");
-    return storedTable ? JSON.parse(storedTable) : [];
-  });
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
@@ -73,6 +69,7 @@ export function Login({setAuthState, setAuthCode}) {
         
         setAuthCode(token);
         setAuthState("Authenticated");
+        setButtonText("Welcome " + username + "!");
         navigate("/Home");
       };
       
