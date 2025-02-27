@@ -114,7 +114,7 @@ export default function App(){
         {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
+                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
                 <Route path='/Home' element={<Home />} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />

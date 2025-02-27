@@ -3,6 +3,30 @@ import {nanoid} from 'nanoid';
 import './productivity.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+function BannerMessage({message, onClose}) {
+    return (
+        <div className="banner-alert">
+            <span>{message}</span>
+            <button onClick={onClose}>x</button>
+        </div>
+    );
+};
+
+// function CreateMessage({handleCloseAlert,alerts}) {
+//     return (
+//         <div className='banner-container'>
+//             {alerts.map((alert) => (
+//                 <BannerMessage
+//                     key={alert.id}
+//                     message={alert.message}
+//                     onClose={() => handleCloseAlert(alert.id)}
+//                 />
+//             ))}
+            
+//         </div>
+//     );
+// };
+
 export function ProductivityCalendar() {
     const [task,setTask] = useState('');
     const [time, setTime] = useState('Choose Est time');
@@ -12,7 +36,14 @@ export function ProductivityCalendar() {
         return storedTable ? JSON.parse(storedTable) : [];
     });
     const [checkItems, setCheckItems] = useState([]);
+    const [alerts,setAlerts] = useState([]);
+    const [id, setId] = useState(1);
+    const taskCompleteMessage = " finished a task!";
 
+    const handleCloseAlert = (id) => {
+        setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
+    };
+    
     const handlePriority = (e) => {
         setPriority(e.target.value);
     };
@@ -55,6 +86,12 @@ export function ProductivityCalendar() {
         const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
         setTaskData(taskData => taskData.filter(row => !removeIDs.includes(row.id)));
         setCheckItems([]);
+
+        // const user = JSON.parse(localStorage.getItem("authState"));
+        // setAlerts([
+        //     {id:id, message:user.username + taskCompleteMessage}
+        // ])
+        // setId(id+1);
     };
 
     useEffect(() => {
@@ -129,6 +166,7 @@ export function ProductivityCalendar() {
                 </tbody>
             </table>
             <button type="button" id="buttonButton" onClick={handleEdit}>Remove Checked Boxes</button>
+            {/* <CreateMessage alerts={alerts} handleCloseAlert={handleCloseAlert}/> */}
         </section>
         <section>
             <h3>Calendar</h3>{/*The calendar will be a 3rd party service call*/}
