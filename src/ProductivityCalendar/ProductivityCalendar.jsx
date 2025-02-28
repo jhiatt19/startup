@@ -39,6 +39,9 @@ export function ProductivityCalendar() {
     const [alerts,setAlerts] = useState([]);
     const [displayAlert, setDisplayAlert] = useState(false);
     const user = JSON.parse(localStorage.getItem("authState"));
+    const names = ["Max ", "Billy ", "Hannah ", "Kate "];
+    const finStart = ["created ", "finished "];
+    const numComplete = [1, 2, 3, 4, 5, 6];
 
     const handleCloseAlert = (id) => {
         setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
@@ -111,7 +114,22 @@ export function ProductivityCalendar() {
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setAlerts((prevAlerts) => [...prevAlerts, {id:nanoid(),message:"Billy finished a task!"}]);
+            const randomName = names[Math.floor(Math.random()*names.length)];
+            const randomfinStart = finStart[Math.floor(Math.random()*finStart.length)];
+            const randomnumComplete = numComplete[Math.floor(Math.random()*numComplete.length)];
+            let uniqueMessage = '';
+            if (randomfinStart === "created "){
+                uniqueMessage = randomName + randomfinStart + "a task.";
+            }
+            else {
+                if (randomnumComplete === 1) {
+                    uniqueMessage = randomName + randomfinStart + "a task!";
+                }
+                else {
+                    uniqueMessage = randomName + randomfinStart + randomnumComplete + " tasks!";
+                }
+            };
+            setAlerts((prevAlerts) => [...prevAlerts, {id:nanoid(),message:uniqueMessage}]);
             setDisplayAlert(true);
         },10000);
 

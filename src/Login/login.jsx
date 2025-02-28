@@ -6,11 +6,7 @@ import {nanoid} from 'nanoid';
 
 //import { SignUpPage } from './SignUpPage/SignUpPage';
 
-export function Login({setAuthState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
-  const [authStatus,setAuthStatus] = useState(() => { 
-    const auth = localStorage.getItem("authState");
-    return auth ? JSON.parse(auth) : {authCode:'',authState:''};
-  });
+export function Login({setButtonText, userData, setUserData}) {
   const [username,setUsername] = useState('');
   const [password,setPassword] = useState('');
   const [error, setError] = useState('');
@@ -66,9 +62,6 @@ export function Login({setAuthState, setAuthCode, authCode, setButtonText, userD
           };
           return userData;
         });
-        
-        setAuthCode(token);
-        setAuthState("Authenticated");
         setButtonText("Welcome " + username + "!");
         navigate("/Home");
       };
@@ -77,8 +70,8 @@ export function Login({setAuthState, setAuthCode, authCode, setButtonText, userD
   };
 
   useEffect(() => {
-      localStorage.setItem("authState",JSON.stringify({username:username,authStatus:"Authenticated",authCode:authCode}));
-    },[authCode]);
+      localStorage.setItem("authState",JSON.stringify({username:username,authStatus:"Authenticated",authCode:userData.authCode}));
+    },[userData]);
 
   return (
     <main>

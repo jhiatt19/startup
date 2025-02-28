@@ -5,7 +5,7 @@ import './signupPage.css';
 
 const initialUsername = 'Username';
 const initialEmail = 'Enter your email';
-export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
+export function SignUpPage({setButtonText, userData, setUserData}) {
   const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(initialEmail);
@@ -13,6 +13,7 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);;
   const [objectAdded,setObjectAdded] = useState(false);
+  const [authCode,setAuthCode] = useState('');
 
   const handleBlurUser = () => {
     if (username === ''){
@@ -72,14 +73,9 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
       setIsError(true);
       return;
       };
-    
     setAuthCode(nanoid());
-    setAuthState("Authenticated");
     setObjectAdded(false);
     setButtonText("Welcome " + username + "!");
-    // setUsername(initialUsername);
-    // setPassword('');
-    // setEmail(initialEmail);
     navigate("/Home");
   };
 
