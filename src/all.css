@@ -107,8 +107,6 @@ footer #authorName {
 }
 
 footer {
-    position: sticky;
-    bottom: 0em;
     display:flex;
     justify-content: space-between;
     border: 0px, solid, black;
@@ -152,6 +150,10 @@ nav a {
 nav a:hover {
     text-decoration:underline;
     font-weight: 700;
+}
+
+p {
+    width:75%;
 }
 
 img {

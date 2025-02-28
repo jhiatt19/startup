@@ -40,14 +40,7 @@ export default function App(){
         const storedTable = localStorage.getItem("userData");
         return storedTable ? JSON.parse(storedTable) : [];
       });
-    const [username,setUsername] = useState(() => {
-        if (userData.username === '') {
-            return 'Guest';
-        }
-        else {
-            return userData.username;
-        };
-    });
+    const [username,setUsername] = useState(userData.username || 'Guest');
     const [buttonText,setButtonText] = useState(initalText);
     const navigate = useNavigate();
     
@@ -73,6 +66,9 @@ export default function App(){
                 return userData;
             };
         });
+        
+        setAuthCode('');
+        setAuthState('Not Authenticated');
         setButtonText("Continue as Guest");
         localStorage.setItem("authState",JSON.stringify({username:'', authCode:'', authStatus:"Not Authenticated"}));
     };
@@ -82,8 +78,7 @@ export default function App(){
     },[userData]);
 
     const handleHome = () => {
-        const authCheck = JSON.parse(localStorage.getItem("authState"));
-        if (authCheck.authStatus === "Authenticated" && authCheck.authCode !== ''){
+        if (authState === "Authenticated" && authCode){
           navigate("/Home");
         }
         else {
@@ -93,22 +88,15 @@ export default function App(){
     
     const handleGuest = () => {
         const token = nanoid();
-        useEffect(() => {
-            localStorage.setItem("authState",JSON.stringify({username:username,authCode:token,authStatus:"Authenticated"}));
-        },[])
+        setUsername("Guest")
+        setAuthState("Authenticated")
+        setAuthCode(token);
+        localStorage.setItem("authState",JSON.stringify({username:username,authCode:token,authStatus:"Authenticated"}));
         setButtonText("Welcome " + username + "!");
         if (username === 'Guest'){
             setUserData([...userData, {username:"Guest", authCode:token}]);
         }
         navigate("/home");
-    }
-
-    function handleAuth(){
-        const authCheck = JSON.parse(localStorage.getItem("authState"));
-        if (authCheck.authStatus === "Authenticated" && authCheck.authCode !== ''){
-            return true;
-        }
-        return false;
     }
     return ( 
         <div>
@@ -123,7 +111,7 @@ export default function App(){
             </form>
             </NavLink> <br/>
         </header>
-        {handleAuth() && <NavigationBar />}
+        {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
                 <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
