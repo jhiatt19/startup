@@ -27,23 +27,34 @@ function NavigationBar(){
         </nav>
     )
 };
-const check = localStorage.getItem("authState")
-if (check === ''){
-    localStorage.setItem("authState",JSON.stringify({username:'',authCode:'',authStatus:''}));
-};
+
 export default function App(){
     const initalText = "Continue as Guest"
+    const [auth, setAuth] = useState(() => {
+        const data = localStorage.getItem("authState");
+        return data ? JSON.parse(data) : {username:'',authCode:'',authState:''};
+    });
+    const [authCode, setAuthCode] = useState(auth.authCode);
+    const [authState,setAuthState] = useState(auth.authState);
     const [userData, setUserData] = useState(() => {
         const storedTable = localStorage.getItem("userData");
         return storedTable ? JSON.parse(storedTable) : [];
       });
+    const [username,setUsername] = useState(() => {
+        if (userData.username === '') {
+            return 'Guest';
+        }
+        else {
+            return userData.username;
+        };
+    });
     const [buttonText,setButtonText] = useState(initalText);
     const navigate = useNavigate();
     
     const handleLogOut = () => {
         const authstate = JSON.parse(localStorage.getItem("authState"))
         setUserData((userData) => {
-            const indexNew = userData.findIndex((u) => u.authCode === authstate.authCode);
+            const indexNew = userData.findIndex((u) => u.authCode === authCode);
             if (authstate.username === 'Guest'){
                 const newUserData = userData.filter(
                     (user) => user.authCode !== userData[indexNew].authCode
@@ -68,13 +79,6 @@ export default function App(){
 
     useEffect(() => {
         localStorage.setItem("userData",JSON.stringify(userData));
-        const authenticated = userData.authCode;
-        if (authenticated !== ''){
-            localStorage.setItem("authState",JSON.stringify({username:userData.username, authCode:authenticated, authStatus:"Authenticated"}));
-        }
-        else {
-            localStorage.setItem("authState",JSON.stringify({username:userData.username, authCode:authenticated, authStatus:"Not Authenticated"}));
-        }
     },[userData]);
 
     const handleHome = () => {
@@ -89,9 +93,13 @@ export default function App(){
     
     const handleGuest = () => {
         const token = nanoid();
-        localStorage.setItem("authState",JSON.stringify({username:"Guest", authCode:token, authStatus:"Authenticated"}));
-        setButtonText("Welcome Guest!");
-        setUserData([...userData, {username:"Guest", authCode:token}]);
+        useEffect(() => {
+            localStorage.setItem("authState",JSON.stringify({username:username,authCode:token,authStatus:"Authenticated"}));
+        },[])
+        setButtonText("Welcome " + username + "!");
+        if (username === 'Guest'){
+            setUserData([...userData, {username:"Guest", authCode:token}]);
+        }
         navigate("/home");
     }
 
@@ -118,14 +126,14 @@ export default function App(){
         {handleAuth() && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
-                <Route path='/Home' element={<Home setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
+                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
+                <Route path='/Home' element={<Home setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
                 <Route path='/Calendar' element={<Calendar />} />
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />
-                <Route path='/SignUpPage' element={<SignUpPage setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
+                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </main>

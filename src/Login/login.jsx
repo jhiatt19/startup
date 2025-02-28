@@ -71,7 +71,7 @@ export function Login({setButtonText, userData, setUserData}) {
 
   useEffect(() => {
       localStorage.setItem("authState",JSON.stringify({username:username,authStatus:"Authenticated",authCode:userData.authCode}));
-    },[userData,username]);
+    },[userData]);
 
   return (
     <main>
