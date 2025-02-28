@@ -111,8 +111,7 @@ th {
     display:flex;
     justify-self:flex-start;
     flex-direction: column;
-    max-height:75%;
-    height:6em;
+    height:75%;
     z-index: 1001;
     max-width:11.5em;
 }

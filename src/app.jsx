@@ -115,7 +115,7 @@ export default function App(){
         <main>
             <Routes>
                 <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
-                <Route path='/Home' element={<Home setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
+                <Route path='/Home' element={<Home />} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
                 <Route path='/Calendar' element={<Calendar />} />
