@@ -32,10 +32,10 @@ export default function App(){
     const initalText = "Continue as Guest"
     const [auth, setAuth] = useState(() => {
         const data = localStorage.getItem("authState");
-        return data ? JSON.parse(data) : {username:'',authCode:'',authState:''};
+        return data ? JSON.parse(data) : {username:'',authCode:'',authStatus:''};
     });
     const [authCode, setAuthCode] = useState(auth.authCode);
-    const [authState,setAuthState] = useState(auth.authState);
+    const [authState,setAuthState] = useState(auth.authStatus);
     const [userData, setUserData] = useState(() => {
         const storedTable = localStorage.getItem("userData");
         return storedTable ? JSON.parse(storedTable) : [];
@@ -70,12 +70,17 @@ export default function App(){
         setAuthCode('');
         setAuthState('Not Authenticated');
         setButtonText("Continue as Guest");
-        localStorage.setItem("authState",JSON.stringify({username:'', authCode:'', authStatus:"Not Authenticated"}));
+        setAuth({username:'',authCode:'',authStatus:"Not Authenticated"});
+        navigate("/");
     };
 
     useEffect(() => {
         localStorage.setItem("userData",JSON.stringify(userData));
     },[userData]);
+
+    useEffect(() => {
+        localStorage.setItem("authState",JSON.stringify(auth));
+    },[auth]);
 
     const handleHome = () => {
         if (authState === "Authenticated" && authCode){
@@ -91,7 +96,7 @@ export default function App(){
         setUsername("Guest")
         setAuthState("Authenticated")
         setAuthCode(token);
-        localStorage.setItem("authState",JSON.stringify({username:username,authCode:token,authStatus:"Authenticated"}));
+        setAuth({username:username,authCode:token,authStatus:"Authenticated"});
         setButtonText("Welcome " + username + "!");
         if (username === 'Guest'){
             setUserData([...userData, {username:"Guest", authCode:token}]);
@@ -115,7 +120,7 @@ export default function App(){
         <main>
             <Routes>
                 <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
-                <Route path='/Home' element={<Home />} />
+                <Route path='/Home' element={<Home setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
                 <Route path='/Calendar' element={<Calendar />} />
