@@ -112,7 +112,7 @@ th {
     justify-self:flex-start;
     flex-direction: column;
     max-height:75%;
-    height:6em;
+    height:7em;
     z-index: 1001;
     max-width:11.5em;
 }
