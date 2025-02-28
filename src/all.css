@@ -176,3 +176,8 @@ div {
 @keyframes blinky {
     50% {caret-color: transparent;}
 }
+
+.links {
+    background:rgb(240, 240, 240);
+    border: 0px solid black;
+}
