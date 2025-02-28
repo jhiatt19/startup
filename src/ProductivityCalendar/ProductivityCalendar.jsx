@@ -1,7 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {nanoid} from 'nanoid';
 import './productivity.css';
-import { typeOfTask, TaskMessage } from './taskMessage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function BannerMessage({message, onClose}) {
@@ -14,16 +13,16 @@ function BannerMessage({message, onClose}) {
 };
 
 function CreateMessage({handleCloseAlert,alerts}) {
-    return (
+    const reversedAlerts = alerts.slice().reverse();
+    return (    
         <div className='banner-container'>
-            {alerts.map((alert) => (
+            {reversedAlerts.map((alert) => (
                 <BannerMessage
                     key={alert.id}
                     message={alert.message}
                     onClose={() => handleCloseAlert(alert.id)}
                 />
-            ))}
-            
+            ))}  
         </div>
     );
 };
@@ -38,12 +37,14 @@ export function ProductivityCalendar() {
     });
     const [checkItems, setCheckItems] = useState([]);
     const [alerts,setAlerts] = useState([]);
-    const [id, setId] = useState(1);
     const [displayAlert, setDisplayAlert] = useState(false);
+    const user = JSON.parse(localStorage.getItem("authState"));
 
     const handleCloseAlert = (id) => {
         setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
-        setDisplayAlert(false);
+        if (alerts.length <= 1){
+            setDisplayAlert(false);
+        };
     };
     
     const handlePriority = (e) => {
@@ -57,19 +58,21 @@ export function ProductivityCalendar() {
     const handleTask = (e) => {
         setTask(e.target.value);
     };
-
+    
     const handleSubmit = (e) => {
         e.preventDefault();
-        const user = JSON.parse(localStorage.getItem("authState"));
         if (!task || time === "Choose Est time" || priority === "Choose priority level") return;
-
         const newTask = {
             task: task,
             time: time,
             priority: priority,
             id:nanoid(),
         }
-        TaskMessage.sendTaskMessage(user.username,typeOfTask.started,{middle:"began a ", end:" task."});
+        setAlerts((prevAlerts) => [
+            ...prevAlerts,
+            {id:nanoid(), message:user.username + " created a task.",}
+        ])
+        setDisplayAlert(true);
         setTaskData([...taskData,newTask]);
         setTask('');
         setPriority("Choose priority level");
@@ -91,23 +94,37 @@ export function ProductivityCalendar() {
         setDisplayAlert(true);
         const removeRows = document.querySelectorAll('.checkBox:checked');
         const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
+        const tempInt = removeIDs.length;
         setTaskData(taskData => taskData.filter(row => !removeIDs.includes(row.id)));
         setCheckItems([]);
-
-        const user = JSON.parse(localStorage.getItem("authState"));
-        setAlerts([
-            {id:id, message:user.username + " finished a task!"}
-        ])
-        setId(id+1);
+        if (tempInt > 1){
+            setAlerts((prevAlerts) => [
+                ...prevAlerts,
+                {id:nanoid(), message:user.username + " finished " + tempInt + " tasks!"}
+            ]);
+        }
+        setAlerts((prevAlerts) => [
+            ...prevAlerts,
+            {id:nanoid(), message:user.username + " finished a task!"}
+        ]);
     };
 
-    function showAlert(){
-        return (
-        <section className='alert'>
-            {<CreateMessage alerts={alerts} handleCloseAlert={handleCloseAlert}/>}
-        </section>
-        );
-    };
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setAlerts((prevAlerts) => [...prevAlerts, {id:nanoid(),message:"Billy finished a task!"}]);
+            setDisplayAlert(true);
+        },10000);
+
+        return () => clearInterval(intervalId);
+    },[alerts]);
+
+    useEffect(()=> {
+        if (alerts.length > 10) {
+            setAlerts((prevEvents) => {
+                prevEvents = prevEvents.slice(1,10);
+                return prevEvents
+            });}
+    },[alerts]);
 
     useEffect(() => {
         localStorage.setItem("taskData",JSON.stringify(taskData));
@@ -115,7 +132,11 @@ export function ProductivityCalendar() {
 
   return (
     <main>
-        {displayAlert && showAlert()}
+        {displayAlert && (
+        <section className='alert'>
+            {<CreateMessage alerts={alerts} handleCloseAlert={handleCloseAlert}/>}
+        </section>
+        )}
         <section>
             <h3>Task Prioritizer</h3>
             <p>Another thing that I struggle with is determining what tasks to do at different times. Sometimes I spend more time coming up with a plan on when I will do all my tasks than actually doing the task. In this section I hope to create an algorithm to place tasks into my calendar based on priority and estimated time to complete task.</p>
