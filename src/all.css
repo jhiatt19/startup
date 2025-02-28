@@ -181,3 +181,7 @@ div {
     background:rgb(240, 240, 240);
     border: 0px solid black;
 }
+
+#fixFooter {
+    position:fixed;
+}
