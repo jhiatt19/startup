@@ -70,17 +70,17 @@ export default function App(){
         setAuthCode('');
         setAuthState('Not Authenticated');
         setButtonText("Continue as Guest");
-        setAuth({username:'',authCode:'',authStatus:"Not Authenticated"});
+        setAuth((prevAuth) => {
+            const newAuth = {username:'',authCode:'',authStatus:"Not Authenticated"};
+            localStorage.setItem("authState",JSON.stringify(newAuth));
+            return newAuth;
+        });
         navigate("/");
     };
 
     useEffect(() => {
         localStorage.setItem("userData",JSON.stringify(userData));
     },[userData]);
-
-    useEffect(() => {
-        localStorage.setItem("authState",JSON.stringify(auth));
-    },[auth]);
 
     const handleHome = () => {
         if (authState === "Authenticated" && authCode){
@@ -96,7 +96,11 @@ export default function App(){
         setUsername("Guest")
         setAuthState("Authenticated")
         setAuthCode(token);
-        setAuth({username:username,authCode:token,authStatus:"Authenticated"});
+        setAuth((prevAuth) => {
+            const newAuth = {username:'Guest',authCode:token,authStatus:"Authenticated"};
+            localStorage.setItem("authState",JSON.stringify(newAuth));
+            return newAuth;
+        });
         setButtonText("Welcome " + username + "!");
         if (username === 'Guest'){
             setUserData([...userData, {username:"Guest", authCode:token}]);
@@ -120,7 +124,7 @@ export default function App(){
         <main>
             <Routes>
                 <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
-                <Route path='/Home' element={<Home setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
+                <Route path='/Home' element={<Home setAuthState={setAuthState} authState={authState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
                 <Route path='/Calendar' element={<Calendar />} />

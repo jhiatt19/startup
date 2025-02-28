@@ -6,7 +6,7 @@ import {nanoid} from 'nanoid';
 
 //import { SignUpPage } from './SignUpPage/SignUpPage';
 
-export function Login({setAuthState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
+export function Login({setAuthState, authState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
   const [authStatus,setAuthStatus] = useState(() => { 
     const auth = localStorage.getItem("authState");
     return auth ? JSON.parse(auth) : {authCode:'',authState:''};
@@ -75,10 +75,6 @@ export function Login({setAuthState, setAuthCode, authCode, setButtonText, userD
       
     };
   };
-
-  useEffect(() => {
-      localStorage.setItem("authState",JSON.stringify({username:username,authStatus:"Authenticated",authCode:authCode}));
-    },[authCode]);
 
   return (
     <main>
