@@ -2,7 +2,7 @@ import React, {useState,useEffect} from 'react';
 import { useLocation } from 'react-router-dom';
 import '../all.css';
 
-export function Home() {
+export function Home({setAuthState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
   return (
     <main>
       <div >

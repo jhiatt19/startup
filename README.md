@@ -84,8 +84,8 @@ I have done the Simon react and deployed it to the simon service prior to underg
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] **All functionality implemented or mocked out** - For this deliverable I mocked out the implementation for many parts of my website, but not all of the parts. My website has 5 different parts to it and I was able to get 3.5 of the parts working. However, the parts that I did mock out or implement all show that I understand how to implement reactivity in multiple ways. I wanted to give myself the option to put as much work into each deliverable as would allow me. So for the first 3 deliverables I was able to easily create the html, css, and routing for a website this big. Trying to create reactivity for 5 different parts was not possible during this time frame.
+- [x] **Hooks** - I implemented multiple unique hooks across my website. These include useState, useEffect, useRef, useNavigate, and others. This helped to create a functional website with lots of different reactivity components. 
 
 ## 🚀 Service deliverable
 
