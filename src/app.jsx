@@ -109,7 +109,7 @@ export default function App(){
             <form>
                 <button id="logOut" onClick={handleLogOut}>Log out</button>
             </form>
-            </NavLink>
+            </NavLink> <br/>
         </header>
         {authState === "Authenticated" && <NavigationBar />}
         <main>

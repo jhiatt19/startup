@@ -36,8 +36,7 @@ header{
 }
 
 header form{
-    position:sticky;
-    top:2em;
+    margin-top:1em;
     display: flex;
     align-items: center;
     padding-right:2em;
@@ -130,7 +129,7 @@ td:hover {
 
 nav {
     position: sticky;
-    top: 0;
+    top: 0px;
     z-index: 100;
 }
 

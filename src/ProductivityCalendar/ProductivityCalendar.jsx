@@ -1,6 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {nanoid} from 'nanoid';
 import './productivity.css';
+import { typeOfTask, TaskMessage } from './taskMessage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function BannerMessage({message, onClose}) {
@@ -12,20 +13,20 @@ function BannerMessage({message, onClose}) {
     );
 };
 
-// function CreateMessage({handleCloseAlert,alerts}) {
-//     return (
-//         <div className='banner-container'>
-//             {alerts.map((alert) => (
-//                 <BannerMessage
-//                     key={alert.id}
-//                     message={alert.message}
-//                     onClose={() => handleCloseAlert(alert.id)}
-//                 />
-//             ))}
+function CreateMessage({handleCloseAlert,alerts}) {
+    return (
+        <div className='banner-container'>
+            {alerts.map((alert) => (
+                <BannerMessage
+                    key={alert.id}
+                    message={alert.message}
+                    onClose={() => handleCloseAlert(alert.id)}
+                />
+            ))}
             
-//         </div>
-//     );
-// };
+        </div>
+    );
+};
 
 export function ProductivityCalendar() {
     const [task,setTask] = useState('');
@@ -38,10 +39,11 @@ export function ProductivityCalendar() {
     const [checkItems, setCheckItems] = useState([]);
     const [alerts,setAlerts] = useState([]);
     const [id, setId] = useState(1);
-    const taskCompleteMessage = " finished a task!";
+    const [displayAlert, setDisplayAlert] = useState(false);
 
     const handleCloseAlert = (id) => {
         setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
+        setDisplayAlert(false);
     };
     
     const handlePriority = (e) => {
@@ -58,6 +60,7 @@ export function ProductivityCalendar() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const user = JSON.parse(localStorage.getItem("authState"));
         if (!task || time === "Choose Est time" || priority === "Choose priority level") return;
 
         const newTask = {
@@ -66,10 +69,12 @@ export function ProductivityCalendar() {
             priority: priority,
             id:nanoid(),
         }
+        TaskMessage.sendTaskMessage(user.username,typeOfTask.started,{middle:"began a ", end:" task."});
         setTaskData([...taskData,newTask]);
         setTask('');
         setPriority("Choose priority level");
         setTime("Choose Est time");
+        
     };
 
     const handleCheckItems = (id) => {
@@ -81,17 +86,27 @@ export function ProductivityCalendar() {
         }
     };
 
-    const handleEdit = () => {
+    const handleEdit = (e) => {
+        e.preventDefault();
+        setDisplayAlert(true);
         const removeRows = document.querySelectorAll('.checkBox:checked');
         const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
         setTaskData(taskData => taskData.filter(row => !removeIDs.includes(row.id)));
         setCheckItems([]);
 
-        // const user = JSON.parse(localStorage.getItem("authState"));
-        // setAlerts([
-        //     {id:id, message:user.username + taskCompleteMessage}
-        // ])
-        // setId(id+1);
+        const user = JSON.parse(localStorage.getItem("authState"));
+        setAlerts([
+            {id:id, message:user.username + " finished a task!"}
+        ])
+        setId(id+1);
+    };
+
+    function showAlert(){
+        return (
+        <section className='alert'>
+            {<CreateMessage alerts={alerts} handleCloseAlert={handleCloseAlert}/>}
+        </section>
+        );
     };
 
     useEffect(() => {
@@ -100,6 +115,7 @@ export function ProductivityCalendar() {
 
   return (
     <main>
+        {displayAlert && showAlert()}
         <section>
             <h3>Task Prioritizer</h3>
             <p>Another thing that I struggle with is determining what tasks to do at different times. Sometimes I spend more time coming up with a plan on when I will do all my tasks than actually doing the task. In this section I hope to create an algorithm to place tasks into my calendar based on priority and estimated time to complete task.</p>
@@ -166,7 +182,7 @@ export function ProductivityCalendar() {
                 </tbody>
             </table>
             <button type="button" id="buttonButton" onClick={handleEdit}>Remove Checked Boxes</button>
-            {/* <CreateMessage alerts={alerts} handleCloseAlert={handleCloseAlert}/> */}
+            
         </section>
         <section>
             <h3>Calendar</h3>{/*The calendar will be a 3rd party service call*/}
