@@ -82,8 +82,6 @@ th {
     justify-content: flex-start;
     min-height:5em;
     width:11.5em;
-    flex-direction: column;
-    z-index:1000;
 }
 
 .banner-alert {
@@ -111,7 +109,5 @@ th {
     display:flex;
     justify-self:flex-start;
     flex-direction: column;
-    height:75%;
-    z-index: 1001;
-    max-width:11.5em;
+    height:50%;
 }
