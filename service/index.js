@@ -39,7 +39,7 @@ apiRouter.post('/auth/login', async (req, res) => {
         if (await bycript.compare(req.body.password, user.password)) {
             user.token = nanoid();
             setAuthCookie(res,user.token);
-            res.send({ user: user.username });
+            res.send({ user: user.username, authState: 'Authenticated' });
             return;
         }
     }
@@ -64,6 +64,39 @@ const verifyAuth = async (req, res, next) => {
     }
 };
 
+apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
+    const user = await findUser('username',req.body.username);
+    if (user) {
+        const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
+        setTasks(user, user.username,task);
+        res.status(200).send( msg: "Task added successfully");
+        return;
+    }
+    res.status(401).send({ msg: 'Unauthorized' });
+})
+
+function setTasks(user, username, taskObject) {
+    const user = findUser('username',username);
+    if (user){
+        if (!user.tasks) {
+            user.tasks = [];
+        }
+        user.tasks.push(taskObject);
+    }
+    else {
+        console.log(`User with username ${username} not found`);
+    }
+}
+
+async function createTask(task, priority, time, taskID){
+    const task = {
+        task : task,
+        priority : priority,
+        time : time,
+        taskID : taskID,
+    }
+    return task;
+}
 
 
 async function createUser(username,password,email) {

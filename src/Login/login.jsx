@@ -29,50 +29,36 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
     navigate("/SignUpPage");
   };
 
-  const handleSubmit = (e) => {
+  async function handleLogin(endpoint) {
+    const response = await fetch(endpoint, {
+      method: 'post',
+      body: JSON.stringify({ username: username, password: password }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      }
+    });
+    if (response?.status === 200) {
+      localStorage.setItem('username', username);
+      setAuthState(response.authState);
+      setButtonText("Welcome " + response.username + "!");
+      navigate("/Home");
+    } else {
+      const body = await response.json();
+      setError(`Error: ${body.msg}`);
+      setIsError(true);
+    }
+  }
+
+  async function handleSubmit(){
     setIsError(false);
     setError('');
-    e.preventDefault();
     if (username === '' || password === ''){
       setError('Please enter a username and password');
       setIsError(true);
       return;
     }
-
-    const dataIndex = userData.findIndex(data => data.username === username);
-    if (userData.length > 0 && dataIndex === -1){
-      setError('Incorrect username');
-      setIsError(true);
-      return;
-    }
     else {
-      if (userData[dataIndex].password !== password){
-        setError('Incorrect password');
-        setIsError(true);
-        return;
-      }
-      else{
-        const token = nanoid();
-        setUserData((userData) => {
-          const indexNew = userData.findIndex((u) => u.username === username);
-          if (indexNew !== -1){
-            const newUserData = [...userData];
-            newUserData[indexNew] = {
-              ...newUserData[indexNew],
-              authCode: token,
-            };
-            localStorage.setItem("userData",JSON.stringify(newUserData))
-            return newUserData;
-          };
-          return userData;
-        });
-        
-        setAuthCode(token);
-        setAuthState("Authenticated");
-        setButtonText("Welcome " + username + "!");
-        navigate("/Home");
-      };
-      
+      handleLogin(`/api/auth/login`);
     };
   };
 
@@ -85,7 +71,7 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
                 <input type="text" id="loginText" name="username" placeholder="Username" value={username} onChange={handleUsername}/><br/>
                 <label htmlFor="password">Password</label><br/>
                 <input type="password" id="loginPassword" name="password" placeholder="Password" value={password} onChange={handlePassword}/><br/>
-                <button type="submit" onClick={handleSubmit}>Login</button>
+                <button type="submit" onClick={() => handleSubmit()}>Login</button>
             </form>
             <div>
               {isError && error}
