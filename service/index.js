@@ -1,6 +1,6 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const bycrypt = require('bycriptjs');
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import bcrypt from 'bcryptjs';
 import {nanoid} from 'nanoid';
 const app = express();
 
@@ -81,7 +81,7 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
         return;
     }
     res.status(401).send({ msg: 'Unauthorized' });
-})
+});
 
 function setTasks(user, username, taskObject) {
     const user = findUser('username',username);
@@ -94,7 +94,7 @@ function setTasks(user, username, taskObject) {
     else {
         console.log(`User with username ${username} not found`);
     }
-}
+};
 
 async function createTask(task, priority, time, taskID){
     const task = {
@@ -104,11 +104,11 @@ async function createTask(task, priority, time, taskID){
         taskID : taskID,
     }
     return task;
-}
+};
 
 
 async function createUser(username,password,email) {
-    const passwordHash = await bycrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const user = {
         username : username,
@@ -120,7 +120,7 @@ async function createUser(username,password,email) {
     users.push(user);
 
     return user;
-}
+};
 
 async function findUser(field, value) {
     if (!value) return null;
