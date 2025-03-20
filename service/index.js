@@ -59,10 +59,13 @@ apiRouter.post('/auth/login', async (req, res) => {
 });
 
 apiRouter.delete('/auth/logout', async (req, res) => {
-    const user = await findUser('token', req.cookies[authCookieName]);
+    const user = await findUser('token', req.body.token);
     if (user) {
-        console.log(json.parse(user.token));
-        delete user.token;
+        console.log(user.token);
+        user.token = '';
+    }
+    else {
+        res.status(401).send({ msg: "Unauthorized"});
     }
     res.clearCookie(authCookieName);
     console.log("Cleared token");
@@ -72,10 +75,12 @@ apiRouter.delete('/auth/logout', async (req, res) => {
 });
 
 const verifyAuth = async (req, res, next) => {
-    const user = await findUser('token', req.cookies[authCookieName]);
+    const user = await findUser('token', req.body.token);
     if (user) {
+        console.log("verified auth");
         next();
     } else {
+        console.log("I am in verifyAuth");
         res.status(401).send({ msg: 'Unauthorized' });
     }
 };
@@ -84,35 +89,30 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
     const user = await findUser('username',req.body.username);
     if (user) {
         const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
-        setTasks(user, user.username,task);
+        setTasks(user,task);
         res.status(200).end();
         return;
     }
     res.status(401).send({ msg: 'Unauthorized' });
 });
 
-// function setTasks(user, username, taskObject) {
-//     const user = findUser('username',username);
-//     if (user){
-//         if (!user.tasks) {
-//             user.tasks = [];
-//         }
-//         user.tasks.push(taskObject);
-//     }
-//     else {
-//         console.log(`User with username ${username} not found`);
-//     }
-// };
+function setTasks(user, taskObject) {
+    if (!user.tasks) {
+        user.tasks = [];
+    }
+    user.tasks.push(taskObject);
+};
 
-// async function createTask(task, priority, time, taskID){
-//     const task = {
-//         task : task,
-//         priority : priority,
-//         time : time,
-//         taskID : taskID,
-//     }
-//     return task;
-// };
+async function createTask(taskMessage, priority, time, taskID){
+    const task = {
+        taskID : taskID,
+        name : taskMessage,
+        priority : priority,
+        time : time,
+        
+    }
+    return task;
+};
 
 
 async function createUser(username,password,email) {
@@ -144,9 +144,9 @@ function setAuthCookie(res, authToken) {
     });
 }
 
-// app.use((_req, res) => {
-//     res.sendFile('index.html', { root: 'public' });
-//   });
+app.use((_req, res) => {
+    res.sendFile('index.html', { root: 'public' });
+  });
 
 app.use(function (err, req, res, next) {
     res.status(500).send({ type: err.name, message: err.message });
