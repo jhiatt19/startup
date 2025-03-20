@@ -40,71 +40,71 @@ apiRouter.post('/auth/create', async (req, res) => {
 });
 
 //Login an existing user and provide auth token
-apiRouter.post('/auth/login', async (req, res) => {
-    const user = await('username', req.body.username);
-    if (user) {
-        if (await bycript.compare(req.body.password, user.password)) {
-            user.token = nanoid();
-            setAuthCookie(res,user.token);
-            res.status(200);
-            res.send({ user: user.username, authState: 'Authenticated' });
-            return;
-        }
-    }
-    res.status(401).send({ msg: 'Unauthorized'});
-});
+// apiRouter.post('/auth/login', async (req, res) => {
+//     const user = await('username', req.body.username);
+//     if (user) {
+//         if (await bycript.compare(req.body.password, user.password)) {
+//             user.token = nanoid();
+//             setAuthCookie(res,user.token);
+//             res.status(200);
+//             res.send({ user: user.username, authState: 'Authenticated' });
+//             return;
+//         }
+//     }
+//     res.status(401).send({ msg: 'Unauthorized'});
+// });
 
-apiRouter.delete('/auth/logout', async (req, res) => {
-    const user = await findUser('token', req.cookies[authCookieName]);
-    if (user) {
-        delete user.token;
-    }
-    res.clearCookie(authCookieName);
-    res.status(200).end();
-});
+// apiRouter.delete('/auth/logout', async (req, res) => {
+//     const user = await findUser('token', req.cookies[authCookieName]);
+//     if (user) {
+//         delete user.token;
+//     }
+//     res.clearCookie(authCookieName);
+//     res.status(200).end();
+// });
 
-const verifyAuth = async (req, res, next) => {
-    const user = await findUser('token', req.cookies[authCookieName]);
-    if (user) {
-        next();
-    } else {
-        res.status(401).send({ msg: 'Unauthorized' });
-    }
-};
+// const verifyAuth = async (req, res, next) => {
+//     const user = await findUser('token', req.cookies[authCookieName]);
+//     if (user) {
+//         next();
+//     } else {
+//         res.status(401).send({ msg: 'Unauthorized' });
+//     }
+// };
 
-apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
-    const user = await findUser('username',req.body.username);
-    if (user) {
-        const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
-        setTasks(user, user.username,task);
-        res.status(200).end();
-        return;
-    }
-    res.status(401).send({ msg: 'Unauthorized' });
-});
+// apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
+//     const user = await findUser('username',req.body.username);
+//     if (user) {
+//         const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
+//         setTasks(user, user.username,task);
+//         res.status(200).end();
+//         return;
+//     }
+//     res.status(401).send({ msg: 'Unauthorized' });
+// });
 
-function setTasks(user, username, taskObject) {
-    const user = findUser('username',username);
-    if (user){
-        if (!user.tasks) {
-            user.tasks = [];
-        }
-        user.tasks.push(taskObject);
-    }
-    else {
-        console.log(`User with username ${username} not found`);
-    }
-};
+// function setTasks(user, username, taskObject) {
+//     const user = findUser('username',username);
+//     if (user){
+//         if (!user.tasks) {
+//             user.tasks = [];
+//         }
+//         user.tasks.push(taskObject);
+//     }
+//     else {
+//         console.log(`User with username ${username} not found`);
+//     }
+// };
 
-async function createTask(task, priority, time, taskID){
-    const task = {
-        task : task,
-        priority : priority,
-        time : time,
-        taskID : taskID,
-    }
-    return task;
-};
+// async function createTask(task, priority, time, taskID){
+//     const task = {
+//         task : task,
+//         priority : priority,
+//         time : time,
+//         taskID : taskID,
+//     }
+//     return task;
+// };
 
 
 async function createUser(username,password,email) {
@@ -136,13 +136,13 @@ function setAuthCookie(res, authToken) {
     });
 }
 
-app.use((_req, res) => {
-    res.sendFile('index.html', { root: 'public' });
-  });
+// app.use((_req, res) => {
+//     res.sendFile('index.html', { root: 'public' });
+//   });
 
-app.use(function (err, req, res, next) {
-    res.status(500).send({ type: err.name, message: err.message });
-  });
+// app.use(function (err, req, res, next) {
+//     res.status(500).send({ type: err.name, message: err.message });
+//   });
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
