@@ -29,27 +29,21 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
     navigate("/SignUpPage");
   };
 
-  async function handleLogin(endpoint) {
-    const response = await fetch(endpoint, {
+  function handleLogin() {
+    fetch('/api/auth/login', {
       method: 'post',
       body: JSON.stringify({ username: username, password: password }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       }
     });
-    if (response?.status === 200) {
-      localStorage.setItem('username', username);
-      setAuthState(response.authState);
-      setButtonText("Welcome " + response.username + "!");
-      navigate("/Home");
-    } else {
-      const body = await response.json();
-      setError(`Error: ${body.msg}`);
-      setIsError(true);
-    }
+    localStorage.setItem('username', response.username);
+    setAuthState(response.authState);
+    setButtonText("Welcome " + response.username + "!");
+    navigate("/Home");
   }
 
-  async function handleSubmit(){
+  function handleSubmit(){
     setIsError(false);
     setError('');
     if (username === '' || password === ''){
@@ -58,7 +52,7 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
       return;
     }
     else {
-      handleLogin(`/api/auth/login`);
+      return handleLogin(`/api/auth/login`);
     };
   };
 

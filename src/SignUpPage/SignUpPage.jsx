@@ -56,6 +56,28 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
     setIsError(false);
   };
 
+  async function handleRegister() {
+    const response = await fetch('/api/auth/create', {
+      method: 'post',
+      body: JSON.stringify({ username: username, password: password, email: email}),
+      headers: {
+        'Content-type': 'application/json;',
+      }
+    });
+
+    if (response?.status === 200){
+      const response = await response.json();
+      localStorage.setItem('username', response.username);
+      setAuthState(response.authState);
+      setButtonText("Welcome " + response.username + "!");
+      navigate("/Home");
+    } else {
+      setError(`Error: ${body.msg}`);
+      setIsError(true);
+    }
+  
+  }
+
   const handleSubmit = (e) => {
     setIsError(false);
     setError('');
@@ -65,22 +87,9 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
       setIsError(true);
       return;
     }
-    const userNameTaken = JSON.parse(localStorage.getItem("userData" || '[]'));
-
-    if (userNameTaken !== '' && userNameTaken.some((data => data.username === username))){
-      setError('Username already taken, please provide another one');
-      setIsError(true);
-      return;
-      };
-    
-    setAuthCode(nanoid());
-    setAuthState("Authenticated");
-    setObjectAdded(false);
-    setButtonText("Welcome " + username + "!");
-    // setUsername(initialUsername);
-    // setPassword('');
-    // setEmail(initialEmail);
-    navigate("/Home");
+    else {
+      return handleRegister(`/api/auth/create`);
+    }
   };
 
   //&& username !== initialUsername && password !== ''

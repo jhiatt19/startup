@@ -22,12 +22,19 @@ app.use('/api', apiRouter);
 
 //Create a new user and provide auth token
 apiRouter.post('/auth/create', async (req, res) => {
+    console.log("Made it to the beginning of the endpoint");
     if (await findUser('username', req.body.username)) {
+        console.log("User already found");
         res.status(403).send({ msg: 'Existing user' });
     } else {
+        console.log("Made it to the create user function");
         const user = await createUser(req.body.username, req.body.password, req.body.email);
         
+        console.log("success in creating user");
         setAuthCookie(res, user.token);
+        console.log("success in setting auth Cookie");
+        res.status(200);
+        console.log("set res status");
         res.send({username: user.username});
     }
 });
@@ -39,6 +46,7 @@ apiRouter.post('/auth/login', async (req, res) => {
         if (await bycript.compare(req.body.password, user.password)) {
             user.token = nanoid();
             setAuthCookie(res,user.token);
+            res.status(200);
             res.send({ user: user.username, authState: 'Authenticated' });
             return;
         }
@@ -69,7 +77,7 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
     if (user) {
         const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
         setTasks(user, user.username,task);
-        res.status(200).send( msg: "Task added successfully");
+        res.status(200).end();
         return;
     }
     res.status(401).send({ msg: 'Unauthorized' });
@@ -127,6 +135,14 @@ function setAuthCookie(res, authToken) {
         sameSite: 'strict',
     });
 }
+
+app.use((_req, res) => {
+    res.sendFile('index.html', { root: 'public' });
+  });
+
+app.use(function (err, req, res, next) {
+    res.status(500).send({ type: err.name, message: err.message });
+  });
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
