@@ -67,7 +67,7 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
 
     if (response?.status === 200){
       const response = await response.json();
-      localStorage.setItem('username', response.username);
+      localStorage.setItem('username', json.stringify(response.username));
       setAuthState(response.authState);
       setButtonText("Welcome " + response.username + "!");
       navigate("/Home");
@@ -93,22 +93,6 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
   };
 
   //&& username !== initialUsername && password !== ''
-
-  useEffect(() => {
-    if(authCode !== '' && !objectAdded){
-      if (email !== initialEmail && email !== ''){
-        setUserData([...userData, {username:username,password:password,email:email, authCode:authCode}]);
-      }
-      else {
-        setUserData([...userData, {username:username,password:password,email:'', authCode:authCode}]);
-      }
-    };
-    setObjectAdded(true);
-  }, [userData, username, password, email, authCode,]);
-
-  useEffect(() => {
-    localStorage.setItem("userData",JSON.stringify(userData));
-  }, [userData]);
 
   useEffect(() => {
     localStorage.setItem("authState",JSON.stringify({username:username,authStatus:"Authenticated",authCode:authCode}));

@@ -24,6 +24,16 @@ apiRouter.get('/users', async (req, res) => {
     res.send(users);
 });
 
+apiRouter.get('/users:username', async (req, res) => {
+    const user = await findUser('username',req.params.username)
+    if (user){
+        res.send(user);
+    }
+    else {
+        res.status(403).send({ msg: "No user found"});
+    }
+});
+
 //Create a new user and provide auth token
 apiRouter.post('/auth/create', async (req, res) => {
     console.log("Made it to the beginning of the endpoint");

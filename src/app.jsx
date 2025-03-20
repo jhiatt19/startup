@@ -45,7 +45,6 @@ export default function App(){
     const navigate = useNavigate();
     
     const handleLogOut = () => {
-        const authstate = JSON.parse(localStorage.getItem("authState"))
         setUserData((userData) => {
             const indexNew = userData.findIndex((u) => u.authCode === authCode);
             if (authstate.username === 'Guest'){

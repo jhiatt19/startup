@@ -30,7 +30,7 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
   };
 
   function handleLogin() {
-    fetch('/api/auth/login', {
+    const response = fetch('/api/auth/login', {
       method: 'post',
       body: JSON.stringify({ username: username, password: password }),
       headers: {
