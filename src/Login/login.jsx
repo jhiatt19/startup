@@ -7,10 +7,7 @@ import {nanoid} from 'nanoid';
 //import { SignUpPage } from './SignUpPage/SignUpPage';
 
 export function Login({setAuthState, authState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
-  const [authStatus,setAuthStatus] = useState(() => { 
-    const auth = localStorage.getItem("authState");
-    return auth ? JSON.parse(auth) : {authCode:'',authState:''};
-  });
+  
   const [username,setUsername] = useState('');
   const [password,setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,21 +26,30 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
     navigate("/SignUpPage");
   };
 
-  function handleLogin() {
-    const response = fetch('/api/auth/login', {
+  async function handleLogin() {
+    const response = await fetch('/api/auth/login', {
       method: 'post',
       body: JSON.stringify({ username: username, password: password }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       }
     });
-    localStorage.setItem('username', response.username);
-    setAuthState(response.authState);
-    setButtonText("Welcome " + response.username + "!");
-    navigate("/Home");
+    if (response?.status == 200){
+      localStorage.setItem('username', res.username);
+      setAuthState(res.authState);
+      setButtonText("Welcome " + res.username + "!");
+      setAuthCode(res.token);
+      navigate("/Home");
+    }
+    else {
+      const body = await response.json();
+      setError(`Error: ${body.msg}`);
+      setIsError(true);
+    }
   }
 
-  function handleSubmit(){
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setIsError(false);
     setError('');
     if (username === '' || password === ''){
@@ -65,7 +71,7 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
                 <input type="text" id="loginText" name="username" placeholder="Username" value={username} onChange={handleUsername}/><br/>
                 <label htmlFor="password">Password</label><br/>
                 <input type="password" id="loginPassword" name="password" placeholder="Password" value={password} onChange={handlePassword}/><br/>
-                <button type="submit" onClick={() => handleSubmit()}>Login</button>
+                <button type="submit" onClick={handleSubmit}>Login</button>
             </form>
             <div>
               {isError && error}

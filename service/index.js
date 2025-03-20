@@ -7,6 +7,7 @@ const app = express();
 const authCookieName = 'token';
 
 let users = [];
+let tokens = [];
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
@@ -24,6 +25,10 @@ apiRouter.get('/users', async (req, res) => {
     res.send(users);
 });
 
+apiRouter.get('/tokens', async (req,res) => {
+    res.send(tokens);
+});
+
 apiRouter.get('/users:username', async (req, res) => {
     const user = await findUser('username',req.params.username)
     if (user){
@@ -36,20 +41,14 @@ apiRouter.get('/users:username', async (req, res) => {
 
 //Create a new user and provide auth token
 apiRouter.post('/auth/create', async (req, res) => {
-    console.log("Made it to the beginning of the endpoint");
     if (await findUser('username', req.body.username)) {
-        console.log("User already found");
         res.status(403).send({ msg: 'Existing user' });
     } else {
-        console.log("Made it to the create user function");
         const user = await createUser(req.body.username, req.body.password, req.body.email);
         
-        console.log("success in creating user");
         setAuthCookie(res, user.token);
-        console.log("success in setting auth Cookie");
         res.status(200);
-        console.log("set res status");
-        res.send({username: user.username, token: user.token});
+        res.send({username: user.username});
     }
 });
 
@@ -58,21 +57,22 @@ apiRouter.post('/auth/login', async (req, res) => {
     const user = await findUser('username', req.body.username);
     if (user) {
         if (await bcrypt.compare(req.body.password, user.password)) {
-            user.token = nanoid();
-            setAuthCookie(res,user.token);
+            setAuthCookie(res,nanoid());
             res.status(200);
             res.send({ user: user.username, authState: 'Authenticated' });
-            return;
         }
+        else {
+            res.status(401).send({ msg: 'Not valid password'});
+        }
+    }else {
+    res.status(401).send({ msg: 'Not valid username'});
     }
-    res.status(401).send({ msg: 'Unauthorized'});
 });
 
 apiRouter.delete('/auth/logout', async (req, res) => {
-    const user = await findUser('token', req.body.token);
-    if (user) {
-        console.log(user.token);
-        user.token = '';
+    const authToken = await findToken('token', req.cookie.token);
+    if (authToken) {
+        delete authToken.token;
     }
     else {
         res.status(401).send({ msg: "Unauthorized"});
@@ -81,7 +81,7 @@ apiRouter.delete('/auth/logout', async (req, res) => {
     console.log("Cleared token");
     //console.log(user.token);
     res.status(200)
-    res.send();
+    res.send({authState: "Not Authenticated"});
 });
 
 const verifyAuth = async (req, res, next) => {
@@ -132,13 +132,18 @@ async function createUser(username,password,email) {
         username : username,
         password: passwordHash,
         email: email,
-        token: nanoid(),
     };
 
     users.push(user);
 
     return user;
 };
+
+async function findToken(field,value){
+    if (!value) return null;
+
+    return tokens.find((tok) => tok[field] === value);
+}
 
 async function findUser(field, value) {
     if (!value) return null;
@@ -152,6 +157,11 @@ function setAuthCookie(res, authToken) {
         httpOnly: true,
         sameSite: 'strict',
     });
+    const token = {
+        token: authToken,
+    };
+
+    tokens.push(token);
 }
 
 app.use((_req, res) => {

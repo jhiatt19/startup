@@ -44,42 +44,24 @@ export default function App(){
     const [buttonText,setButtonText] = useState(initalText);
     const navigate = useNavigate();
     
-    const handleLogOut = () => {
-        setUserData((userData) => {
-            const indexNew = userData.findIndex((u) => u.authCode === authCode);
-            if (authstate.username === 'Guest'){
-                const newUserData = userData.filter(
-                    (user) => user.authCode !== userData[indexNew].authCode
-                );
-                return newUserData;
+    function handleLogOut(){
+        const response = fetch('/api/auth/logout', {
+            method: 'delete',
+            headers: {
+                'Content-type': 'application/json;',
+                'Cookie': `token: ${authCode};`,
             }
-            else {
-                if (indexNew !== -1){
-                const newUserData = [...userData];
-                newUserData[indexNew] = {
-                    ...newUserData[indexNew],
-                    authCode: '',
-                };
-                return newUserData;
-                };
-                return userData;
-            };
-        });
+        })
+        if (response?.status === 200) {
+            setAuthState(response.authState);
+            setAuthCode('');
+            navigate("/");
+        } else {
+            setError(`Error: ${CardBody.msg}`);
+            setIsError(true);
+        }
         
-        setAuthCode('');
-        setAuthState('Not Authenticated');
-        setButtonText("Continue as Guest");
-        setAuth((prevAuth) => {
-            const newAuth = {username:'',authCode:'',authStatus:"Not Authenticated"};
-            localStorage.setItem("authState",JSON.stringify(newAuth));
-            return newAuth;
-        });
-        navigate("/");
     };
-
-    useEffect(() => {
-        localStorage.setItem("userData",JSON.stringify(userData));
-    },[userData]);
 
     const handleHome = () => {
         if (authState === "Authenticated" && authCode){
@@ -91,20 +73,28 @@ export default function App(){
       };
     
     const handleGuest = () => {
-        const token = nanoid();
-        setUsername("Guest")
-        setAuthState("Authenticated")
-        setAuthCode(token);
-        setAuth((prevAuth) => {
-            const newAuth = {username:'Guest',authCode:token,authStatus:"Authenticated"};
-            localStorage.setItem("authState",JSON.stringify(newAuth));
-            return newAuth;
-        });
-        setButtonText("Welcome " + username + "!");
-        if (username === 'Guest'){
-            setUserData([...userData, {username:"Guest", authCode:token}]);
+        setUsername("Guest-" + nanoid());
+        const response = fetch('/api/auth/login', {
+            method: 'post',
+            body: JSON.stringify({username: username, password: "guest"}),
+            headers: {
+                'Content-type': 'application/json',
+            }
+        })
+        if (response?.status === 200){
+            localStorage.setItem('username',response.username);
+            const plaintextResponse = response.json();
+            setAuthCode(plaintextResponse.cookie.token);
+            setAuthState(plaintextResponse.body.authState);
+            setButtonText("Welcome Guest!");
+            navigate("/home");
         }
-        navigate("/home");
+        else {
+            setError(`Error: ${body.msg}`);
+            setIsError(true);
+        }
+        
+        
     }
     return ( 
         <div>
@@ -115,7 +105,7 @@ export default function App(){
             <h1><a id="homeNav" onClick={handleHome}>Won Stop</a></h1>
             <NavLink to='./'>
             <form>
-                <button id="logOut" onClick={handleLogOut}>Log out</button>
+                <button id="logOut" onClick={() => handleLogOut}>Log out</button>
             </form>
             </NavLink> <br/>
         </header>

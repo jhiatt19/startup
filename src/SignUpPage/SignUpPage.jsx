@@ -68,10 +68,10 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
     if (response?.status === 200){
       const response = await response.json();
       localStorage.setItem('username', json.stringify(response.username));
-      setAuthState(response.authState);
       setButtonText("Welcome " + response.username + "!");
       navigate("/Home");
     } else {
+      const body = await response.json();
       setError(`Error: ${body.msg}`);
       setIsError(true);
     }
