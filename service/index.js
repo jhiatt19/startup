@@ -20,6 +20,10 @@ var apiRouter = express.Router();
 
 app.use('/api', apiRouter);
 
+apiRouter.get('/users', async (req, res) => {
+    res.send(users);
+});
+
 //Create a new user and provide auth token
 apiRouter.post('/auth/create', async (req, res) => {
     console.log("Made it to the beginning of the endpoint");
@@ -35,53 +39,57 @@ apiRouter.post('/auth/create', async (req, res) => {
         console.log("success in setting auth Cookie");
         res.status(200);
         console.log("set res status");
-        res.send({username: user.username});
+        res.send({username: user.username, token: user.token});
     }
 });
 
 //Login an existing user and provide auth token
-// apiRouter.post('/auth/login', async (req, res) => {
-//     const user = await('username', req.body.username);
-//     if (user) {
-//         if (await bycript.compare(req.body.password, user.password)) {
-//             user.token = nanoid();
-//             setAuthCookie(res,user.token);
-//             res.status(200);
-//             res.send({ user: user.username, authState: 'Authenticated' });
-//             return;
-//         }
-//     }
-//     res.status(401).send({ msg: 'Unauthorized'});
-// });
+apiRouter.post('/auth/login', async (req, res) => {
+    const user = await findUser('username', req.body.username);
+    if (user) {
+        if (await bcrypt.compare(req.body.password, user.password)) {
+            user.token = nanoid();
+            setAuthCookie(res,user.token);
+            res.status(200);
+            res.send({ user: user.username, authState: 'Authenticated' });
+            return;
+        }
+    }
+    res.status(401).send({ msg: 'Unauthorized'});
+});
 
-// apiRouter.delete('/auth/logout', async (req, res) => {
-//     const user = await findUser('token', req.cookies[authCookieName]);
-//     if (user) {
-//         delete user.token;
-//     }
-//     res.clearCookie(authCookieName);
-//     res.status(200).end();
-// });
+apiRouter.delete('/auth/logout', async (req, res) => {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) {
+        console.log(json.parse(user.token));
+        delete user.token;
+    }
+    res.clearCookie(authCookieName);
+    console.log("Cleared token");
+    //console.log(user.token);
+    res.status(200)
+    res.send();
+});
 
-// const verifyAuth = async (req, res, next) => {
-//     const user = await findUser('token', req.cookies[authCookieName]);
-//     if (user) {
-//         next();
-//     } else {
-//         res.status(401).send({ msg: 'Unauthorized' });
-//     }
-// };
+const verifyAuth = async (req, res, next) => {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) {
+        next();
+    } else {
+        res.status(401).send({ msg: 'Unauthorized' });
+    }
+};
 
-// apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
-//     const user = await findUser('username',req.body.username);
-//     if (user) {
-//         const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
-//         setTasks(user, user.username,task);
-//         res.status(200).end();
-//         return;
-//     }
-//     res.status(401).send({ msg: 'Unauthorized' });
-// });
+apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
+    const user = await findUser('username',req.body.username);
+    if (user) {
+        const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
+        setTasks(user, user.username,task);
+        res.status(200).end();
+        return;
+    }
+    res.status(401).send({ msg: 'Unauthorized' });
+});
 
 // function setTasks(user, username, taskObject) {
 //     const user = findUser('username',username);
@@ -140,9 +148,9 @@ function setAuthCookie(res, authToken) {
 //     res.sendFile('index.html', { root: 'public' });
 //   });
 
-// app.use(function (err, req, res, next) {
-//     res.status(500).send({ type: err.name, message: err.message });
-//   });
+app.use(function (err, req, res, next) {
+    res.status(500).send({ type: err.name, message: err.message });
+  });
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
