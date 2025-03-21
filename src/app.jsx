@@ -30,22 +30,14 @@ function NavigationBar(){
 
 export default function App(){
     const initalText = "Continue as Guest"
-    const [auth, setAuth] = useState(() => {
-        const data = localStorage.getItem("authState");
-        return data ? JSON.parse(data) : {username:'',authCode:'',authStatus:''};
-    });
-    const [authCode, setAuthCode] = useState(auth.authCode);
-    const [authState,setAuthState] = useState(auth.authStatus);
-    const [userData, setUserData] = useState(() => {
-        const storedTable = localStorage.getItem("userData");
-        return storedTable ? JSON.parse(storedTable) : [];
-      });
-    const [username,setUsername] = useState(userData.username || 'Guest');
+    const [authCode, setAuthCode] = useState('');
+    const [authState,setAuthState] = useState("Not Authenticated");
+    const [username,setUsername] = useState('Guest');
     const [buttonText,setButtonText] = useState(initalText);
     const navigate = useNavigate();
     
-    function handleLogOut(){
-        const response = fetch('/api/auth/logout', {
+    async function handleLogOut(){
+        const response = await fetch('/api/auth/logout', {
             method: 'delete',
             headers: {
                 'Content-type': 'application/json;',
@@ -53,11 +45,13 @@ export default function App(){
             }
         })
         if (response?.status === 200) {
-            setAuthState(response.authState);
+            const res = await response.json();
+            setAuthState(res.authState);
             setAuthCode('');
             navigate("/");
         } else {
-            setError(`Error: ${CardBody.msg}`);
+            const body = await response.json();
+            setError(`Error: ${body.msg}`);
             setIsError(true);
         }
         
@@ -112,14 +106,14 @@ export default function App(){
         {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} exact />
-                <Route path='/Home' element={<Home setAuthState={setAuthState} authState={authState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
+                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText}/>} exact />
+                <Route path='/Home' element={<Home setAuthState={setAuthState} authState={authState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
                 <Route path='/Calendar' element={<Calendar />} />
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />
-                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText} userData={userData} setUserData={setUserData}/>} />
+                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText}/>} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </main>

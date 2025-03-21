@@ -34,6 +34,7 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
         'Content-type': 'application/json; charset=UTF-8',
       }
     });
+    console.log(document.cookie.token);
     if (response?.status == 200){
       const res = await response.json();
       localStorage.setItem('username', JSON.stringify(res.user));
