@@ -12,7 +12,6 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);;
-  const [objectAdded,setObjectAdded] = useState(false);
 
   const handleBlurUser = () => {
     if (username === ''){
@@ -61,14 +60,15 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
       method: 'post',
       body: JSON.stringify({ username: username, password: password, email: email}),
       headers: {
-        'Content-type': 'application/json;',
+        'Content-type': 'application/json; charset=UTF-8',
       }
     });
 
     if (response?.status === 200){
-      const response = await response.json();
-      localStorage.setItem('username', JSON.stringify(response.username));
-      setButtonText("Welcome " + response.username + "!");
+      const res = await response.json();
+      localStorage.setItem('username', JSON.stringify(res.username));
+      setButtonText("Welcome " + res.username + "!");
+      setAuthState(res.authState);
       navigate("/Home");
     } else {
       const body = await response.json();

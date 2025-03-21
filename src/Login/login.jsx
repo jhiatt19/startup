@@ -40,7 +40,6 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
       localStorage.setItem('username', JSON.stringify(res.user));
       setAuthState(res.authState);
       setButtonText("Welcome " + res.user + "!");
-      setAuthCode(res.token);
       navigate("/Home");
     }
     else {

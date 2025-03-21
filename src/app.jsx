@@ -30,7 +30,6 @@ function NavigationBar(){
 
 export default function App(){
     const initalText = "Continue as Guest"
-    const [authCode, setAuthCode] = useState('');
     const [authState,setAuthState] = useState("Not Authenticated");
     const [username,setUsername] = useState('Guest');
     const [buttonText,setButtonText] = useState(initalText);
@@ -41,13 +40,12 @@ export default function App(){
             method: 'delete',
             headers: {
                 'Content-type': 'application/json;',
-                'Cookie': `token: ${authCode};`,
             }
-        })
+        });
         if (response?.status === 200) {
             const res = await response.json();
             setAuthState(res.authState);
-            setAuthCode('');
+            setButtonText("Welcome Guest!");
             navigate("/");
         } else {
             const body = await response.json();
@@ -58,7 +56,7 @@ export default function App(){
     };
 
     const handleHome = () => {
-        if (authState === "Authenticated" && authCode){
+        if (authState === "Authenticated"){
           navigate("/Home");
         }
         else {
@@ -78,7 +76,6 @@ export default function App(){
         if (response?.status === 200){
             localStorage.setItem('username',response.username);
             const plaintextResponse = response.json();
-            setAuthCode(plaintextResponse.cookie.token);
             setAuthState(plaintextResponse.body.authState);
             setButtonText("Welcome Guest!");
             navigate("/home");
@@ -99,21 +96,21 @@ export default function App(){
             <h1><a id="homeNav" onClick={handleHome}>Won Stop</a></h1>
             <NavLink to='./'>
             <form>
-                <button id="logOut" onClick={() => handleLogOut}>Log out</button>
+                <button id="logOut" onClick={() => handleLogOut()}>Log out</button>
             </form>
             </NavLink> <br/>
         </header>
         {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setAuthState={setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText}/>} exact />
-                <Route path='/Home' element={<Home setAuthState={setAuthState} authState={authState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText}/>} />
+                <Route path='/' element={<Login setAuthState={setAuthState} setButtonText={setButtonText}/>} exact />
+                <Route path='/Home' element={<Home setAuthState={setAuthState} authState={authState} setButtonText={setButtonText}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar />} />
                 <Route path='/Calendar' element={<Calendar />} />
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />
-                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} setAuthCode={setAuthCode} authCode={authCode} setButtonText={setButtonText}/>} />
+                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} authState={authState} setButtonText={setButtonText}/>} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </main>

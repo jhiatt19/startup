@@ -47,8 +47,7 @@ apiRouter.post('/auth/create', async (req, res) => {
         const user = await createUser(req.body.username, req.body.password, req.body.email);
         
         setAuthCookie(res, nanoid());
-        res.status(200);
-        res.send({username: user.username, authState:'Authenticated' });
+        res.status(200).send({username: user.username, authState:'Authenticated' });
     }
 });
 
@@ -70,13 +69,8 @@ apiRouter.post('/auth/login', async (req, res) => {
 });
 
 apiRouter.delete('/auth/logout', async (req, res) => {
-    const authToken = await findToken('token', req.cookie.token);
-    if (authToken) {
-        delete authToken.token;
-    }
-    else {
-        res.status(401).send({ msg: "Unauthorized"});
-    }
+    const authToken = req.cookies.token;
+    console.log(authToken);
     res.clearCookie(authCookieName);
     console.log("Cleared token");
     //console.log(user.token);
