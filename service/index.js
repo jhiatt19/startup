@@ -46,9 +46,9 @@ apiRouter.post('/auth/create', async (req, res) => {
     } else {
         const user = await createUser(req.body.username, req.body.password, req.body.email);
         
-        setAuthCookie(res, user.token);
+        setAuthCookie(res, nanoid());
         res.status(200);
-        res.send({username: user.username});
+        res.send({username: user.username, authState:'Authenticated' });
     }
 });
 
@@ -157,11 +157,6 @@ function setAuthCookie(res, authToken) {
         httpOnly: true,
         sameSite: 'strict',
     });
-    const token = {
-        token: authToken,
-    };
-
-    tokens.push(token);
 }
 
 app.use((_req, res) => {

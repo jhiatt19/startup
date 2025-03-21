@@ -35,9 +35,10 @@ export function Login({setAuthState, authState, setAuthCode, authCode, setButton
       }
     });
     if (response?.status == 200){
-      localStorage.setItem('username', res.username);
+      const res = await response.json();
+      localStorage.setItem('username', JSON.stringify(res.user));
       setAuthState(res.authState);
-      setButtonText("Welcome " + res.username + "!");
+      setButtonText("Welcome " + res.user + "!");
       setAuthCode(res.token);
       navigate("/Home");
     }
