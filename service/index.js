@@ -100,6 +100,16 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
     res.status(401).send({ msg: 'Unauthorized' });
 });
 
+apiRouter.get('/auth/getTaskData', verifyAuth, async(req,res) => {
+    const user = await findUser('username', req.body.username);
+    if (user) {
+        res.send(user.tasks);
+    } else {
+        res.status(505).send("Error: User tasks not found");
+    }
+    res.status(403).send("Error: user not found");
+});
+
 function setTasks(user, taskObject) {
     if (!user.tasks) {
         user.tasks = [];

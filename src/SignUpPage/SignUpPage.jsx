@@ -11,7 +11,7 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
   const [email, setEmail] = useState(initialEmail);
   const navigate = useNavigate();
   const [error, setError] = useState('');
-  const [isError, setIsError] = useState(false);;
+  const [isError, setIsError] = useState(false);
 
   const handleBlurUser = () => {
     if (username === ''){

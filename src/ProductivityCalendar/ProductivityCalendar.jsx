@@ -27,12 +27,12 @@ function CreateMessage({handleCloseAlert,alerts}) {
     );
 };
 
-export function ProductivityCalendar() {
+export function ProductivityCalendar(username) {
     const [task,setTask] = useState('');
     const [time, setTime] = useState('Choose Est time');
     const [priority, setPriority] = useState('Choose priority level');
     const [taskData,setTaskData] = useState(() => {
-        const storedTable = localStorage.getItem("taskData");
+        const storedTable = pullTaskData();
         return storedTable ? JSON.parse(storedTable) : [];
     });
     const [checkItems, setCheckItems] = useState([]);
@@ -42,6 +42,8 @@ export function ProductivityCalendar() {
     const names = ["Max ", "Billy ", "Hannah ", "Kate "];
     const finStart = ["created ", "finished "];
     const numComplete = [1, 2, 3, 4, 5, 6];
+    const [isError, setIsError] = useState(false);
+    const [error,setError] = useState('');
 
     const handleCloseAlert = (id) => {
         setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
@@ -61,6 +63,36 @@ export function ProductivityCalendar() {
     const handleTask = (e) => {
         setTask(e.target.value);
     };
+
+    async function pullTaskData(){
+        const response = await fetch('/api/auth/getTaskData', {
+            method: 'get',
+            body: JSON.stringify({username: username}),
+            headers: {
+                'Content-type': 'application/json',
+            }
+        });
+        if (response?.status === 200) {
+            const res = await response.json();
+            return res.taskData;
+        } else {
+            const body = await response.json();
+            setError(`Error: ${body.msg}`);
+            setIsError(true);
+        }
+    }
+    async function addTask(taskData){
+        const response = await fetch('/api/auth/addtask', {
+            method: 'post',
+            body: JSON.stringify(taskData),
+            headers: {
+                'Content-type': 'application/json',
+            }
+        });
+        if (response?.status === 200){
+            
+        }
+    }
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -69,8 +101,9 @@ export function ProductivityCalendar() {
             task: task,
             time: time,
             priority: priority,
-            id:nanoid(),
+            taskID:nanoid(),
         }
+        addTask(newTask);        
         setAlerts((prevAlerts) => [
             ...prevAlerts,
             {id:nanoid(), message:user.username + " created a task.",}
@@ -221,7 +254,9 @@ export function ProductivityCalendar() {
                 </tbody>
             </table>
             <button type="button" id="buttonButton" onClick={handleEdit}>Remove Checked Boxes</button>
-            
+            <div>
+                {isError && error}
+            </div>
         </section>
         <section>
             <h3>Calendar</h3>{/*The calendar will be a 3rd party service call*/}
