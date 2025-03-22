@@ -106,7 +106,7 @@ export default function App(){
                 <Route path='/' element={<Login setAuthState={setAuthState} setButtonText={setButtonText}/>} exact />
                 <Route path='/Home' element={<Home setAuthState={setAuthState} authState={authState} setButtonText={setButtonText}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
-                <Route path='/ProductivityCalendar' element={<ProductivityCalendar username={username}/>} />
+                <Route path='/ProductivityCalendar' element={<ProductivityCalendar username={username} authState={authState}/>} />
                 <Route path='/Calendar' element={<Calendar />} />
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />

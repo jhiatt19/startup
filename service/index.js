@@ -100,8 +100,8 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
     res.status(401).send({ msg: 'Unauthorized' });
 });
 
-apiRouter.get('/auth/getTaskData', verifyAuth, async(req,res) => {
-    const user = await findUser('username', req.body.username);
+apiRouter.get('/auth/getTaskData:username', verifyAuth, async(req,res) => {
+    const user = await findUser('username', req.params.username);
     if (user) {
         res.send(user.tasks);
     } else {
@@ -111,9 +111,6 @@ apiRouter.get('/auth/getTaskData', verifyAuth, async(req,res) => {
 });
 
 function setTasks(user, taskObject) {
-    if (!user.tasks) {
-        user.tasks = [];
-    }
     user.tasks.push(taskObject);
 };
 
@@ -123,7 +120,6 @@ async function createTask(taskMessage, priority, time, taskID){
         name : taskMessage,
         priority : priority,
         time : time,
-        
     }
     return task;
 };
@@ -136,6 +132,7 @@ async function createUser(username,password,email) {
         username : username,
         password: passwordHash,
         email: email,
+        tasks: [],
     };
 
     users.push(user);
