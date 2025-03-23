@@ -29,7 +29,7 @@ apiRouter.get('/tokens', async (req,res) => {
     res.send(tokens);
 });
 
-apiRouter.get('/users:username', async (req, res) => {
+apiRouter.get('/users/:username', async (req, res) => {
     const user = await findUser('username',req.params.username)
     if (user){
         res.send(user);
@@ -46,7 +46,7 @@ apiRouter.post('/auth/create', async (req, res) => {
     } else {
         const user = await createUser(req.body.username, req.body.password, req.body.email);
         
-        setAuthCookie(res, nanoid());
+        setAuthCookie(res, nanoid(), user.username);
         res.status(200).send({username: user.username, authState:'Authenticated' });
     }
 });
@@ -56,7 +56,7 @@ apiRouter.post('/auth/login', async (req, res) => {
     const user = await findUser('username', req.body.username);
     if (user) {
         if (await bcrypt.compare(req.body.password, user.password)) {
-            setAuthCookie(res,nanoid());
+            setAuthCookie(res,nanoid(), user.username);
             res.status(200);
             res.send({ user: user.username, authState: 'Authenticated' });
         }
@@ -72,6 +72,7 @@ apiRouter.delete('/auth/logout', async (req, res) => {
     const authToken = req.cookies.token;
     console.log(authToken);
     res.clearCookie(authCookieName);
+    deleteToken(authToken);
     console.log("Cleared token");
     //console.log(user.token);
     res.status(200)
@@ -79,8 +80,8 @@ apiRouter.delete('/auth/logout', async (req, res) => {
 });
 
 const verifyAuth = async (req, res, next) => {
-    const user = await findUser('token', req.body.token);
-    if (user) {
+    const token = await findToken(req.cookies.token);
+    if (token) {
         console.log("verified auth");
         next();
     } else {
@@ -140,10 +141,17 @@ async function createUser(username,password,email) {
     return user;
 };
 
-async function findToken(field,value){
+async function findToken(value){
     if (!value) return null;
 
-    return tokens.find((tok) => tok[field] === value);
+    return tokens.find((tok) => tok.token === value);
+}
+
+async function deleteToken(value){
+    if (!value) return null;
+    else {
+        return tokens.filter(tok => tok.authToken !== value);
+    }
 }
 
 async function findUser(field, value) {
@@ -152,12 +160,17 @@ async function findUser(field, value) {
     return users.find((u) => u[field] === value);
 }
 
-function setAuthCookie(res, authToken) {
+function setAuthCookie(res, authToken, username) {
     res.cookie(authCookieName, authToken, {
         secure: true,
         httpOnly: true,
         sameSite: 'strict',
     });
+    const token = {
+        user: username,
+        auth: authToken,
+    }
+    tokens.push(token);
 }
 
 app.use((_req, res) => {

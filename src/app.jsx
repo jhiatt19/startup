@@ -31,7 +31,7 @@ function NavigationBar(){
 export default function App(){
     const initalText = "Continue as Guest"
     const [authState,setAuthState] = useState("Not Authenticated");
-    const [username,setUsername] = useState('Guest');
+    const [username,setUsername] = useState();
     const [buttonText,setButtonText] = useState(initalText);
     const navigate = useNavigate();
     
@@ -66,7 +66,7 @@ export default function App(){
     
     const handleGuest = () => {
         setUsername("Guest-" + nanoid());
-        const response = fetch('/api/auth/login', {
+        const response = fetch('/api/auth/create', {
             method: 'post',
             body: JSON.stringify({username: username, password: "guest"}),
             headers: {
@@ -87,6 +87,35 @@ export default function App(){
         
         
     }
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const response = await fetch(`/api/users:${username}`);
+            if (response?.status === 200){
+                const res = await response.json();
+                setUsername(res.username);
+            }
+            else {
+                setUsername('');
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    useEffect(() => {
+        const fetchAuthData = async () => {
+            const response = await fetch(`/api/tokens:${username}`);
+            if (response?.status === 200) {
+                setAuthState("Authenticated");
+            } else {
+                setAuthState("Not Authenticated");
+            }
+        };
+
+        fetchAuthData();
+    }, []);
+    
     return ( 
         <div>
         <header>
@@ -103,14 +132,14 @@ export default function App(){
         {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setAuthState={setAuthState} setButtonText={setButtonText}/>} exact />
+                <Route path='/' element={<Login setAuthState={setAuthState} setButtonText={setButtonText} authState={authState} setUsername={setUsername} username={username}/>} exact />
                 <Route path='/Home' element={<Home setAuthState={setAuthState} authState={authState} setButtonText={setButtonText}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar username={username} authState={authState}/>} />
                 <Route path='/Calendar' element={<Calendar />} />
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />
-                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} authState={authState} setButtonText={setButtonText}/>} />
+                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} authState={authState} setButtonText={setButtonText} setUsername={setUsername} username={username}/>} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </main>

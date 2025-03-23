@@ -27,31 +27,13 @@ function CreateMessage({handleCloseAlert,alerts}) {
     );
 };
 
-async function pullTaskData(){
-    const username = await fetch()
-    const response = await fetch(`/api/auth/getTaskData:${username}`, {
-        method: 'get',
-        headers: {
-            'Content-type': 'application/json',
-        }
-    });
-    if (response?.status === 200) {
-        const res = await response.json();
-        return res.taskData;
-    } else {
-        const body = await response.json();
-        setError(`Error: ${body.msg}`);
-        setIsError(true);
-    }
-};
-
-const initalTaskData = await pullTaskData();
+//const initalTaskData = await pullTaskData();
 
 export function ProductivityCalendar(username, authState) {
     const [task,setTask] = useState('');
     const [time, setTime] = useState('Choose Est time');
     const [priority, setPriority] = useState('Choose priority level');
-    const [taskData,setTaskData] = useState(initalTaskData);
+    const [taskData,setTaskData] = useState([]);
     const [checkItems, setCheckItems] = useState([]);
     const [alerts,setAlerts] = useState([]);
     const [displayAlert, setDisplayAlert] = useState(false);
@@ -62,6 +44,23 @@ export function ProductivityCalendar(username, authState) {
     const [error,setError] = useState('');
 
     //setTaskData(await pullTaskData());
+
+    async function pullTaskData(){
+        const response = await fetch(`/api/auth/getTaskData:${username}`, {
+            method: 'get',
+            headers: {
+                'Content-type': 'application/json',
+            }
+        });
+        if (response?.status === 200) {
+            const res = await response.json();
+            return res.taskData;
+        } else {
+            const body = await response.json();
+            setError(`Error: ${body.msg}`);
+            setIsError(true);
+        }
+    };
 
     const handleCloseAlert = (id) => {
         setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
@@ -93,7 +92,7 @@ export function ProductivityCalendar(username, authState) {
         });
         if (response?.status === 200){
             const newTaskData = await pullTaskData();
-            setTaskData(newTaskData);
+            setTaskData([...taskData, newTaskData]);
         }
     }
     
@@ -109,7 +108,7 @@ export function ProductivityCalendar(username, authState) {
         addTask(newTask);        
         setAlerts((prevAlerts) => [
             ...prevAlerts,
-            {id:nanoid(), message:user.username + " created a task.",}
+            {id:nanoid(), message:username + " created a task.",}
         ])
         setDisplayAlert(true);
         setTaskData([...taskData,newTask]);

@@ -6,9 +6,8 @@ import {nanoid} from 'nanoid';
 
 //import { SignUpPage } from './SignUpPage/SignUpPage';
 
-export function Login({setAuthState, authState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
+export function Login({setAuthState, authState, setUsername, username, setButtonText}) {
   
-  const [username,setUsername] = useState('');
   const [password,setPassword] = useState('');
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
