@@ -29,6 +29,17 @@ apiRouter.get('/tokens', async (req,res) => {
     res.send(tokens);
 });
 
+apiRouter.get('/tokens/:username', async (req, res) => {
+    console.log(req.cookies.token);
+    const token = await findToken('auth',req.cookies.token);
+    if (token){
+        res.send(token);
+    }
+    else {
+        res.status(403).send({ msg: "No token found"});
+    }
+});
+
 apiRouter.get('/users/:username', async (req, res) => {
     const user = await findUser('username',req.params.username)
     if (user){
@@ -45,8 +56,9 @@ apiRouter.post('/auth/create', async (req, res) => {
         res.status(403).send({ msg: 'Existing user' });
     } else {
         const user = await createUser(req.body.username, req.body.password, req.body.email);
-        
-        setAuthCookie(res, nanoid(), user.username);
+        const token = nanoid();
+        setAuthCookie(res, token);
+        saveAuth(token,user.username);
         res.status(200).send({username: user.username, authState:'Authenticated' });
     }
 });
@@ -56,7 +68,9 @@ apiRouter.post('/auth/login', async (req, res) => {
     const user = await findUser('username', req.body.username);
     if (user) {
         if (await bcrypt.compare(req.body.password, user.password)) {
-            setAuthCookie(res,nanoid(), user.username);
+            const token = nanoid();
+            setAuthCookie(res, token);
+            saveAuth(token,user.username);
             res.status(200);
             res.send({ user: user.username, authState: 'Authenticated' });
         }
@@ -73,6 +87,7 @@ apiRouter.delete('/auth/logout', async (req, res) => {
     console.log(authToken);
     res.clearCookie(authCookieName);
     deleteToken(authToken);
+    console.log(authToken);
     console.log("Cleared token");
     //console.log(user.token);
     res.status(200)
@@ -80,7 +95,8 @@ apiRouter.delete('/auth/logout', async (req, res) => {
 });
 
 const verifyAuth = async (req, res, next) => {
-    const token = await findToken(req.cookies.token);
+    console.log(req.cookies.token);
+    const token = await findToken("auth",req.cookies.token);
     if (token) {
         console.log("verified auth");
         next();
@@ -141,16 +157,16 @@ async function createUser(username,password,email) {
     return user;
 };
 
-async function findToken(value){
+async function findToken(field,value){
     if (!value) return null;
 
-    return tokens.find((tok) => tok.token === value);
+    return tokens.find((tok) => tok[field] === value);
 }
 
 async function deleteToken(value){
     if (!value) return null;
     else {
-        return tokens.filter(tok => tok.authToken !== value);
+        tokens = tokens.filter(tok => tok.auth !== value);
     }
 }
 
@@ -160,16 +176,19 @@ async function findUser(field, value) {
     return users.find((u) => u[field] === value);
 }
 
-function setAuthCookie(res, authToken, username) {
+function setAuthCookie(res, authToken) {
     res.cookie(authCookieName, authToken, {
         secure: true,
         httpOnly: true,
         sameSite: 'strict',
-    });
+    });    
+}
+
+function saveAuth(authToken, username){
     const token = {
         user: username,
         auth: authToken,
-    }
+    };
     tokens.push(token);
 }
 

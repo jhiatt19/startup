@@ -31,9 +31,10 @@ function NavigationBar(){
 export default function App(){
     const initalText = "Continue as Guest"
     const [authState,setAuthState] = useState("Not Authenticated");
-    const [username,setUsername] = useState();
+    const [username,setUsername] = useState('');
     const [buttonText,setButtonText] = useState(initalText);
     const navigate = useNavigate();
+    const location = useLocation();
     
     async function handleLogOut(){
         const response = await fetch('/api/auth/logout', {
@@ -80,10 +81,6 @@ export default function App(){
             setButtonText("Welcome Guest!");
             navigate("/home");
         }
-        else {
-            setError(`Error: ${body.msg}`);
-            setIsError(true);
-        }
         
         
     }
@@ -101,7 +98,7 @@ export default function App(){
         };
 
         fetchUserData();
-    }, []);
+    }, [location.pathname]);
 
     useEffect(() => {
         const fetchAuthData = async () => {
@@ -114,8 +111,8 @@ export default function App(){
         };
 
         fetchAuthData();
-    }, []);
-    
+    }, [location.pathname]);
+
     return ( 
         <div>
         <header>
@@ -132,14 +129,14 @@ export default function App(){
         {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setAuthState={setAuthState} setButtonText={setButtonText} authState={authState} setUsername={setUsername} username={username}/>} exact />
-                <Route path='/Home' element={<Home setAuthState={setAuthState} authState={authState} setButtonText={setButtonText}/>} />
+                <Route path='/' element={<Login setButtonText={setButtonText} authState={authState} setUsername={setUsername} username={username}/>} exact />
+                <Route path='/Home' element={<Home authState={authState} setButtonText={setButtonText}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar username={username} authState={authState}/>} />
                 <Route path='/Calendar' element={<Calendar />} />
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />
-                <Route path='/SignUpPage' element={<SignUpPage setAuthState = {setAuthState} authState={authState} setButtonText={setButtonText} setUsername={setUsername} username={username}/>} />
+                <Route path='/SignUpPage' element={<SignUpPage authState={authState} setButtonText={setButtonText} setUsername={setUsername} username={username}/>} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </main>

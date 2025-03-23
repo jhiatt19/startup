@@ -1,13 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import './login.css';
 import { data, useNavigate } from 'react-router-dom';
-import {nanoid} from 'nanoid';
-//import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
-//import { SignUpPage } from './SignUpPage/SignUpPage';
 
 export function Login({setAuthState, authState, setUsername, username, setButtonText}) {
-  
   const [password,setPassword] = useState('');
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
@@ -36,8 +31,6 @@ export function Login({setAuthState, authState, setUsername, username, setButton
     console.log(document.cookie.token);
     if (response?.status == 200){
       const res = await response.json();
-      localStorage.setItem('username', JSON.stringify(res.user));
-      setAuthState(res.authState);
       setButtonText("Welcome " + res.user + "!");
       navigate("/Home");
     }
