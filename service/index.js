@@ -126,10 +126,27 @@ apiRouter.get('/auth/getTaskData/:username', verifyAuth, async(req,res) => {
     if (user) {
         res.send(user.tasks);
     } else {
-        res.status(505).send("Error: User tasks not found");
+        res.status(505).send({msg : "Error: User tasks not found"});
     }
     //res.status(403).send("Error: user not found");
 });
+
+apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) => {
+    console.log(req.headers);
+    console.log(req.body);
+    const user = await findUser('username', req.params.username);
+    if (user) {
+        deleteTasks(user,req.deleteTasks);
+    } else {
+        res.status(505).send({ msg: "Error: User tasks not found" });
+    }
+});
+
+function deleteTasks(user,tasks){
+    for (const task in tasks) {
+        user.tasks = user.tasks.filter(t => t !== task);
+    }
+}
 
 function setTasks(user, taskObject) {
     user.tasks.push(taskObject);

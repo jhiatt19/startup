@@ -48,7 +48,7 @@ export function ProductivityCalendar(username, authState) {
     },[]);
 
     async function pullTaskData(){
-        const response = await fetch(`/api/auth/getTaskData:${username}`, {
+        const response = await fetch(`/api/auth/getTaskData/${username}`, {
             method: 'get',
             headers: {
                 'Content-type': 'application/json',
@@ -97,6 +97,22 @@ export function ProductivityCalendar(username, authState) {
             setTaskData([...taskData, newTaskData]);
         }
     }
+
+    async function deleteTasks(tasks){
+        const response = await fetch(`api/auth/deleteTaskData/${username}`, {
+            method: 'delete',
+            body: JSON.stringify(tasks),
+        });
+        if (response?.status === 200){
+            const updatedTaskData = await pullTaskData();
+            setTaskData([...taskData, updatedTaskData]);
+        }
+        else {
+            const body = await response.json();
+            setError(`Error: ${body.msg}`);
+            setIsError(true);
+        }
+    }
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -135,7 +151,8 @@ export function ProductivityCalendar(username, authState) {
         const removeRows = document.querySelectorAll('.checkBox:checked');
         const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
         const tempInt = removeIDs.length;
-        setTaskData(taskData => taskData.filter(row => !removeIDs.includes(row.id)));
+        const deleteTaskData = taskData.filter(row => removeIDs.includes(row.id));
+        deleteTasks(deleteTaskData);
         setCheckItems([]);
         if (tempInt > 1){
             setAlerts((prevAlerts) => [
