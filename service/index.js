@@ -43,7 +43,7 @@ apiRouter.get('/tokens/:username', async (req, res) => {
 });
 
 apiRouter.get('/users/:username', async (req, res) => {
-    const user = await findUser('username',req.params.username)
+    const user = await findUser(req.params.username)
     if (user){
         res.send(user);
     }
@@ -54,7 +54,7 @@ apiRouter.get('/users/:username', async (req, res) => {
 
 //Create a new user and provide auth token
 apiRouter.post('/auth/create', async (req, res) => {
-    if (await findUser('username', req.body.username)) {
+    if (await findUser(req.body.username)) {
         res.status(403).send({ msg: 'Existing user' });
     } else {
         console.log(req.body);
@@ -115,9 +115,10 @@ const verifyAuth = async (req, res, next) => {
 
 apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
     console.log(req.body);
-    const user = await findUser('username',req.body.username);
+    const user = await findUser(req.body.username);
     if (user) {
         const task = await createTask(req.body.task, req.body.priority, req.body.time);
+        counter = counter + 1;
         setTasks(user,task);
         res.status(200).end();
         return;
@@ -128,9 +129,10 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
 
 apiRouter.get('/auth/getTaskData/:username', verifyAuth, async(req,res) => {
     console.log(req.headers);
-    const user = await findUser('username', req.params.username);
+    const user = await findUser(req.params.username);
     if (user) {
-        res.send(user.tasks);
+        const jsonObject = Object.fromEntries(user.tasks.entries());
+        res.send(jsonObject);
     } else {
         res.status(505).send({msg : "Error: User tasks not found"});
     }
@@ -140,7 +142,7 @@ apiRouter.get('/auth/getTaskData/:username', verifyAuth, async(req,res) => {
 apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) => {
     console.log(req.headers);
     console.log(req.body);
-    const user = await findUser('username', req.params.username);
+    const user = await findUser(req.params.username);
     if (user) {
         deleteTasks(user,req.deleteTasks);
     } else {

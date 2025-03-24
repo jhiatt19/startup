@@ -52,7 +52,7 @@ export function ProductivityCalendar(username, authState) {
         });
         if (response?.status === 200) {
             const res = await response.json();
-            return res.taskData;
+            return Objects.entries(res.taskData);
         } else {
             const body = await response.json();
             setError(`Error: ${body.msg}`);
@@ -193,10 +193,6 @@ export function ProductivityCalendar(username, authState) {
             });}
     },[alerts]);
 
-    // useEffect(() => {
-    //     localStorage.setItem("taskData",JSON.stringify(taskData));
-    // },[taskData]);
-
   return (
     <main>
         {displayAlert && (
@@ -260,7 +256,7 @@ export function ProductivityCalendar(username, authState) {
                     </tr>
                 </thead>
                 <tbody>
-                {taskData.map((data) => 
+                {taskData.map(([data]) => 
                     <tr key={data.taskID}>
                         <td style={{backgroundColor:data.priority}}>{data.name}</td>
                         <td>{data.time}</td>

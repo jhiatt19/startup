@@ -29,9 +29,9 @@ export function Login({setUsername, username, setButtonText, setAuthState}) {
         'Content-type': 'application/json; charset=UTF-8',
       }
     });
-    console.log(document.cookie.token);
     if (response?.status == 200){
       const res = await response.json();
+      console.log(res);
       setButtonText("Welcome " + res.user + "!");
       setAuthState(res.authState);
       setUsername(res.user);
