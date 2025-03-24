@@ -124,7 +124,7 @@ apiRouter.get('/auth/getTaskData:username', verifyAuth, async(req,res) => {
     } else {
         res.status(505).send("Error: User tasks not found");
     }
-    res.status(403).send("Error: user not found");
+    //res.status(403).send("Error: user not found");
 });
 
 function setTasks(user, taskObject) {

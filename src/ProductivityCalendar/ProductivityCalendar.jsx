@@ -43,7 +43,9 @@ export function ProductivityCalendar(username, authState) {
     const [isError, setIsError] = useState(false);
     const [error,setError] = useState('');
 
-    //setTaskData(await pullTaskData());
+    useEffect(()=> {
+        setTaskData(pullTaskData());
+    },[]);
 
     async function pullTaskData(){
         const response = await fetch(`/api/auth/getTaskData:${username}`, {
@@ -85,7 +87,7 @@ export function ProductivityCalendar(username, authState) {
     async function addTask(taskData){
         const response = await fetch('/api/auth/addtask', {
             method: 'post',
-            body: JSON.stringify(taskData),
+            body: JSON.stringify({username: username}, taskData),
             headers: {
                 'Content-type': 'application/json',
             }
@@ -111,7 +113,7 @@ export function ProductivityCalendar(username, authState) {
             {id:nanoid(), message:username + " created a task.",}
         ])
         setDisplayAlert(true);
-        setTaskData([...taskData,newTask]);
+        //setTaskData([...taskData,newTask]);
         setTask('');
         setPriority("Choose priority level");
         setTime("Choose Est time");
