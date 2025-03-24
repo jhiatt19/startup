@@ -95,8 +95,9 @@ apiRouter.delete('/auth/logout', async (req, res) => {
 });
 
 const verifyAuth = async (req, res, next) => {
-    console.log(req.cookies.token);
-    const token = await findToken("auth",req.cookies.token);
+    console.log(req.headers);
+    console.log("AuthToken: " + req.cookies.token);
+    const token = await findToken('auth',req.cookies.token);
     if (token) {
         console.log("verified auth");
         next();
@@ -107,6 +108,7 @@ const verifyAuth = async (req, res, next) => {
 };
 
 apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
+    console.log(req.body);
     const user = await findUser('username',req.body.username);
     if (user) {
         const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
@@ -114,10 +116,12 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
         res.status(200).end();
         return;
     }
+    console.log("No user found");
     res.status(401).send({ msg: 'Unauthorized' });
 });
 
-apiRouter.get('/auth/getTaskData:username', verifyAuth, async(req,res) => {
+apiRouter.get('/auth/getTaskData/:username', verifyAuth, async(req,res) => {
+    console.log(req.headers);
     const user = await findUser('username', req.params.username);
     if (user) {
         res.send(user.tasks);
@@ -180,7 +184,7 @@ function setAuthCookie(res, authToken) {
     res.cookie(authCookieName, authToken, {
         secure: true,
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: 'none',
     });    
 }
 
