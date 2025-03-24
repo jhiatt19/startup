@@ -33,7 +33,7 @@ export function ProductivityCalendar(username, authState) {
     const [task,setTask] = useState('');
     const [time, setTime] = useState('Choose Est time');
     const [priority, setPriority] = useState('Choose priority level');
-    const [taskData,setTaskData] = useState([]);
+    const [taskData,setTaskData] = useState(pullTaskData());
     const [checkItems, setCheckItems] = useState([]);
     const [alerts,setAlerts] = useState([]);
     const [displayAlert, setDisplayAlert] = useState(false);
@@ -42,10 +42,6 @@ export function ProductivityCalendar(username, authState) {
     const numComplete = [1, 2, 3, 4, 5, 6];
     const [isError, setIsError] = useState(false);
     const [error,setError] = useState('');
-
-    useEffect(()=> {
-        setTaskData(pullTaskData());
-    },[]);
 
     async function pullTaskData(){
         const response = await fetch(`/api/auth/getTaskData/${username}`, {
@@ -121,7 +117,6 @@ export function ProductivityCalendar(username, authState) {
             task: task,
             time: time,
             priority: priority,
-            taskID:nanoid(),
         }
         addTask(newTask);        
         setAlerts((prevAlerts) => [
@@ -151,8 +146,8 @@ export function ProductivityCalendar(username, authState) {
         const removeRows = document.querySelectorAll('.checkBox:checked');
         const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
         const tempInt = removeIDs.length;
-        const deleteTaskData = taskData.filter(row => removeIDs.includes(row.id));
-        deleteTasks(deleteTaskData);
+        //const deleteTaskData = taskData.filter(row => removeIDs.includes(row.id));
+        deleteTasks(removeIDs);
         setCheckItems([]);
         if (tempInt > 1){
             setAlerts((prevAlerts) => [
@@ -266,10 +261,10 @@ export function ProductivityCalendar(username, authState) {
                 </thead>
                 <tbody>
                 {taskData.map((data) => 
-                    <tr key={data.id}>
-                        <td style={{backgroundColor:data.priority}}>{data.task}</td>
+                    <tr key={data.taskID}>
+                        <td style={{backgroundColor:data.priority}}>{data.name}</td>
                         <td>{data.time}</td>
-                        <td><input className='checkBox' data-row-id={data.id} checked={checkItems.includes(data.id)} type="checkbox" onChange={() => handleCheckItems(data.id)}/></td>
+                        <td><input className='checkBox' data-row-id={data.taskID} checked={checkItems.includes(data.taskID)} type="checkbox" onChange={() => handleCheckItems(data.taskID)}/></td>
                     </tr>
                 )}
                 </tbody>

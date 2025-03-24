@@ -6,8 +6,9 @@ const app = express();
 
 const authCookieName = 'token';
 
-let users = [];
+let users = new Map();
 let tokens = [];
+let counter = 0;
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
@@ -111,7 +112,7 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
     console.log(req.body);
     const user = await findUser('username',req.body.username);
     if (user) {
-        const task = await createTask(req.body.task, req.body.priority, req.body.time, req.body.taskID);
+        const task = await createTask(req.body.task, req.body.priority, req.body.time);
         setTasks(user,task);
         res.status(200).end();
         return;
@@ -143,18 +144,20 @@ apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) =>
 });
 
 function deleteTasks(user,tasks){
-    for (const task in tasks) {
-        user.tasks = user.tasks.filter(t => t !== task);
-    }
+    tasks.forEach(id => {
+        if (user.tasks.has(id)) {
+            user.tasks.delete(id);
+        }
+    });
 }
 
 function setTasks(user, taskObject) {
-    user.tasks.push(taskObject);
+    user.tasks.set(taskObject.taskID, taskObject);
 };
 
 async function createTask(taskMessage, priority, time, taskID){
     const task = {
-        taskID : taskID,
+        taskID : counter,
         name : taskMessage,
         priority : priority,
         time : time,
@@ -170,10 +173,10 @@ async function createUser(username,password,email) {
         username : username,
         password: passwordHash,
         email: email,
-        tasks: [],
+        tasks: new Map(),
     };
 
-    users.push(user);
+    users.set(username,user);
 
     return user;
 };
