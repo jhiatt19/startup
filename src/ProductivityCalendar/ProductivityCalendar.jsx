@@ -208,7 +208,7 @@ export function ProductivityCalendar(username, authState) {
                     <option> 1 hour</option>
                     <option> 1.5 hours</option>
                     <option> 2 hours</option>
-                    <option> 2.5 hous</option>
+                    <option> 2.5 hours</option>
                     <option> 3 hours</option>
                     <option> 4 hours</option>
                     <option> 5 hours</option>

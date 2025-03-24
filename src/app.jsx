@@ -46,7 +46,8 @@ export default function App(){
         if (response?.status === 200) {
             const res = await response.json();
             setAuthState(res.authState);
-            setButtonText("Welcome Guest!");
+            setButtonText("Continue as Guest");
+            setUsername('');
             navigate("/");
         } else {
             const body = await response.json();
@@ -65,29 +66,29 @@ export default function App(){
         }
       };
     
-    const handleGuest = () => {
-        setUsername("Guest-" + nanoid());
-        const response = fetch('/api/auth/create', {
+    async function handleGuest(){
+        const guestUser = "Guest-" + nanoid(10);
+        setUsername(guestUser);
+
+        const response = await fetch('/api/auth/create', {
             method: 'post',
-            body: JSON.stringify({username: username, password: "guest"}),
+            body: JSON.stringify({username: guestUser, password: "guest"}),
             headers: {
                 'Content-type': 'application/json',
             }
-        })
+        });
+
         if (response?.status === 200){
-            localStorage.setItem('username',response.username);
-            const plaintextResponse = response.json();
-            setAuthState(plaintextResponse.body.authState);
+            const plaintextResponse = await response.json();
+            setAuthState(plaintextResponse.authState);
             setButtonText("Welcome Guest!");
             navigate("/home");
         }
-        
-        
-    }
+    };
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const response = await fetch(`/api/users:${username}`);
+            const response = await fetch(`/api/users/${username}`);
             if (response?.status === 200){
                 const res = await response.json();
                 setUsername(res.username);
@@ -102,7 +103,7 @@ export default function App(){
 
     useEffect(() => {
         const fetchAuthData = async () => {
-            const response = await fetch(`/api/tokens:${username}`);
+            const response = await fetch(`/api/tokens/${username}`);
             if (response?.status === 200) {
                 setAuthState("Authenticated");
             } else {
@@ -117,7 +118,7 @@ export default function App(){
         <div>
         <header>
             <NavLink to='./Home'><form action='./Home'>
-                <button id="profile" onClick={handleGuest}>{buttonText}</button>
+                <button id="profile" onClick={() => handleGuest()}>{buttonText}</button>
             </form></NavLink>
             <h1><a id="homeNav" onClick={handleHome}>Won Stop</a></h1>
             <NavLink to='./'>
@@ -129,7 +130,7 @@ export default function App(){
         {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setButtonText={setButtonText} authState={authState} setUsername={setUsername} username={username}/>} exact />
+                <Route path='/' element={<Login setUsername={setUsername} username={username} setButtonText={setButtonText}/>} exact />
                 <Route path='/Home' element={<Home authState={authState} setButtonText={setButtonText}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar username={username} authState={authState}/>} />

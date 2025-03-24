@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './login.css';
 import { data, useNavigate } from 'react-router-dom';
 
-export function Login({setAuthState, authState, setUsername, username, setButtonText}) {
+export function Login({setUsername, username, setButtonText}) {
   const [password,setPassword] = useState('');
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
