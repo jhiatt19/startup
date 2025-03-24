@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './login.css';
 import { data, useNavigate } from 'react-router-dom';
 
-export function Login({setUsername, username, setButtonText}) {
+export function Login({setUsername, username, setButtonText, setAuthState}) {
   const [password,setPassword] = useState('');
   const [error, setError] = useState('');
   const [isError, setIsError] = useState(false);
@@ -21,6 +21,7 @@ export function Login({setUsername, username, setButtonText}) {
   };
 
   async function handleLogin() {
+    console.log(username);
     const response = await fetch('/api/auth/login', {
       method: 'post',
       body: JSON.stringify({ username: username, password: password }),
@@ -32,6 +33,8 @@ export function Login({setUsername, username, setButtonText}) {
     if (response?.status == 200){
       const res = await response.json();
       setButtonText("Welcome " + res.user + "!");
+      setAuthState(res.authState);
+      setUsername(res.user);
       navigate("/Home");
     }
     else {

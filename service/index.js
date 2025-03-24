@@ -23,7 +23,8 @@ var apiRouter = express.Router();
 app.use('/api', apiRouter);
 
 apiRouter.get('/users', async (req, res) => {
-    res.send(users);
+    let jsonUsers = Object.fromEntries(users.entries());
+    res.send(jsonUsers);
 });
 
 apiRouter.get('/tokens', async (req,res) => {
@@ -56,17 +57,21 @@ apiRouter.post('/auth/create', async (req, res) => {
     if (await findUser('username', req.body.username)) {
         res.status(403).send({ msg: 'Existing user' });
     } else {
+        console.log(req.body);
         const user = await createUser(req.body.username, req.body.password, req.body.email);
+        console.log(user);
+        console.log(users);
         const token = nanoid();
         setAuthCookie(res, token);
         saveAuth(token,user.username);
         res.status(200).send({username: user.username, authState:'Authenticated' });
     }
+    //res.status(507).send({ msg: "Failing the if statement"});
 });
 
 //Login an existing user and provide auth token
 apiRouter.post('/auth/login', async (req, res) => {
-    const user = await findUser('username', req.body.username);
+    const user = await findUser(req.body.username);
     if (user) {
         if (await bcrypt.compare(req.body.password, user.password)) {
             const token = nanoid();
@@ -155,7 +160,7 @@ function setTasks(user, taskObject) {
     user.tasks.set(taskObject.taskID, taskObject);
 };
 
-async function createTask(taskMessage, priority, time, taskID){
+async function createTask(taskMessage, priority, time){
     const task = {
         taskID : counter,
         name : taskMessage,
@@ -168,14 +173,12 @@ async function createTask(taskMessage, priority, time, taskID){
 
 async function createUser(username,password,email) {
     const passwordHash = await bcrypt.hash(password, 10);
-
     const user = {
         username : username,
         password: passwordHash,
         email: email,
         tasks: new Map(),
     };
-
     users.set(username,user);
 
     return user;
@@ -194,10 +197,16 @@ async function deleteToken(value){
     }
 }
 
-async function findUser(field, value) {
+async function findUser(value) {
     if (!value) return null;
 
-    return users.find((u) => u[field] === value);
+    if (users.size === 0) {
+        return null;
+    }
+
+    if (users.has(value)){
+        return users.get(value);
+    }
 }
 
 function setAuthCookie(res, authToken) {

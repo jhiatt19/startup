@@ -5,7 +5,7 @@ import './signupPage.css';
 
 const initialUsername = 'Username';
 const initialEmail = 'Enter your email';
-export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, userData, setUserData}) {
+export function SignUpPage({setAuthState, setButtonText }) {
   const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(initialEmail);
@@ -56,6 +56,7 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
   };
 
   async function handleRegister() {
+    console.log(username);
     const response = await fetch('/api/auth/create', {
       method: 'post',
       body: JSON.stringify({ username: username, password: password, email: email}),
@@ -65,9 +66,12 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
     });
 
     if (response?.status === 200){
+      //console.log(response);
       const res = await response.json();
-      localStorage.setItem('username', JSON.stringify(res.username));
+      //localStorage.setItem('username', JSON.stringify(res.username));
+      setAuthState(res.authState);
       setButtonText("Welcome " + res.username + "!");
+      setUsername(res.username);
       navigate("/Home");
     } else {
       const body = await response.json();
@@ -92,10 +96,6 @@ export function SignUpPage({setAuthState, setAuthCode, authCode, setButtonText, 
   };
 
   //&& username !== initialUsername && password !== ''
-
-  useEffect(() => {
-    localStorage.setItem("authState",JSON.stringify({username:username,authStatus:"Authenticated",authCode:authCode}));
-  },[authCode]);
 
   return (
     <main>

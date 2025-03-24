@@ -34,7 +34,6 @@ export default function App(){
     const [username,setUsername] = useState('');
     const [buttonText,setButtonText] = useState(initalText);
     const navigate = useNavigate();
-    const location = useLocation();
     
     async function handleLogOut(){
         const response = await fetch('/api/auth/logout', {
@@ -67,52 +66,28 @@ export default function App(){
       };
     
     async function handleGuest(){
-        const guestUser = "Guest-" + nanoid(10);
-        setUsername(guestUser);
+        if (username === ''){
+            const guestUser = "Guest-" + nanoid(10);
 
-        const response = await fetch('/api/auth/create', {
-            method: 'post',
-            body: JSON.stringify({username: guestUser, password: "guest"}),
-            headers: {
-                'Content-type': 'application/json',
+            const response = await fetch('/api/auth/create', {
+                method: 'post',
+                body: JSON.stringify({username: guestUser, password: "guest"}),
+                headers: {
+                    'Content-type': 'application/json',
+                }
+            });
+
+            if (response?.status === 200){
+                const plaintextResponse = await response.json();
+                setAuthState(plaintextResponse.authState);
+                setUsername(res.username);
+                setButtonText("Welcome Guest!");
+                navigate("/home");
             }
-        });
-
-        if (response?.status === 200){
-            const plaintextResponse = await response.json();
-            setAuthState(plaintextResponse.authState);
-            setButtonText("Welcome Guest!");
-            navigate("/home");
+        } else {
+            handleHome;
         }
     };
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const response = await fetch(`/api/users/${username}`);
-            if (response?.status === 200){
-                const res = await response.json();
-                setUsername(res.username);
-            }
-            else {
-                setUsername('');
-            }
-        };
-
-        fetchUserData();
-    }, [location.pathname]);
-
-    useEffect(() => {
-        const fetchAuthData = async () => {
-            const response = await fetch(`/api/tokens/${username}`);
-            if (response?.status === 200) {
-                setAuthState("Authenticated");
-            } else {
-                setAuthState("Not Authenticated");
-            }
-        };
-
-        fetchAuthData();
-    }, [location.pathname]);
 
     return ( 
         <div>
@@ -130,14 +105,14 @@ export default function App(){
         {authState === "Authenticated" && <NavigationBar />}
         <main>
             <Routes>
-                <Route path='/' element={<Login setUsername={setUsername} username={username} setButtonText={setButtonText}/>} exact />
+                <Route path='/' element={<Login setAuthState={setAuthState} setUsername={setUsername} username={username} setButtonText={setButtonText}/>} exact />
                 <Route path='/Home' element={<Home authState={authState} setButtonText={setButtonText}/>} />
                 <Route path='/PDFextractor' element={<PDFextractor />} />
                 <Route path='/ProductivityCalendar' element={<ProductivityCalendar username={username} authState={authState}/>} />
                 <Route path='/Calendar' element={<Calendar />} />
                 <Route path='/Alarms' element={<Alarms />} />
                 <Route path='/URLholder' element={<URLholder />} />
-                <Route path='/SignUpPage' element={<SignUpPage authState={authState} setButtonText={setButtonText} setUsername={setUsername} username={username}/>} />
+                <Route path='/SignUpPage' element={<SignUpPage setAuthState={setAuthState} setButtonText={setButtonText} setUsername={setUsername} username={username}/>} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </main>
