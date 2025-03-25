@@ -1,9 +1,22 @@
 import React, {useState,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../all.css';
+import WeatherReport from './WeatherReport.jsx';
 
 export function Home() {
     const navigate = useNavigate();
+
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const day3 = new Date(tomorrow);
+    day3.setDate(tomorrow.getDate() + 1);
+    const day4 = new Date(day3);
+    day4.setDate(day3.getDate() + 1);
+    const day5 = new Date(day4);
+    day5.setDate(day4.getDate() + 1);
+    const day6 = new Date(day5);
+    day6.setDate(day5.getDate() + 1);
 
     const handleTaskPrioritizer = () => {
         navigate("/ProductivityCalendar");
@@ -32,6 +45,15 @@ export function Home() {
         <section>
             <h2>What the heck is this website all about?</h2>
             <p>This website is going to have pages that I have feel will be helpful to have in one place. Gone are the days of having 45 tabs open and crashing my computer. I will attempt to have all the necessary tools/pages all in one place.</p>
+        </section>
+        <section>
+            <WeatherReport
+                today={today}
+                tomorrow={tomorrow}
+                day3={day3}
+                day4={day4}
+                day5={day5}
+                day6={day6}/>
         </section>
         <section>
             <h3><button className="links" onClick={handlePDF}>PDF extractor</button></h3>
