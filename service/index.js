@@ -148,6 +148,7 @@ apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) =>
     console.log(user);
     if (user) {
         deleteTasks(user,req.body);
+        res.status(200).end();
     } else {
         res.status(505).send({ msg: "Error: User tasks not found" });
     }

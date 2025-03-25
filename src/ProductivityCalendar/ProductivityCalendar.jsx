@@ -45,6 +45,7 @@ export function ProductivityCalendar(username) {
     const [loading,setLoading] = useState(true);
   
     const pullTaskData = useCallback(async () => {
+        console.log(taskData);
         console.log("I am in pullTaskData ",username.username);
         setLoading(true);
         try {
@@ -58,6 +59,7 @@ export function ProductivityCalendar(username) {
             const res = await response.json();
             console.log("Returned data: ", res);
             setTaskData(res || {});
+            console.log(taskData);
         } else {
             const body = await response.json();
             setError(`Error: ${body.msg}`);
