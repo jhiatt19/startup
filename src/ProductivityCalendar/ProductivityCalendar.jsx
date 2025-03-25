@@ -33,7 +33,7 @@ export function ProductivityCalendar(username, authState) {
     const [task,setTask] = useState('');
     const [time, setTime] = useState('Choose Est time');
     const [priority, setPriority] = useState('Choose priority level');
-    const [taskData,setTaskData] = useState(pullTaskData());
+    const [taskData,setTaskData] = useState(null);
     const [checkItems, setCheckItems] = useState([]);
     const [alerts,setAlerts] = useState([]);
     const [displayAlert, setDisplayAlert] = useState(false);
@@ -43,16 +43,28 @@ export function ProductivityCalendar(username, authState) {
     const [isError, setIsError] = useState(false);
     const [error,setError] = useState('');
 
+    useEffect(() => {
+        async function grabData() {
+            setTaskData(pullTaskData());
+        }
+
+        grabData();
+    },[]);
+
+
     async function pullTaskData(){
+        console.log(username);
         const response = await fetch(`/api/auth/getTaskData/${username}`, {
             method: 'get',
             headers: {
                 'Content-type': 'application/json',
             }
         });
+        console.log(response.body);
         if (response?.status === 200) {
             const res = await response.json();
-            return Objects.entries(res.taskData);
+            console.log(Objects.entries(res.taskData));
+            return [];
         } else {
             const body = await response.json();
             setError(`Error: ${body.msg}`);
@@ -160,7 +172,7 @@ export function ProductivityCalendar(username, authState) {
             {id:nanoid(), message:user.username + " finished a task!"}
         ]);
     };
-
+    
     useEffect(() => {
         const intervalId = setInterval(() => {
             const randomName = names[Math.floor(Math.random()*names.length)];
@@ -192,6 +204,19 @@ export function ProductivityCalendar(username, authState) {
                 return prevEvents
             });}
     },[alerts]);
+    
+    useEffect(() => {
+        if (taskData === null) {
+        return <p>Loading...</p>
+    } else {
+        return taskData.map(([dataID,data]) => 
+            <tr key={dataID}>
+                <td style={{backgroundColor:data.priority}}>{data.name}</td>
+                <td>{data.time}</td>
+                <td><input className='checkBox' data-row-id={data.taskID} checked={checkItems.includes(data.taskID)} type="checkbox" onChange={() => handleCheckItems(data.taskID)}/></td>
+            </tr>
+        )};
+    },[taskData]);
 
   return (
     <main>
@@ -256,13 +281,7 @@ export function ProductivityCalendar(username, authState) {
                     </tr>
                 </thead>
                 <tbody>
-                {taskData.map(([data]) => 
-                    <tr key={data.taskID}>
-                        <td style={{backgroundColor:data.priority}}>{data.name}</td>
-                        <td>{data.time}</td>
-                        <td><input className='checkBox' data-row-id={data.taskID} checked={checkItems.includes(data.taskID)} type="checkbox" onChange={() => handleCheckItems(data.taskID)}/></td>
-                    </tr>
-                )}
+                
                 </tbody>
             </table>
             <button type="button" id="buttonButton" onClick={handleEdit}>Remove Checked Boxes</button>

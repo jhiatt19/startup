@@ -129,6 +129,7 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
 
 apiRouter.get('/auth/getTaskData/:username', verifyAuth, async(req,res) => {
     console.log(req.headers);
+    console.log(req.body);
     const user = await findUser(req.params.username);
     if (user) {
         const jsonObject = Object.fromEntries(user.tasks.entries());
