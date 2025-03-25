@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useMemo, useEffect, useCallback} from 'react';
 import {nanoid} from 'nanoid';
 import './productivity.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -33,7 +33,7 @@ export function ProductivityCalendar(username) {
     const [task,setTask] = useState('');
     const [time, setTime] = useState('Choose Est time');
     const [priority, setPriority] = useState('Choose priority level');
-    const [taskData,setTaskData] = useState([]);
+    const [taskData,setTaskData] = useState(null);
     const [checkItems, setCheckItems] = useState([]);
     const [alerts,setAlerts] = useState([]);
     const [displayAlert, setDisplayAlert] = useState(false);
@@ -42,37 +42,38 @@ export function ProductivityCalendar(username) {
     const numComplete = [1, 2, 3, 4, 5, 6];
     const [isError, setIsError] = useState(false);
     const [error,setError] = useState('');
-
-    useEffect(() => {
-        async function grabData() {
-            setTaskData(pullTaskData());
-        }
-        grabData();
-    },[]);
-
-
-    async function pullTaskData(){
-        console.log("I am in pullTaskData" + username.username);
-        const response = await fetch(`/api/auth/getTaskData/${username.username}`, {
+    const [loading,setLoading] = useState(true);
+  
+    const pullTaskData = useCallback(async () => {
+        console.log("I am in pullTaskData ",username.username);
+        setLoading(true);
+        try {
+            const response = await fetch(`/api/auth/getTaskData/${username.username}`, {
             method: 'get',
             headers: {
                 'Content-type': 'application/json',
             }
         });
-        console.log(response.body);
         if (response?.status === 200) {
             const res = await response.json();
-            console.log(res.taskData);
-            if (Object.keys(res).length === 0){
-                return [];
-            }
-            return Object.entries(res.taskData);
+            console.log("Returned data: ", res);
+            setTaskData(res || {});
         } else {
             const body = await response.json();
             setError(`Error: ${body.msg}`);
             setIsError(true);
         }
-    };
+    } catch (err) {
+        setError(`Error: ${err.message}`);
+        setIsError(true);
+    } finally {
+            setLoading(false);
+        }
+    }, [username]);
+
+    useEffect(() => {
+        pullTaskData();
+    }, [pullTaskData]);
 
     const handleCloseAlert = (id) => {
         setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
@@ -103,19 +104,22 @@ export function ProductivityCalendar(username) {
             }
         });
         if (response?.status === 200){
-            const newTaskData = await pullTaskData();
-            setTaskData([...taskData, newTaskData]);
+            pullTaskData();
         }
     }
 
     async function deleteTasks(tasks){
-        const response = await fetch(`api/auth/deleteTaskData/${username}`, {
+        console.log(tasks);
+        console.log(JSON.stringify(tasks));
+        const response = await fetch(`api/auth/deleteTaskData/${username.username}`, {
             method: 'delete',
-            body: JSON.stringify(tasks),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(tasks)
         });
         if (response?.status === 200){
-            const updatedTaskData = await pullTaskData();
-            setTaskData([...taskData, updatedTaskData]);
+            pullTaskData();
         }
         else {
             const body = await response.json();
@@ -154,24 +158,36 @@ export function ProductivityCalendar(username) {
         }
     };
 
+    const tableRows = useMemo(() => {
+        if (!taskData) return null;
+        return Object.entries(taskData).map(([key,value]) => (
+        <tr key={key}>
+            <td style={{backgroundColor:value.priority}}>{value.name}</td>
+            <td>{value.time}</td>         
+            <td><input className='checkBox' data-row-id={key} checked={checkItems.includes(key)} type="checkbox" onChange={() => handleCheckItems(key)}/></td>
+        </tr>
+    ));
+}, [taskData, checkItems]);
+
     const handleEdit = (e) => {
         e.preventDefault();
         setDisplayAlert(true);
         const removeRows = document.querySelectorAll('.checkBox:checked');
         const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
         const tempInt = removeIDs.length;
+        const intIDs = removeIDs.map(char => parseInt(char));
         //const deleteTaskData = taskData.filter(row => removeIDs.includes(row.id));
-        deleteTasks(removeIDs);
+        deleteTasks(intIDs);
         setCheckItems([]);
         if (tempInt > 1){
             setAlerts((prevAlerts) => [
                 ...prevAlerts,
-                {id:nanoid(), message:user.username + " finished " + tempInt + " tasks!"}
+                {id:nanoid(), message:username.username + " finished " + tempInt + " tasks!"}
             ]);
         }
         setAlerts((prevAlerts) => [
             ...prevAlerts,
-            {id:nanoid(), message:user.username + " finished a task!"}
+            {id:nanoid(), message:username.username + " finished a task!"}
         ]);
     };
     
@@ -206,13 +222,6 @@ export function ProductivityCalendar(username) {
                 return prevEvents
             });}
     },[alerts]);
-    
-    // useEffect(() => {
-    //     if (taskData === null) {
-    //     return <p>Loading...</p>
-    // } else {
-    //     return 
-    // },[taskData]);
 
   return (
     <main>
@@ -277,12 +286,14 @@ export function ProductivityCalendar(username) {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {Object.entries(taskData).map(([dataID,data]) => 
-                    <tr key={dataID}>
-                        <td style={{backgroundColor:data.priority}}>{data.name}</td>
-                        <td>{data.time}</td>
-                        <td><input className='checkBox' data-row-id={data.taskID} checked={checkItems.includes(data.taskID)} type="checkbox" onChange={() => handleCheckItems(data.taskID)}/></td>
-                    </tr>)} */}
+                {isError === true && <tr>
+                            <td colSpan="3">Error: {error}</td>
+                        </tr>}
+                        {isError === false && loading === true && <tr>
+                            <td colSpan="3">Loading...</td>
+                        </tr>}
+                        {isError === false && loading === false && taskData && Object.keys(taskData).length > 0 && tableRows}
+                        {isError === false && loading === false && (!taskData || Object.keys(taskData).length === 0) && <tr><td colSpan="4">No tasks available.</td></tr>}
                 </tbody>
             </table>
             <button type="button" id="buttonButton" onClick={handleEdit}>Remove Checked Boxes</button>

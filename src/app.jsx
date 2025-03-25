@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './all.css';
 import {nanoid} from 'nanoid';
@@ -29,32 +29,28 @@ function NavigationBar(){
 };
 
 export default function App(){
-    const initalText = "Continue as Guest"
     const [authState,setAuthState] = useState("Not Authenticated");
     const [username,setUsername] = useState('');
-    const [buttonText,setButtonText] = useState(initalText);
+    const [buttonText,setButtonText] = useState("Continue as Guest");
     const navigate = useNavigate();
     
-    async function handleLogOut(){
-        const response = await fetch('/api/auth/logout', {
-            method: 'delete',
-            headers: {
-                'Content-type': 'application/json;',
+    const handleLogOut = useCallback(async () => {
+        try {
+            const response = await fetch('/api/auth/logout', {method: 'delete'});
+            if (response?.status === 200) {
+                setAuthState("Not Authenticated");
+                setButtonText("Continue as Guest");
+                setUsername('');
+                navigate("/");
+            } else {
+                const body = await response.json();
+                console.error(`Logout Error: ${body.msg}`);
             }
-        });
-        if (response?.status === 200) {
-            const res = await response.json();
-            setAuthState(res.authState);
-            setButtonText("Continue as Guest");
-            setUsername('');
-            navigate("/");
-        } else {
-            const body = await response.json();
-            setError(`Error: ${body.msg}`);
-            setIsError(true);
+        } catch (error) {
+            console.error('Logout failed:', error);
         }
         
-    };
+    }, [navigate]);
 
     const handleHome = () => {
         if (authState === "Authenticated"){
@@ -65,17 +61,17 @@ export default function App(){
         }
       };
     
-    async function handleGuest(){
+    const handleGuest = useCallback(async () => {
         if (username === ''){
-            const guestUser = "Guest-" + nanoid(10);
-
-            const response = await fetch('/api/auth/create', {
-                method: 'post',
-                body: JSON.stringify({username: guestUser, password: "guest"}),
-                headers: {
-                    'Content-type': 'application/json',
-                }
-            });
+            const guestUser = `Guest-${nanoid(10)}`;
+            try {
+                const response = await fetch('/api/auth/create', {
+                    method: 'post',
+                    body: JSON.stringify({username: guestUser, password: "guest"}),
+                    headers: {
+                        'Content-type': 'application/json',
+                    }
+                });
 
             if (response?.status === 200){
                 const plaintextResponse = await response.json();
@@ -83,11 +79,17 @@ export default function App(){
                 setUsername(plaintextResponse.username);
                 setButtonText("Welcome Guest!");
                 navigate("/home");
+            } else {
+                const body = await response.json();
+                console.error(`Guest Error: ${body.msg}`);
             }
+        } catch (error) {
+            console.error('Guest creation failed:', error);
+        }
         } else {
             handleHome;
         }
-    };
+    }, [navigate, username]);
 
     return ( 
         <div>

@@ -145,8 +145,9 @@ apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) =>
     console.log(req.headers);
     console.log(req.body);
     const user = await findUser(req.params.username);
+    console.log(user);
     if (user) {
-        deleteTasks(user,req.deleteTasks);
+        deleteTasks(user,req.body);
     } else {
         res.status(505).send({ msg: "Error: User tasks not found" });
     }
@@ -154,14 +155,18 @@ apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) =>
 
 function deleteTasks(user,tasks){
     tasks.forEach(id => {
-        if (user.tasks.has(id)) {
-            user.tasks.delete(id);
-        }
+        user.tasks.delete(id);
     });
+    users.set(user.username,user);
+    console.log(users);
 }
 
 function setTasks(user, taskObject) {
+    console.log("User before adding task: ", user);
     user.tasks.set(taskObject.taskID, taskObject);
+    console.log("User after adding task: ", user);
+    users.set(user.username,user);
+    console.log(users);
 };
 
 async function createTask(taskMessage, priority, time){
