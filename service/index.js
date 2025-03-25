@@ -133,6 +133,7 @@ apiRouter.get('/auth/getTaskData/:username', verifyAuth, async(req,res) => {
     const user = await findUser(req.params.username);
     if (user) {
         const jsonObject = Object.fromEntries(user.tasks.entries());
+        console.log(jsonObject);
         res.send(jsonObject);
     } else {
         res.status(505).send({msg : "Error: User tasks not found"});

@@ -80,7 +80,7 @@ export default function App(){
             if (response?.status === 200){
                 const plaintextResponse = await response.json();
                 setAuthState(plaintextResponse.authState);
-                setUsername(res.username);
+                setUsername(plaintextResponse.username);
                 setButtonText("Welcome Guest!");
                 navigate("/home");
             }
