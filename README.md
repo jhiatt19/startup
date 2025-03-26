@@ -92,11 +92,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
+- [x] **Node.js/Express HTTP service** - My website uses Node.js and Express to create and handle HTTP requests and responses.
+- [x] **Static middleware for frontend** - My website uses static middleware for the frontend with apiRouter, bcrypt, and cookie-parser.
+- [x] **Calls to third party endpoints** - On my home page I make a call to WeatherXu to request weather data, and then displays the forecast for the next week.
+- [x] **Backend service endpoints** - My backend has multiple service endpoints to handle adding, displaying, and removing task data sent in from the front end.
+- [x] **Frontend calls service endpoints** - My frontend calls the backend service endpoints with the task prioritizer, login, logout, and register. These endpoints are usually called when a button is pressed and transfers data in the body of the request if it is a post request.
 
 ## 🚀 DB/Login deliverable
 
