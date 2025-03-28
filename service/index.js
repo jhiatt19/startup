@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import {nanoid} from 'nanoid';
 const app = express();
+const DB = require('./database.js')
 
 const authCookieName = 'token';
 
@@ -59,11 +60,9 @@ apiRouter.post('/auth/create', async (req, res) => {
     } else {
         console.log(req.body);
         const user = await createUser(req.body.username, req.body.password, req.body.email);
-        console.log(user);
-        console.log(users);
         const token = nanoid();
         setAuthCookie(res, token);
-        saveAuth(token,user.username);
+        DB.addAuth(token,user.username);
         res.status(200).send({username: user.username, authState:'Authenticated' });
     }
     //res.status(507).send({ msg: "Failing the if statement"});
@@ -76,7 +75,7 @@ apiRouter.post('/auth/login', async (req, res) => {
         if (await bcrypt.compare(req.body.password, user.password)) {
             const token = nanoid();
             setAuthCookie(res, token);
-            saveAuth(token,user.username);
+            DB.addAuth(token,user.username);
             res.status(200);
             res.send({ user: user.username, authState: 'Authenticated' });
         }
@@ -90,25 +89,17 @@ apiRouter.post('/auth/login', async (req, res) => {
 
 apiRouter.delete('/auth/logout', async (req, res) => {
     const authToken = req.cookies.token;
-    console.log(authToken);
     res.clearCookie(authCookieName);
     deleteToken(authToken);
-    console.log(authToken);
-    console.log("Cleared token");
-    //console.log(user.token);
     res.status(200)
     res.send({authState: "Not Authenticated"});
 });
 
 const verifyAuth = async (req, res, next) => {
-    console.log(req.headers);
-    console.log("AuthToken: " + req.cookies.token);
-    const token = await findToken('auth',req.cookies.token);
+    const token = await findToken(req.cookies.token);
     if (token) {
-        console.log("verified auth");
         next();
     } else {
-        console.log("I am in verifyAuth");
         res.status(401).send({ msg: 'Unauthorized' });
     }
 };
@@ -163,11 +154,8 @@ function deleteTasks(user,tasks){
 }
 
 function setTasks(user, taskObject) {
-    console.log("User before adding task: ", user);
     user.tasks.set(taskObject.taskID, taskObject);
-    console.log("User after adding task: ", user);
     users.set(user.username,user);
-    console.log(users);
 };
 
 async function createTask(taskMessage, priority, time){
@@ -189,15 +177,15 @@ async function createUser(username,password,email) {
         email: email,
         tasks: new Map(),
     };
-    users.set(username,user);
+    DB.addUser(user);
 
     return user;
 };
 
-async function findToken(field,value){
+async function findToken(value){
     if (!value) return null;
 
-    return tokens.find((tok) => tok[field] === value);
+    return DB.getAuth(value);
 }
 
 async function deleteToken(value){
@@ -215,7 +203,7 @@ async function findUser(value) {
     }
 
     if (users.has(value)){
-        return users.get(value);
+        return DB.getUser(value);
     }
 }
 
@@ -223,7 +211,7 @@ function setAuthCookie(res, authToken) {
     res.cookie(authCookieName, authToken, {
         secure: true,
         httpOnly: true,
-        sameSite: 'none',
+        sameSite: 'strict',
     });    
 }
 
