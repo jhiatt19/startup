@@ -188,13 +188,6 @@ async function findToken(value){
     return DB.getAuth(value);
 }
 
-async function deleteToken(value){
-    if (!value) return null;
-    else {
-        tokens = tokens.filter(tok => tok.auth !== value);
-    }
-}
-
 async function findUser(value) {
     if (!value) return null;
 
@@ -213,14 +206,6 @@ function setAuthCookie(res, authToken) {
         httpOnly: true,
         sameSite: 'strict',
     });    
-}
-
-function saveAuth(authToken, username){
-    const token = {
-        user: username,
-        auth: authToken,
-    };
-    tokens.push(token);
 }
 
 app.use((_req, res) => {
