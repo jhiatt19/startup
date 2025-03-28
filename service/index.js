@@ -90,7 +90,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 apiRouter.delete('/auth/logout', async (req, res) => {
     const authToken = req.cookies.token;
     res.clearCookie(authCookieName);
-    deleteToken(authToken);
+    DB.deleteAuth(authToken);
     res.status(200)
     res.send({authState: "Not Authenticated"});
 });
