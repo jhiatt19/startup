@@ -46,8 +46,10 @@ function getAuthCode(token){
     return authCollection.findOne({auth: token});
 }
 
-function deleteAuth(token){
-    
+async function deleteAuth(token){
+    const auth = getAuthCode(token);
+    const deleteQuery = {_id:auth.insertedId};
+    await authCollection.deleteOne(deleteQuery);
 }
 
 module.exports = {
@@ -57,5 +59,6 @@ module.exports = {
     addTask,
     updateUser,
     addAuth,
-    getAuthCode
+    getAuthCode,
+    deleteAuth
 }
