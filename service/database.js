@@ -6,6 +6,7 @@ const client = new MongoClient(url);
 const db = client.db('Won_Stop');
 const userCollection = db.collection('user');
 const authCollection = db.collection('auth');
+const taskCollection = db.collection('task');
 
 (async function testConnection() {
     try {
@@ -37,6 +38,10 @@ async function addTask(task) {
     await userCollection.updateOne({username: user.username}, {$set: user});
 }
 
+async function deleteTask(task){
+
+}
+
 async function addAuth(code,username){
     const authData = {auth: code, username: username};
     await authCollection.insertOne(authData);
@@ -60,5 +65,6 @@ module.exports = {
     updateUser,
     addAuth,
     getAuthCode,
-    deleteAuth
+    deleteAuth,
+    deleteTask
 }
