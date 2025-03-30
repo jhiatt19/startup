@@ -35,11 +35,12 @@ async function updateUser(user) {
 
 async function addTask(task,user) {
     console.log(user.tasks);
-    user.tasks[task.taskID] = task;
+    user.tasks[(task.taskID).type(String)] = task;
     await userCollection.updateOne({username: user.username}, {$set: user});
 }
 
 async function deleteTask(user,task){
+    console.log(task);
     task.forEach(id => {
         delete user.tasks[id];
     });
@@ -62,8 +63,9 @@ function getAuthCode(token){
 }
 
 async function deleteAuth(token){
-    const auth = getAuthCode(token);
-    const deleteQuery = {_id:auth.insertedId};
+    const auth = await getAuthCode(token);
+    console.log(auth);
+    const deleteQuery = { _id: auth.insertedId };
     await authCollection.deleteOne(deleteQuery);
 }
 

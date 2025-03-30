@@ -144,7 +144,7 @@ apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) =>
 
 async function createTask(taskMessage, priority, time){
     const task = {
-        taskID : nanoid(5),
+        taskID : nanoid(5).type(String),
         name : taskMessage,
         priority : priority,
         time : time,
