@@ -64,8 +64,7 @@ function getAuthCode(token){
 
 async function deleteAuth(token){
     const auth = await getAuthCode(token);
-    console.log(auth);
-    const deleteQuery = { _id: auth.insertedId };
+    const deleteQuery = { id: auth.insertedId };
     await authCollection.deleteOne(deleteQuery);
 }
 
