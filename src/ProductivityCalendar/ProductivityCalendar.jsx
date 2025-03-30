@@ -162,6 +162,7 @@ export function ProductivityCalendar(username) {
 
     const tableRows = useMemo(() => {
         if (!taskData) return null;
+        console.log(taskData);
         return Object.entries(taskData).map(([key,value]) => (
         <tr key={key}>
             <td style={{backgroundColor:value.priority}}>{value.name}</td>

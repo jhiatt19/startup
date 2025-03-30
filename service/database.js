@@ -1,12 +1,11 @@
-const { MongoClient } = require('mongodb');
-const config = require('./dbConfig.json');
+import { MongoClient } from 'mongodb';
+import config from './dbConfig.json' with {type: 'json'};
 
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
 const db = client.db('Won_Stop');
-const userCollection = db.collection('user');
+const userCollection = db.collection('users');
 const authCollection = db.collection('auth');
-const taskCollection = db.collection('task');
 
 (async function testConnection() {
     try {
@@ -19,11 +18,11 @@ const taskCollection = db.collection('task');
 })();
 
 function getUser(user){
-    return userCollection.findOne({username: user.username});
+    return userCollection.findOne({username: user});
 }
 
 function getUserByToken(token){
-    return userCollection.findOne({token: token});
+    return authCollection.findOne({auth: token});
 }
 
 async function addUser(user) {
@@ -34,12 +33,23 @@ async function updateUser(user) {
     await userCollection.updateOne({username: user.username}, {$set: user});
 }
 
-async function addTask(task) {
+async function addTask(task,user) {
+    console.log(user.tasks);
+    user.tasks[task.taskID] = task;
     await userCollection.updateOne({username: user.username}, {$set: user});
 }
 
-async function deleteTask(task){
+async function deleteTask(user,task){
+    task.forEach(id => {
+        delete user.tasks[id];
+    });
+    await userCollection.updateOne({username: user.username},{$set:user});
+}
 
+async function getTasks(username){
+    const user = await getUser(username);
+    console.log(user);
+    return user.tasks;
 }
 
 async function addAuth(code,username){
@@ -57,7 +67,7 @@ async function deleteAuth(token){
     await authCollection.deleteOne(deleteQuery);
 }
 
-module.exports = {
+export {
     getUser,
     getUserByToken,
     addUser,
@@ -66,5 +76,6 @@ module.exports = {
     addAuth,
     getAuthCode,
     deleteAuth,
-    deleteTask
+    deleteTask,
+    getTasks
 }

@@ -3,12 +3,10 @@ import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import {nanoid} from 'nanoid';
 const app = express();
-const DB = require('./database.js')
+import * as db from './database.js';
 
 const authCookieName = 'token';
 
-let users = new Map();
-let tokens = [];
 let counter = 0;
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -62,7 +60,7 @@ apiRouter.post('/auth/create', async (req, res) => {
         const user = await createUser(req.body.username, req.body.password, req.body.email);
         const token = nanoid();
         setAuthCookie(res, token);
-        DB.addAuth(token,user.username);
+        db.addAuth(token,user.username);
         res.status(200).send({username: user.username, authState:'Authenticated' });
     }
     //res.status(507).send({ msg: "Failing the if statement"});
@@ -70,12 +68,14 @@ apiRouter.post('/auth/create', async (req, res) => {
 
 //Login an existing user and provide auth token
 apiRouter.post('/auth/login', async (req, res) => {
+    console.log(req.body.username);
     const user = await findUser(req.body.username);
+    console.log(user);
     if (user) {
         if (await bcrypt.compare(req.body.password, user.password)) {
             const token = nanoid();
             setAuthCookie(res, token);
-            DB.addAuth(token,user.username);
+            db.addAuth(token,user.username);
             res.status(200);
             res.send({ user: user.username, authState: 'Authenticated' });
         }
@@ -90,7 +90,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 apiRouter.delete('/auth/logout', async (req, res) => {
     const authToken = req.cookies.token;
     res.clearCookie(authCookieName);
-    DB.deleteAuth(authToken);
+    db.deleteAuth(authToken);
     res.status(200)
     res.send({authState: "Not Authenticated"});
 });
@@ -105,12 +105,12 @@ const verifyAuth = async (req, res, next) => {
 };
 
 apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
-    console.log(req.body);
     const user = await findUser(req.body.username);
     if (user) {
         const task = await createTask(req.body.task, req.body.priority, req.body.time);
         counter = counter + 1;
-        setTasks(user,task);
+        console.log(user);
+        db.addTask(task,user);
         res.status(200).end();
         return;
     }
@@ -119,12 +119,9 @@ apiRouter.post('/auth/addtask', verifyAuth, async (req, res) => {
 });
 
 apiRouter.get('/auth/getTaskData/:username', verifyAuth, async(req,res) => {
-    console.log(req.headers);
-    console.log(req.body);
     const user = await findUser(req.params.username);
     if (user) {
-        const jsonObject = Object.fromEntries(user.tasks.entries());
-        console.log(jsonObject);
+        const jsonObject = await db.getTasks(user.username);
         res.send(jsonObject);
     } else {
         res.status(505).send({msg : "Error: User tasks not found"});
@@ -138,29 +135,16 @@ apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) =>
     const user = await findUser(req.params.username);
     console.log(user);
     if (user) {
-        deleteTasks(user,req.body);
+        db.deleteTask(user,req.body);
         res.status(200).end();
     } else {
         res.status(505).send({ msg: "Error: User tasks not found" });
     }
 });
 
-function deleteTasks(user,tasks){
-    tasks.forEach(id => {
-        user.tasks.delete(id);
-    });
-    users.set(user.username,user);
-    console.log(users);
-}
-
-function setTasks(user, taskObject) {
-    user.tasks.set(taskObject.taskID, taskObject);
-    users.set(user.username,user);
-};
-
 async function createTask(taskMessage, priority, time){
     const task = {
-        taskID : counter,
+        taskID : nanoid(5),
         name : taskMessage,
         priority : priority,
         time : time,
@@ -177,7 +161,7 @@ async function createUser(username,password,email) {
         email: email,
         tasks: new Map(),
     };
-    DB.addUser(user);
+    db.addUser(user);
 
     return user;
 };
@@ -185,19 +169,12 @@ async function createUser(username,password,email) {
 async function findToken(value){
     if (!value) return null;
 
-    return DB.getAuth(value);
+    return db.getAuthCode(value);
 }
 
 async function findUser(value) {
     if (!value) return null;
-
-    if (users.size === 0) {
-        return null;
-    }
-
-    if (users.has(value)){
-        return DB.getUser(value);
-    }
+    return db.getUser(value);
 }
 
 function setAuthCookie(res, authToken) {
