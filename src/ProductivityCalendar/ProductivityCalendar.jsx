@@ -71,11 +71,11 @@ export function ProductivityCalendar(username) {
     } finally {
             setLoading(false);
         }
-    }, [username]);
+    });
 
     useEffect(() => {
         pullTaskData();
-    }, [pullTaskData]);
+    }, []);
 
     const handleCloseAlert = (id) => {
         setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
@@ -111,7 +111,6 @@ export function ProductivityCalendar(username) {
     }
 
     async function deleteTasks(tasks){
-        console.log(tasks);
         console.log(JSON.stringify(tasks));
         const response = await fetch(`api/auth/deleteTaskData/${username.username}`, {
             method: 'delete',
@@ -152,19 +151,22 @@ export function ProductivityCalendar(username) {
     };
 
     const handleCheckItems = (id) => {
+        console.log(id);
+        console.log(checkItems);
         if (checkItems.includes(id)){
-            setCheckItems(checkItems.filter((item) => item !== id));
+            setCheckItems(checkItems => checkItems.filter((item) => item !== id));
         }
         else{
-            setCheckItems([...checkItems,id]);
+            setCheckItems(checkItems => [...checkItems,id]);
+            console.log("CheckItems doesn't include this id: ", id);
         }
     };
 
     const tableRows = useMemo(() => {
         if (!taskData) return null;
-        console.log(taskData);
+        console.log("Task data: ",taskData);
         return Object.entries(taskData).map(([key,value]) => (
-        <tr key={value.taskID}>
+        <tr key={key}>
             <td>{value.taskID}</td>
             <td style={{backgroundColor:value.priority}}>{value.name}</td>
             <td>{value.time}</td>         
@@ -177,11 +179,12 @@ export function ProductivityCalendar(username) {
         e.preventDefault();
         setDisplayAlert(true);
         const removeRows = document.querySelectorAll('.checkBox:checked');
+        console.log("removeRows: ", removeRows);
         const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
         const tempInt = removeIDs.length;
-        const intIDs = removeIDs.map(char => parseInt(char));
+        //const intIDs = removeIDs.map(char => parseInt(char));
         //const deleteTaskData = taskData.filter(row => removeIDs.includes(row.id));
-        deleteTasks(intIDs);
+        deleteTasks(removeIDs);
         setCheckItems([]);
         if (tempInt > 1){
             setAlerts((prevAlerts) => [
@@ -212,7 +215,7 @@ export function ProductivityCalendar(username) {
                     uniqueMessage = randomName + randomfinStart + randomnumComplete + " tasks!";
                 }
             };
-            setAlerts((prevAlerts) => [...prevAlerts, {id:nanoid(),message:uniqueMessage}]);
+            setAlerts((prevAlerts) => [...prevAlerts, {id:nanoid(5),message:uniqueMessage}]);
             setDisplayAlert(true);
         },10000);
 
