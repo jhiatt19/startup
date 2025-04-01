@@ -35,7 +35,7 @@ async function updateUser(user) {
 
 async function addTask(task,user) {
     console.log(user.tasks);
-    user.tasks[(task.taskID).type(String)] = task;
+    user.tasks[(task.taskID)] = task;
     await userCollection.updateOne({username: user.username}, {$set: user});
 }
 

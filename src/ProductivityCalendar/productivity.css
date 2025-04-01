@@ -55,16 +55,13 @@ input[type="checkbox"] {
 }
 
 .col1{
-    width:10%;
+    width:75%;
 }
 .col2{
-    width:65%;
+    width:15%;
 }
 .col3{
-    width:15%
-}
-.col4{
-    width:10%;
+    width:10%
 }
 
 th {

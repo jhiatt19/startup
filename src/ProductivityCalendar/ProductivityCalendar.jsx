@@ -60,22 +60,18 @@ export function ProductivityCalendar(username) {
             console.log("Returned data: ", res);
             setTaskData(res || {});
             console.log(taskData);
-        } else {
-            const body = await response.json();
-            setError(`Error: ${body.msg}`);
-            setIsError(true);
         }
     } catch (err) {
-        setError(`Error: ${err.message}`);
+        setError(`Error: ${body.msg}`);
         setIsError(true);
     } finally {
             setLoading(false);
         }
-    });
+    },[username]);
 
     useEffect(() => {
         pullTaskData();
-    }, []);
+    }, [pullTaskData]);
 
     const handleCloseAlert = (id) => {
         setAlerts((oldAlerts) => oldAlerts.filter((message) => message.id !== id));
@@ -167,7 +163,6 @@ export function ProductivityCalendar(username) {
         console.log("Task data: ",taskData);
         return Object.entries(taskData).map(([key,value]) => (
         <tr key={key}>
-            <td>{value.taskID}</td>
             <td style={{backgroundColor:value.priority}}>{value.name}</td>
             <td>{value.time}</td>         
             <td><input className='checkBox' data-row-id={value.taskID} checked={checkItems.includes(value.taskID)} type="checkbox" onChange={() => handleCheckItems(value.taskID)}/></td>
@@ -284,10 +279,9 @@ export function ProductivityCalendar(username) {
                 </colgroup>
                 <thead>
                     <tr>
-                        <th id="topRow" colSpan="4">Tasks to do:</th>
+                        <th id="topRow" colSpan="3">Tasks to do:</th>
                     </tr>
                     <tr>
-                        <th>Task Id</th>
                         <th>Task</th>
                         <th>Estimated Time</th>
                         <th>Finished?</th>
@@ -295,13 +289,13 @@ export function ProductivityCalendar(username) {
                 </thead>
                 <tbody>
                 {isError === true && <tr>
-                            <td colSpan="4">Error: {error}</td>
+                            <td colSpan="3">Error: {error}</td>
                         </tr>}
                         {isError === false && loading === true && <tr>
-                            <td colSpan="4">Loading...</td>
+                            <td colSpan="3">Loading...</td>
                         </tr>}
                         {isError === false && loading === false && taskData && Object.keys(taskData).length > 0 && tableRows}
-                        {isError === false && loading === false && (!taskData || Object.keys(taskData).length === 0) && <tr><td colSpan="4">No tasks available.</td></tr>}
+                        {isError === false && loading === false && (!taskData || Object.keys(taskData).length === 0) && <tr><td colSpan="3">No tasks available.</td></tr>}
                 </tbody>
             </table>
             <button type="button" id="buttonButton" onClick={handleEdit}>Remove Checked Boxes</button>
