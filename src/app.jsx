@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './all.css';
 import {nanoid} from 'nanoid';
@@ -90,6 +90,12 @@ export default function App(){
             handleHome;
         }
     }, [navigate, username]);
+
+    useEffect(() => {
+        if (authState === 'Not Authenticated'){
+            navigate('/');
+        }
+    },[authState]);
 
     return ( 
         <div>

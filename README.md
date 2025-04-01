@@ -102,11 +102,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **User registration** - I did not complete this part of the deliverable.
-- [ ] **User login and logout** - I did not complete this part of the deliverable.
-- [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Restricts functionality based on authentication** - I did not complete this part of the deliverable.
+- [x] **User registration** - Users register through the registration page and there data is saved persistently in the database. Users password is hashed using bcrypt.
+- [x] **User login and logout** - User can login and logout and perform tasks based on the users authentication. 
+- [x] **Stores data in MongoDB** - Website stores user task data that is entered on the productivity calendar page. This page uploads data for each individual user and can make changes to the database in real time by completing tasks.
+- [x] **Stores credentials in MongoDB** - Website stores user credentials on mongoDB and encrypts passwords for security. 
+- [x] **Restricts functionality based on authentication** - If user is not authenticated it returns them to the login page to become authenticated.
 
 ## 🚀 WebSocket deliverable
 

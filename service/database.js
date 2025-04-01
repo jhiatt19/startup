@@ -22,7 +22,7 @@ function getUser(user){
 }
 
 function getUserByToken(token){
-    return authCollection.findOne({auth: token});
+    return userCollection.findOne({auth: token});
 }
 
 async function addUser(user) {
@@ -53,19 +53,17 @@ async function getTasks(username){
     return user.tasks;
 }
 
-async function addAuth(code,username){
-    const authData = {auth: code, username: username};
-    await authCollection.insertOne(authData);
+async function addAuth(auth,username){
+    await userCollection.updateOne({username:username}, {$set:auth});
 }
 
 function getAuthCode(token){
-    return authCollection.findOne({auth: token});
+    return userCollection.findOne({auth: token});
 }
 
 async function deleteAuth(token){
-    const auth = await getAuthCode(token);
-    const deleteQuery = { id: auth.insertedId };
-    await authCollection.deleteOne(deleteQuery);
+    const username = await getUserByToken(token);
+    await authCollection.updateOne({username:username}, {auth:''});
 }
 
 export {
