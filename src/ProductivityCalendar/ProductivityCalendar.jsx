@@ -1,9 +1,10 @@
-import React, {useState, useMemo, useEffect, useCallback} from 'react';
+import React, {useState, useMemo, useEffect, useCallback, useRef} from 'react';
+import { WebSocketServer } from 'ws';
 import {nanoid} from 'nanoid';
 import './productivity.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function BannerMessage({message, onClose}) {
+export function BannerMessage({message, onClose}) {
     return (
         <div className="banner-alert">
             <span>{message}</span>
@@ -12,7 +13,7 @@ function BannerMessage({message, onClose}) {
     );
 };
 
-function CreateMessage({handleCloseAlert,alerts}) {
+export function CreateMessage({handleCloseAlert,alerts}) {
     const reversedAlerts = alerts.slice().reverse();
     return (    
         <div className='banner-container'>
@@ -43,6 +44,31 @@ export function ProductivityCalendar(username) {
     const [isError, setIsError] = useState(false);
     const [error,setError] = useState('');
     const [loading,setLoading] = useState(true);
+    const websocket = useRef(null);
+    
+    useEffect(() => {
+    let port = window.location.port;
+    const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+    websocket.current = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
+    websocket.current.onopen = () => {
+        console.log('Websocket connected');
+    }
+    websocket.current.onmessage = (event) => {
+        const taskMessage = event.data;
+        setAlerts((prevAlerts) => [
+            ...prevAlerts,
+            taskMessage
+        ]);
+    };
+    websocket.current.onclose = () => {
+        console.log('Websocket disconnected');
+    }
+    return () => {
+        if (websocket.current) {
+            websocket.current.close();
+        }
+    }
+    }, []);
   
     const pullTaskData = useCallback(async () => {
         console.log(taskData);
@@ -124,6 +150,16 @@ export function ProductivityCalendar(username) {
             setIsError(true);
         }
     }
+
+    function sendAlert(alertMessage){
+        if (alertMessage) {
+            if (websocket.current && websocket.current.readyState === WebSocket.OPEN){
+                websocket.current.send(alertMessage);
+            }
+        } else {
+            alert('Websocket not connected');
+        };
+    }
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -133,11 +169,10 @@ export function ProductivityCalendar(username) {
             time: time,
             priority: priority,
         }
-        addTask(newTask);        
-        setAlerts((prevAlerts) => [
-            ...prevAlerts,
-            {id:nanoid(), message:username.username + " created a task.",}
-        ])
+        addTask(newTask);       
+        const taskMessage = {id:nanoid(), message:username.username + " created a task.",};
+        sendAlert(taskMessage);
+        
         setDisplayAlert(true);
         //setTaskData([...taskData,newTask]);
         setTask('');
@@ -182,45 +217,50 @@ export function ProductivityCalendar(username) {
         deleteTasks(removeIDs);
         setCheckItems([]);
         if (tempInt > 1){
+            const msg = {id:nanoid(), message:username.username + " finished " + tempInt + " tasks!"};
+            sendAlert(msg);
             setAlerts((prevAlerts) => [
                 ...prevAlerts,
-                {id:nanoid(), message:username.username + " finished " + tempInt + " tasks!"}
+                msg
+            ]);
+        } else {
+            const msg = {id:nanoid(), message:username.username + " finished a task!"};
+            sendAlert(msg);
+            setAlerts((prevAlerts) => [
+                ...prevAlerts,
+                msg
             ]);
         }
-        setAlerts((prevAlerts) => [
-            ...prevAlerts,
-            {id:nanoid(), message:username.username + " finished a task!"}
-        ]);
     };
     
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            const randomName = names[Math.floor(Math.random()*names.length)];
-            const randomfinStart = finStart[Math.floor(Math.random()*finStart.length)];
-            const randomnumComplete = numComplete[Math.floor(Math.random()*numComplete.length)];
-            let uniqueMessage = '';
-            if (randomfinStart === "created "){
-                uniqueMessage = randomName + randomfinStart + "a task.";
-            }
-            else {
-                if (randomnumComplete === 1) {
-                    uniqueMessage = randomName + randomfinStart + "a task!";
-                }
-                else {
-                    uniqueMessage = randomName + randomfinStart + randomnumComplete + " tasks!";
-                }
-            };
-            setAlerts((prevAlerts) => [...prevAlerts, {id:nanoid(5),message:uniqueMessage}]);
-            setDisplayAlert(true);
-        },10000);
+    // useEffect(() => {
+    //     const intervalId = setInterval(() => {
+    //         const randomName = names[Math.floor(Math.random()*names.length)];
+    //         const randomfinStart = finStart[Math.floor(Math.random()*finStart.length)];
+    //         const randomnumComplete = numComplete[Math.floor(Math.random()*numComplete.length)];
+    //         let uniqueMessage = '';
+    //         if (randomfinStart === "created "){
+    //             uniqueMessage = randomName + randomfinStart + "a task.";
+    //         }
+    //         else {
+    //             if (randomnumComplete === 1) {
+    //                 uniqueMessage = randomName + randomfinStart + "a task!";
+    //             }
+    //             else {
+    //                 uniqueMessage = randomName + randomfinStart + randomnumComplete + " tasks!";
+    //             }
+    //         };
+    //         setAlerts((prevAlerts) => [...prevAlerts, {id:nanoid(5),message:uniqueMessage}]);
+    //         setDisplayAlert(true);
+    //     },10000);
 
-        return () => clearInterval(intervalId);
-    },[alerts]);
+    //     return () => clearInterval(intervalId);
+    // },[alerts]);
 
     useEffect(()=> {
-        if (alerts.length > 10) {
+        if (alerts.length > 5) {
             setAlerts((prevEvents) => {
-                prevEvents = prevEvents.slice(1,10);
+                prevEvents = prevEvents.slice(1,5);
                 return prevEvents
             });}
     },[alerts]);

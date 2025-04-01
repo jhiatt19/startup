@@ -22,7 +22,7 @@ function getUser(user){
 }
 
 function getUserByToken(token){
-    return userCollection.findOne({auth: token});
+    return authCollection.findOne({auth: token});
 }
 
 async function addUser(user) {
@@ -54,16 +54,16 @@ async function getTasks(username){
 }
 
 async function addAuth(auth,username){
-    await userCollection.updateOne({username:username}, {$set:auth});
+    await authCollection.insertOne({username:username, auth:auth});
 }
 
 function getAuthCode(token){
-    return userCollection.findOne({auth: token});
+    return authCollection.findOne({auth: token});
 }
 
 async function deleteAuth(token){
     const username = await getUserByToken(token);
-    await authCollection.updateOne({username:username}, {auth:''});
+    await authCollection.deleteMany({username:username});
 }
 
 export {
