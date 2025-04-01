@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import {nanoid} from 'nanoid';
 const app = express();
 import * as db from './database.js';
+import { peerProxy } from './peerProxy.js';
 
 const authCookieName = 'token';
 
@@ -193,6 +194,8 @@ app.use(function (err, req, res, next) {
     res.status(500).send({ type: err.name, message: err.message });
   });
 
-app.listen(port, () => {
+const httpService = app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
+
+peerProxy(httpService);

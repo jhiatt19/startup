@@ -1,4 +1,4 @@
-import WebSocketServer from 'ws';
+import { WebSocketServer } from 'ws';
 
 function peerProxy(httpServer) {
 
@@ -21,7 +21,7 @@ function peerProxy(httpServer) {
     });
 
     setInterval(() => {
-        socket.Server.clients.forEach(function each(client){
+        socketServer.clients.forEach(function each(client){
             if (client.isAlive === false) return client.terminate();
 
             client.isAlive = false;
