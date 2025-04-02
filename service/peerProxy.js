@@ -10,13 +10,12 @@ function peerProxy(httpServer) {
         socket.on('message', (data) => {
             const msg = String.fromCharCode(...data);
             console.log('recieved: %s', msg);
-            socket.send(`I heard you say "${msg}"`);
-         //function message(data){ 
-        //     socketServer.clients.forEach((client) => {
-        //         if (client !== socket && client.readyState === WebSocket.OPEN) {
-        //             client.send(data);
-        //         }
-        //     });
+            //socket.send(msg);
+            socketServer.clients.forEach((client) => {
+                if (client !== socket && client.readyState === WebSocket.OPEN) {
+                    client.send(msg);
+                }
+            });
         });
         
         //socket.send('Hello webSocket');

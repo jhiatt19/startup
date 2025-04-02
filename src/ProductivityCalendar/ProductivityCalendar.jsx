@@ -13,7 +13,9 @@ function BannerMessage({message, onClose}) {
 };
 
 function CreateMessage({handleCloseAlert,alerts}) {
-    const reversedAlerts = alerts.splice().reverse();
+    console.log("CreateMessage alerts: ",alerts);
+    const reversedAlerts = alerts.reverse();
+    console.log("Reversed alerts: ",reversedAlerts);
     return (    
         <div className='banner-container'>
             {reversedAlerts.map((alert) => (
@@ -54,10 +56,14 @@ export function ProductivityCalendar(username) {
     }
     websocket.current.onmessage = (event) => {
         const taskMessage = event.data;
+        const parsedTaskMessage = JSON.parse(taskMessage);
+        console.log("On message websocket: ",parsedTaskMessage);
         setAlerts((prevAlerts) => [
             ...prevAlerts,
-            taskMessage
+            parsedTaskMessage
         ]);
+        setDisplayAlert(true);
+        console.log("On message websocket:",alerts);
     };
     websocket.current.onclose = () => {
         console.log('Websocket disconnected');
@@ -148,7 +154,6 @@ export function ProductivityCalendar(username) {
     function sendAlert(alertMessage){
         if (alertMessage) {
             if (websocket.current && websocket.current.readyState === WebSocket.OPEN){
-                console.log([alertMessage]);
                 websocket.current.send(JSON.stringify(alertMessage));
             }
         } else {
@@ -167,33 +172,26 @@ export function ProductivityCalendar(username) {
         addTask(newTask);       
         const taskMessage = {id:nanoid(), message:username.username + " created a task.",};
         sendAlert(taskMessage);
-        setAlerts((prevAlerts) => [
-            ...prevAlerts,
-            taskMessage
-        ]);
         setDisplayAlert(true);
         //setTaskData([...taskData,newTask]);
         setTask('');
         setPriority("Choose priority level");
         setTime("Choose Est time");
+        console.log("Alerts:",alerts);
         
     };
 
     const handleCheckItems = (id) => {
-        console.log(id);
-        console.log(checkItems);
         if (checkItems.includes(id)){
             setCheckItems(checkItems => checkItems.filter((item) => item !== id));
         }
         else{
             setCheckItems(checkItems => [...checkItems,id]);
-            console.log("CheckItems doesn't include this id: ", id);
         }
     };
 
     const tableRows = useMemo(() => {
         if (!taskData) return null;
-        console.log("Task data: ",taskData);
         return Object.entries(taskData).map(([key,value]) => (
         <tr key={key}>
             <td style={{backgroundColor:value.priority}}>{value.name}</td>
@@ -205,30 +203,20 @@ export function ProductivityCalendar(username) {
 
     const handleEdit = (e) => {
         e.preventDefault();
-        setDisplayAlert(true);
         const removeRows = document.querySelectorAll('.checkBox:checked');
-        console.log("removeRows: ", removeRows);
         const removeIDs = Array.from(removeRows).map(rmID => rmID.dataset.rowId);
         const tempInt = removeIDs.length;
-        //const intIDs = removeIDs.map(char => parseInt(char));
-        //const deleteTaskData = taskData.filter(row => removeIDs.includes(row.id));
         deleteTasks(removeIDs);
         setCheckItems([]);
         if (tempInt > 1){
             const msg = {id:nanoid(), message:username.username + " finished " + tempInt + " tasks!"};
             sendAlert(msg);
-            setAlerts((prevAlerts) => [
-                ...prevAlerts,
-                msg
-            ]);
-        } else {
-            const msg = {id:nanoid(), message:username.username + " finished a task!"};
+        } else if (tempInt === 1) {
+            const msg = {id:nanoid(5), message:username.username + " finished a task!"};
             sendAlert(msg);
-            setAlerts((prevAlerts) => [
-                ...prevAlerts,
-                msg
-            ]);
         }
+        console.log("Alerts:",alerts);
+        setDisplayAlert(true);
     };
     
     // useEffect(() => {
@@ -260,7 +248,9 @@ export function ProductivityCalendar(username) {
             setAlerts((prevEvents) => {
                 prevEvents = prevEvents.slice(1,5);
                 return prevEvents
-            });}
+            });
+            setDisplayAlert(true);
+        }
     },[alerts]);
 
   return (
