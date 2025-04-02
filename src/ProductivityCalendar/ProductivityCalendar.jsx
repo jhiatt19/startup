@@ -59,9 +59,9 @@ export function ProductivityCalendar(username) {
         const parsedTaskMessage = JSON.parse(taskMessage);
         console.log("On message websocket: ",parsedTaskMessage);
         setAlerts((prevAlerts) => [
-            ...prevAlerts,
-            parsedTaskMessage
-        ]);
+        ...prevAlerts,
+        parsedTaskMessage
+    ]);
         setDisplayAlert(true);
         console.log("On message websocket:",alerts);
     };
