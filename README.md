@@ -112,8 +112,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [x] **Backend listens for WebSocket connection** - Index.js listens in for the WebSocket connection.
+- [x] **Frontend makes WebSocket connection** - ProductivityCalendar.jsx makes the frontend connection.
+- [x] **Data sent over WebSocket connection** - Data sent over WebSocket connection through peerProxy and ProductivityCalendar.jsx.
+- [x] **WebSocket data displayed** - Websocket data is displayed on the ProductivityCalendar.jsx when new task is created or finished.
+- [x] **Application is fully functional** - The ProductivityCalendar.jsx task creater and table is fully functional, it uses react to update state, service requests to make http requests, a DB to persistently store data, and creates a websocket component that listens in for other users who have created or finished tasks.

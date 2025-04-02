@@ -14,11 +14,9 @@ function BannerMessage({message, onClose}) {
 
 function CreateMessage({handleCloseAlert,alerts}) {
     console.log("CreateMessage alerts: ",alerts);
-    const reversedAlerts = alerts.reverse();
-    console.log("Reversed alerts: ",reversedAlerts);
     return (    
         <div className='banner-container'>
-            {reversedAlerts.map((alert) => (
+            {alerts.map((alert) => (
                 <BannerMessage
                     key={alert.id}
                     message={alert.message}
