@@ -1,10 +1,9 @@
 import React, {useState, useMemo, useEffect, useCallback, useRef} from 'react';
-import { WebSocketServer } from 'ws';
 import {nanoid} from 'nanoid';
 import './productivity.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export function BannerMessage({message, onClose}) {
+function BannerMessage({message, onClose}) {
     return (
         <div className="banner-alert">
             <span>{message}</span>
@@ -13,8 +12,8 @@ export function BannerMessage({message, onClose}) {
     );
 };
 
-export function CreateMessage({handleCloseAlert,alerts}) {
-    const reversedAlerts = alerts.slice().reverse();
+function CreateMessage({handleCloseAlert,alerts}) {
+    const reversedAlerts = alerts.splice().reverse();
     return (    
         <div className='banner-container'>
             {reversedAlerts.map((alert) => (
@@ -46,7 +45,7 @@ export function ProductivityCalendar(username) {
     const [loading,setLoading] = useState(true);
     const websocket = useRef(null);
     
-    useEffect(() => {
+    useEffect(()=> {
     let port = window.location.port;
     const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
     websocket.current = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
@@ -63,12 +62,7 @@ export function ProductivityCalendar(username) {
     websocket.current.onclose = () => {
         console.log('Websocket disconnected');
     }
-    return () => {
-        if (websocket.current) {
-            websocket.current.close();
-        }
-    }
-    }, []);
+},[]);
   
     const pullTaskData = useCallback(async () => {
         console.log(taskData);
@@ -154,7 +148,8 @@ export function ProductivityCalendar(username) {
     function sendAlert(alertMessage){
         if (alertMessage) {
             if (websocket.current && websocket.current.readyState === WebSocket.OPEN){
-                websocket.current.send(alertMessage);
+                console.log([alertMessage]);
+                websocket.current.send(JSON.stringify(alertMessage));
             }
         } else {
             alert('Websocket not connected');
@@ -172,7 +167,10 @@ export function ProductivityCalendar(username) {
         addTask(newTask);       
         const taskMessage = {id:nanoid(), message:username.username + " created a task.",};
         sendAlert(taskMessage);
-        
+        setAlerts((prevAlerts) => [
+            ...prevAlerts,
+            taskMessage
+        ]);
         setDisplayAlert(true);
         //setTaskData([...taskData,newTask]);
         setTask('');
