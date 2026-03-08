@@ -1,0 +1,49 @@
+name: Deploy to Home Server
+
+on:
+  push:
+    branches:
+      - main # Trigger only when pushing to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: |
+          npm ci && npm run build
+          cp dist/index.html dist/404.html
+
+      # 1. Install cloudflared so the runner can "see" your tunnel
+      - name: Install cloudflared
+        run: |
+          sudo mkdir -p --mode=0755 /usr/share/keyrings
+          curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloudflare-main.gpg
+          echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared bookworm main" | sudo tee /etc/apt/sources.list.d/cloudflare.list
+          sudo apt-get update && sudo apt-get install cloudflared
+
+      # 2. Manual SCP transfer using ProxyCommand
+      - name: Copy files to Server via Cloudflare Tunnel
+        run: |
+          # Set up the SSH key
+          echo "${{ secrets.SERVER_SSH_KEY }}" > private_key
+          chmod 600 private_key
+
+          # Run SCP with the ProxyCommand
+          # We use -r to copy the dist folder contents
+          scp -r -i private_key \
+            -o StrictHostKeyChecking=no \
+            -o "ProxyCommand=cloudflared access ssh --hostname %h --id ${{ secrets.CF_ACCESS_CLIENT_ID }} --secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}" \
+            dist/* j19@j19server.jordanhiatt.org:/var/www/startup/
