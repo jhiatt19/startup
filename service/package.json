@@ -12,7 +12,8 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
-    "express": "^4.21.2",
+    "dotenv": "^17.3.1",
+    "express": "^4.22.1",
     "nanoid": "^5.1.5"
   },
   "keywords": []
