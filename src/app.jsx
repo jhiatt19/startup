@@ -25,7 +25,7 @@ function NavigationBar() {
     <nav>
       <ul>
         <li>
-          <NavLink to="/home">Home</NavLink>
+          <NavLink to="/Home">Home</NavLink>
         </li>
         <li>
           <NavLink to="/PDFextractor">PDF Extractor</NavLink>
@@ -48,10 +48,12 @@ function NavigationBar() {
 }
 
 export default function App() {
+  console.trace("Made it to app.jsx");
   const [authState, setAuthState] = useState("Not Authenticated");
   const [username, setUsername] = useState("");
   const [buttonText, setButtonText] = useState("Continue as Guest");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogOut = useCallback(async () => {
     try {
@@ -95,7 +97,7 @@ export default function App() {
           setAuthState(plaintextResponse.authState);
           setUsername(plaintextResponse.username);
           setButtonText("Welcome Guest!");
-          navigate("/home");
+          navigate("/Home");
         } else {
           const body = await response.json();
           console.error(`Guest Error: ${body.msg}`);
@@ -108,33 +110,30 @@ export default function App() {
     }
   }, [navigate, username]);
 
-  useEffect(() => {
-    if (authState === "Not Authenticated") {
-      navigate("/");
+  function ProtectedRoute({ authState, children }) {
+    if (authState !== "Authenticated") {
+      return <Login />;
     }
-  }, [authState]);
+    return children;
+  }
 
   return (
     <div>
       <header>
-        <NavLink to="./Home">
-          <form action="./Home">
-            <button id="profile" onClick={() => handleGuest()}>
-              {buttonText}
-            </button>
-          </form>
+        <NavLink to="/Home">
+          <button id="profile" onClick={handleGuest}>
+            {buttonText}
+          </button>
         </NavLink>
         <h1>
           <a id="homeNav" onClick={handleHome}>
             Won Stop
           </a>
         </h1>
-        <NavLink to="./">
-          <form>
-            <button id="logOut" onClick={() => handleLogOut()}>
-              Log out
-            </button>
-          </form>
+        <NavLink to="/">
+          <button id="logOut" onClick={handleLogOut}>
+            Log out
+          </button>
         </NavLink>{" "}
         <br />
       </header>
@@ -151,24 +150,48 @@ export default function App() {
                 setButtonText={setButtonText}
               />
             }
-            exact
           />
           <Route
             path="/Home"
             element={
-              <Home authState={authState} setButtonText={setButtonText} />
+              <ProtectedRoute authState={authState}>
+                <Home setButtonText={setButtonText} />
+              </ProtectedRoute>
             }
           />
           <Route path="/PDFextractor" element={<PDFextractor />} />
           <Route
             path="/ProductivityCalendar"
             element={
-              <ProductivityCalendar username={username} authState={authState} />
+              <ProtectedRoute authState={authState}>
+                <ProductivityCalendar username={username} />
+              </ProtectedRoute>
             }
           />
-          <Route path="/Calendar" element={<Calendar />} />
-          <Route path="/Alarms" element={<Alarms />} />
-          <Route path="/URLholder" element={<URLholder />} />
+          <Route
+            path="/Calendar"
+            element={
+              <ProtectedRoute authState={authState}>
+                <Calendar />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Alarms"
+            element={
+              <ProtectedRoute authState={authState}>
+                <Alarms />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/URLholder"
+            element={
+              <ProtectedRoute authState={authState}>
+                <URLholder />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/SignUpPage"
             element={
