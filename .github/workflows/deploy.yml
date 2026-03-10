@@ -43,7 +43,7 @@ jobs:
 
           # 1. Remotely clear the folder
           ssh ssh -i private_key \
-              -o StrictHostingKeyChecking=no \
+              -o StrictHostKeyChecking=no \
               -o "ProxyCommand=cloudflared access ssh --hostname %h --id ${{ secrets.CF_ACCESS_CLIENT_ID }} --secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}" \
               j19@j19server.jordanhiatt.org "rm -rf /var/www/startup/*"
 
