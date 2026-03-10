@@ -41,6 +41,9 @@ jobs:
           echo "${{ secrets.SERVER_SSH_KEY }}" > private_key
           chmod 600 private_key
 
+          # 1. Remotely clear the folder
+          ssh j19@j19server.jordanhiatt.org "rm -rf /var/www/revolutionarywar/*"
+
           # Run SCP with the ProxyCommand
           # We use -r to copy the dist folder contents
           scp -r -i private_key \
