@@ -21,6 +21,13 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Create .env files
+        run: | 
+          echo "DB_USERNAME=${{secrets.DB_USERNAME}}" >> .env
+          echo "PASSWORD=${{secrets.PASSWORD}}" >> .env
+          echo "HOST=${{secrets.HOST}}" >> .env
+          echo "DATABASE_NAME=${{secrets.DATABASE_NAME}}" >> .env
+
       - name: Build
         run: |
           npm ci && npm run build
