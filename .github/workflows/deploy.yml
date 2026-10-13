@@ -61,6 +61,13 @@ jobs:
             -o "ProxyCommand=cloudflared access ssh --hostname %h --id ${{ secrets.CF_ACCESS_CLIENT_ID }} --secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}" \
             dist/* j19@j19server.jordanhiatt.org:/var/www/startup/
       
+      - name: Copy Backend Folder via Cloudflare Tunnel
+        run: |
+          scp -r -i private_key \
+            -o StrictHostKeyChecking=no \
+            -o "ProxyCommand=cloudflared access ssh --hostname %h --id ${{ secrets.CF_ACCESS_CLIENT_ID }} --secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}" \
+            service/* j19@j19server.jordanhiatt.org:/var/www/startup/backend/
+
       - name: Restart backend with PM2 on Server
         run: |
           mkdir -p ~/.ssh
@@ -71,7 +78,7 @@ jobs:
           ssh -i private_key \
             -o StrictHostKeyChecking=no \
             j19@j19server.jordanhiatt.org << 'EOF'
-              cd /var/www/startup
+              cd /var/www/startup/backend
               
               # Install any missing dependencies
               npm install --production
