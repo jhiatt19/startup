@@ -60,3 +60,24 @@ jobs:
             -o StrictHostKeyChecking=no \
             -o "ProxyCommand=cloudflared access ssh --hostname %h --id ${{ secrets.CF_ACCESS_CLIENT_ID }} --secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}" \
             dist/* j19@j19server.jordanhiatt.org:/var/www/startup/
+      
+      - name: Restart backend with PM2 on Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: j19server.jordanhiatt.org
+          username: j19
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          proxy_host: j19server.jordanhiatt.org
+          proxy_ssh_options: "-o ProxyCommand='cloudflared access ssh --hostname %h --id ${{ secrets.CF_ACCESS_CLIENT_ID }} --secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}'"
+          script: |
+            cd /var/www/startup
+            
+            # Ensure dependencies are up-to-date
+            npm install --production
+            
+            # Restart or start the backend process with PM2
+            pm2 restart startup-backend || pm2 start index.js --name "startup-backend"
+            
+            # Save state
+            pm2 save
