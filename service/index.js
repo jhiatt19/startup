@@ -10,7 +10,7 @@ const authCookieName = 'token';
 
 let counter = 0;
 
-const port = process.argv.length > 2 ? process.argv[2] : 4000;
+const port = process.argv.length > 2 ? process.argv[2] : 5000;
 
 app.use(express.static('public'));
 
