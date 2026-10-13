@@ -48,7 +48,7 @@ function NavigationBar() {
 }
 
 export default function App() {
-  console.trace("Made it to app.jsx");
+  console.log("Made it to app.jsx");
   const [authState, setAuthState] = useState("Not Authenticated");
   const [username, setUsername] = useState("");
   const [buttonText, setButtonText] = useState("Continue as Guest");

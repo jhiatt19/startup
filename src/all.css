@@ -1,5 +1,5 @@
-* {
-    display:flexbox;
+body {
+    display:flex;
     font-family: "Quicksand", serif;
     font-optical-sizing: auto;
     font-weight: 500;
@@ -47,6 +47,7 @@ form #logOut {
     box-sizing: border-box;
     height: 3em;
     min-width:10%;
+    max-width: 50%;
     width: 10em;
     min-height:1em;
     justify-content:end;

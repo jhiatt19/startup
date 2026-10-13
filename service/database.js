@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import "dotenv/config";
 
-const url = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOSTNAME}`;
+const url = `mongodb://${process.env.DB_USERNAME}:${process.env.PASSWORD}@${process.env.HOST}/${process.env.DATABASE_NAME}?authSource=admin`;
 const client = new MongoClient(url);
 const db = client.db("Won_Stop");
 const userCollection = db.collection("users");

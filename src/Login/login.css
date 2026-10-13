@@ -13,8 +13,8 @@ h1{
     caret-color: black;
 }
 
-form {
-    width:100%;
+#form-login {
+    width:50%
 }
 
 form button[type="submit"] {

@@ -60,7 +60,7 @@ export function Login({ setUsername, username, setButtonText, setAuthState }) {
     <main>
       <p>Please login below</p>
       <section id="login">
-        <form onSubmit={handleSubmit}>
+        <form id="form-login" onSubmit={handleSubmit}>
           <label htmlFor="username">Username</label>
           <br />
           <input
