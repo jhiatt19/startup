@@ -81,7 +81,7 @@ jobs:
               cd /var/www/startup/backend
               
               # Install any missing dependencies
-              npm install --production
+              npm install
               
               # Restart or boot up your backend via PM2
               pm2 restart startup-backend || pm2 start index.js --name "startup-backend"
