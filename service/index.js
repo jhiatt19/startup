@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import {nanoid} from 'nanoid';
+import crypto from 'crypto';
 const app = express();
 import * as db from './database.js';
 import { peerProxy } from './peerProxy.js';
