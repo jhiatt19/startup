@@ -7,6 +7,10 @@ const app = express();
 import * as db from './database.js';
 import { peerProxy } from './peerProxy.js';
 
+if (typeof global.crypto === 'undefined') {
+  global.crypto = crypto;
+}
+
 const authCookieName = 'token';
 
 let counter = 0;
