@@ -29,6 +29,7 @@ export function Login({ setUsername, username, setButtonText, setAuthState }) {
         "Content-type": "application/json; charset=UTF-8",
       },
     });
+    console.log(response)
     if (response?.status == 200) {
       const res = await response.json();
       console.log(res);
