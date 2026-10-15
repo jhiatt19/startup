@@ -3,7 +3,7 @@ import "dotenv/config";
 
 const url = `mongodb://${process.env.DB_USERNAME}:${process.env.PASSWORD}@${process.env.HOST}/${process.env.DATABASE_NAME}?authSource=admin`;
 const client = new MongoClient(url);
-const db = client.db("Won_Stop");
+const db = client.db("Won_Stop_dev");
 const userCollection = db.collection("users");
 const authCollection = db.collection("auth");
 

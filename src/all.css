@@ -163,10 +163,10 @@ img {
     min-height: none;
 }
 
-div {
+/* div {
     height:100%;
     width:100%;
-}
+} */
 
 @media (max-width: 300px) {
     header form {
