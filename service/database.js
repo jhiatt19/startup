@@ -56,7 +56,9 @@ async function getTasks(username) {
 }
 
 async function addAuth(auth, username) {
-  await authCollection.insertOne({ username: username, auth: auth });
+  const currTime = new Date();
+  const thirtyMinutesFromNow = new Date(currTime.getTime() + (30*60*1000));
+  await authCollection.insertOne({ username: username, auth: auth, expireTime: thirtyMinutesFromNow });
 }
 
 function getAuthCode(token) {
@@ -66,6 +68,11 @@ function getAuthCode(token) {
 async function deleteAuth(token) {
   const username = await getUserByToken(token);
   await authCollection.deleteMany({ username: username });
+}
+
+function clearAuthCodes() {
+  const now = Date.now();
+  authCollection.deleteMany({expireTime: { $lt: now}});
 }
 
 export {
@@ -79,4 +86,5 @@ export {
   deleteAuth,
   deleteTask,
   getTasks,
+  clearAuthCodes
 };

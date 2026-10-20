@@ -49,20 +49,53 @@ function NavigationBar() {
 
 export default function App() {
   console.log("Made it to app.jsx");
-  const [authState, setAuthState] = useState("Not Authenticated");
-  const [username, setUsername] = useState("");
+  const [authState, setAuthState] = useState(false);
+  const [username, setUsername] = useState('');
   const [buttonText, setButtonText] = useState("Continue as Guest");
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const authStateCheck = async () =>  {
+        try {
+          const response = await fetch('/api/auth/verify', {
+            method:'GET',
+            credentials: 'include',
+          });
+          console.log(response);
+          if (response.ok){
+            const result = await response.json();
+            console.log(result);
+            setAuthState(result.authenticated);
+            if (result.authenticated) {
+              setButtonText(`Welcome ${result.user}!`);
+              setUsername(result.user);
+            }
+            console.log(authState);
+          } else{
+            setAuthState(false);
+          }
+        } catch (error) {
+          console.error("Session verification failed:", error);
+          setAuthState(false);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+    authStateCheck();
+    console.log(authState);
+  },[]);
 
   const handleLogOut = useCallback(async () => {
     try {
       const response = await fetch("/api/auth/logout", { method: "delete" });
       if (response?.status === 200) {
-        setAuthState("Not Authenticated");
+        setAuthState(false);
         setButtonText("Continue as Guest");
         setUsername("");
         navigate("/");
+        localStorage.removeItem("username");
       } else {
         const body = await response.json();
         console.error(`Logout Error: ${body.msg}`);
@@ -73,7 +106,7 @@ export default function App() {
   }, [navigate]);
 
   const handleHome = () => {
-    if (authState === "Authenticated") {
+    if (authState) {
       navigate("/Home");
     } else {
       navigate("/");
@@ -96,6 +129,7 @@ export default function App() {
           const plaintextResponse = await response.json();
           setAuthState(plaintextResponse.authState);
           setUsername(plaintextResponse.username);
+          localStorage.setItem("username", plaintextResponse.username);
           setButtonText("Welcome Guest!");
           navigate("/Home");
         } else {
@@ -111,8 +145,11 @@ export default function App() {
   }, [navigate, username]);
 
   function ProtectedRoute({ authState, children }) {
-    if (authState !== "Authenticated") {
-      return <Login />;
+    if (isLoading) {
+      return <div className="loading-state">Loading session...</div>;
+    }
+    if (!authState) {
+      return <Login setAuthState={setAuthState} setUsername={setUsername} username={username} setButtonText={setButtonText}/>;
     }
     return children;
   }
@@ -137,7 +174,7 @@ export default function App() {
         </NavLink>{" "}
         <br />
       </header>
-      {authState === "Authenticated" && <NavigationBar />}
+      {authState && <NavigationBar />}
       <main>
         <Routes>
           <Route

@@ -37,13 +37,13 @@ apiRouter.get('/tokens', async (req,res) => {
 });
 
 apiRouter.get('/tokens/:username', async (req, res) => {
-    console.log(req.cookies.token);
+    console.log("token:",req.cookies.token);
     const token = await findToken('auth',req.cookies.token);
     if (token){
-        res.send(token);
+        return res.status(200).json({token: token, 'authenticated': true});
     }
     else {
-        res.status(403).send({ msg: "No token found"});
+        res.status(403).send({ msg: "No token found", 'authenticated': false});
     }
 });
 
@@ -67,7 +67,7 @@ apiRouter.post('/auth/create', async (req, res) => {
         const token = nanoid();
         setAuthCookie(res, token);
         db.addAuth(token,user.username);
-        res.status(200).send({username: user.username, authState:'Authenticated' });
+        res.status(200).send({username: user.username, authState:true });
     }
     //res.status(507).send({ msg: "Failing the if statement"});
 });
@@ -83,7 +83,7 @@ apiRouter.post('/auth/login', async (req, res) => {
             setAuthCookie(res, token);
             db.addAuth(token,user.username);
             res.status(200);
-            res.send({ user: user.username, authState: 'Authenticated' });
+            res.send({ user: user.username, authState: true });
         }
         else {
             res.status(401).send({ msg: 'Not valid password'});
@@ -98,7 +98,7 @@ apiRouter.delete('/auth/logout', async (req, res) => {
     res.clearCookie(authCookieName);
     db.deleteAuth(authToken);
     res.status(200)
-    res.send({authState: "Not Authenticated"});
+    res.send({authState: false});
 });
 
 const verifyAuth = async (req, res, next) => {
@@ -147,6 +147,18 @@ apiRouter.delete('/auth/deleteTaskData/:username', verifyAuth, async(req,res) =>
         res.status(505).send({ msg: "Error: User tasks not found" });
     }
 });
+
+apiRouter.get('/auth/clearDatabase', async (req,res) => {
+    console.log("hit this endpoint")
+    db.clearAuthCodes();
+    res.status(200).send({msg: "Auth collection cleared"});
+});
+
+apiRouter.get('/auth/verify', verifyAuth, async (req,res) => {
+    const user = await db.getUserByToken(req.cookies.token);
+    console.log(user);
+    res.status(200).json({authenticated: true, user: user.username});
+})
 
 async function createTask(taskMessage, priority, time){
     const task = {
@@ -198,6 +210,10 @@ app.use((_req, res) => {
 app.use(function (err, req, res, next) {
     res.status(500).send({ type: err.name, message: err.message });
   });
+
+setInterval(() => {
+    db.clearAuthCodes();
+},60000);
 
 const httpService = app.listen(port, () => {
     console.log(`Listening on port ${port}`);

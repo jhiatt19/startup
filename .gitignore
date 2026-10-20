@@ -3,3 +3,5 @@ node_modules
 dbConfig.json
 
 .env
+
+vite.config.js

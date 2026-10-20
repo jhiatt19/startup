@@ -30,8 +30,6 @@ function WeatherReport({ today, tomorrow, day3, day4, day5, day6, day7 }) {
           } else {
               console.error("Geolocation is not available in this browsser");
           }
-          console.log("What is lat and long before weather api req:",lat,long);
-
       }, []);
 
       useEffect(() => {
@@ -45,12 +43,6 @@ function WeatherReport({ today, tomorrow, day3, day4, day5, day6, day7 }) {
             .catch();
         }
         }, [forecast]);
-
-      useEffect(() => {
-        if (dailyWeather){
-          console.log(dailyWeather)
-        }
-      }, [dailyWeather]);
   return (
       <table>
           <thead>
