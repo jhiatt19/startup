@@ -35,6 +35,11 @@ async function updateUser(user) {
   await userCollection.updateOne({ username: user.username }, { $set: user });
 }
 
+async function updateAuth(token) {
+  const newExperiation = Date.now();
+  const check = await authCollection.updateOne({auth:token}, {$set: {expireTime:newExperiation}});
+  console.log(check);
+}
 async function addTask(task, user) {
   console.log(user.tasks);
   user.tasks[task.taskID] = task;
@@ -86,5 +91,6 @@ export {
   deleteAuth,
   deleteTask,
   getTasks,
-  clearAuthCodes
+  clearAuthCodes,
+  updateAuth
 };

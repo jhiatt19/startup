@@ -156,6 +156,7 @@ apiRouter.get('/auth/clearDatabase', async (req,res) => {
 
 apiRouter.get('/auth/verify', verifyAuth, async (req,res) => {
     const user = await db.getUserByToken(req.cookies.token);
+    db.updateAuth(req.cookies.token);
     console.log(user);
     res.status(200).json({authenticated: true, user: user.username});
 })
@@ -196,6 +197,7 @@ async function findUser(value) {
 }
 
 function setAuthCookie(res, authToken) {
+    const expiration = new Date(Date.now() + 30 * 60 * 1000);
     res.cookie(authCookieName, authToken, {
         secure: true,
         httpOnly: true,
