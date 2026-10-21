@@ -47,6 +47,7 @@ tbody {
 
 #websiteSubmit {
   width: 100%;
+  justify-items: center;
 }
 
 section {
@@ -76,6 +77,10 @@ section {
 
 #inputBoxes {
   width: 75%;
+}
+
+div #inputBoxes {
+  justify-content: center;
 }
 
 #removeButton {

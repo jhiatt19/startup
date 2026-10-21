@@ -17,7 +17,12 @@ label.extractor:hover{
 label.fileTypeSelector {
     margin-bottom: 1em;
     display: flex;
+    justify-content: center;
+}
 
+#pdf-div p {
+    justify-items: center;
+    width: 100%;
 }
 
 #pdfFile {
@@ -35,8 +40,9 @@ label.fileTypeSelector {
 #extractInput {
     display:flex;
     border:2px solid black;
-    padding:1em;
-    margin:1em;
+    padding-top:1em;
+    padding-bottom:1em;
+    margin-bottom:1em;
     cursor:pointer;
     width:100%;
     font-size: large;

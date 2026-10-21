@@ -9,6 +9,11 @@ body {
     text-align: center;
 
     background: rgb(240, 240, 240);
+    flex-direction: column;
+}
+
+p {
+    width:75%;
 }
 
 a {
@@ -74,11 +79,6 @@ button:hover {
     color:white;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-}
-
 html,body {
     width:100%;
     margin: 0;
@@ -122,9 +122,11 @@ footer {
 table {
     border-collapse: collapse;
 }
+
 th, td {
     border: 1px solid black;
 }
+
 td:hover {
     background-color: rgb(10, 10, 10);
     color:white;
@@ -154,7 +156,6 @@ nav a:hover {
     text-decoration:underline;
     font-weight: 700;
 }
-
 
 img {
     max-width: max-content;

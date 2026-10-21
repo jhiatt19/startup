@@ -266,6 +266,7 @@ export function ProductivityCalendar(username) {
             <h3 id="newtask">Add new task</h3>
             <form id="newTask" onSubmit={handleSubmit}>
                 <textarea className="form-control" id="task" rows="3" value={task} onChange={handleTask} placeholder="Enter task..."></textarea>
+                <br/>
                 <label htmlFor="time">Estimated time:</label>
                 <select id="times" name="time" onChange={handleTime} value={time}>
                     <option>Choose Est time</option>

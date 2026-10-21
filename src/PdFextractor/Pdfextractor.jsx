@@ -55,7 +55,7 @@ export function PDFextractor() {
             />
             {selectedFile && <p>Selected File: {selectedFile}</p>}
           </div>
-          <div>
+          <div id='pdf-div'>
             <label className="fileTypeSelector" htmlFor="fileType">
               What kind of file would you like text added to?
             </label>
