@@ -16,6 +16,10 @@ p {
     width:75%;
 }
 
+p#front-page {
+    width: 100%;
+}
+
 a {
     background-color: rgb(240, 240, 240);
     color:rgb(69, 33, 202);
