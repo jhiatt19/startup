@@ -252,7 +252,7 @@ export function ProductivityCalendar(username) {
     },[alerts]);
 
   return (
-    <main>
+    <main id='productivity-calendar'>
         {displayAlert && (
         <section className='alert'>
             {<CreateMessage alerts={alerts} handleCloseAlert={handleCloseAlert}/>}

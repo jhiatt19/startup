@@ -5,7 +5,7 @@ h3 {
 #newTask {
     width:100%;
 }
- main {
+ main#productivity-calendar {
     display: flex;
     flex-direction: column;
     justify-content:space-around;

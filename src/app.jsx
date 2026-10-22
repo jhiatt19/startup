@@ -19,6 +19,7 @@ import { PDFextractor } from "./PdFextractor/Pdfextractor";
 import { ProductivityCalendar } from "./ProductivityCalendar/ProductivityCalendar";
 import { SignUpPage } from "./SignUpPage/SignUpPage";
 import { URLholder } from "./URLholder/URLholder";
+import { Scribe } from "./Scribe/scribe";
 
 function NavigationBar() {
   return (
@@ -41,6 +42,9 @@ function NavigationBar() {
         </li>
         <li>
           <NavLink to="/URLholder">URL holder</NavLink>
+        </li>
+        <li>
+          <NavLink to='/Scribe'>Scribe</NavLink>
         </li>
       </ul>
     </nav>
@@ -240,6 +244,14 @@ export default function App() {
               />
             }
           />
+          <Route
+            path="/Scribe"
+            element={
+              <ProtectedRoute authState={authState}>
+              <Scribe />
+              </ProtectedRoute>
+            }
+            />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

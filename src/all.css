@@ -10,6 +10,26 @@ body {
 
     background: rgb(240, 240, 240);
     flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    padding-right: 1em;
+    padding-left:1em;
+}
+
+button#logout {
+    width: 10em;
+    height:3em;
+}
+
+button#profile {
+    width: 10em;
+    height:3em;
+}
+
+header{
+    padding-top:1em;
 }
 
 p {
@@ -42,6 +62,7 @@ header{
     width: 100%;
     justify-content: space-evenly;
     padding-bottom:.5em;
+    min-height: 10vh;
 }
 
 header form{
@@ -93,6 +114,7 @@ main {
     /*width: 75%;*/
     flex:1;
     font-size: large;
+    min-height: 80vh;
 }
 
 button {
@@ -119,8 +141,20 @@ footer {
     border: 0px, solid, black;
     border-top-width: 2px;
     width:100%;
-    min-height: 3em;
-    max-height: 4em;
+    min-height: 10vh;
+    background-color: darkslategrey;
+}
+
+#authorName {
+    color:white;
+}
+
+#github {
+    color:white;
+}
+
+footer a {
+    background-color: darkslategrey;
 }
 
 table {
